@@ -1,4 +1,4 @@
-// zod-v4-mocks の使用例（Node.js専用・ブラウザバンドル非対応）
+// zod-v4-mocks の使用例（3.4.0 からブラウザバンドル対応）
 // initGenerator でスキーマ→型付きモックを生成し、テストデータの形を保証する
 import { describe, it, expect } from "vitest";
 import { initGenerator } from "zod-v4-mocks";

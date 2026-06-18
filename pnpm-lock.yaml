@@ -30,8 +30,8 @@ importers:
         specifier: ^4.4.3
         version: 4.4.3
       zod-v4-mocks:
-        specifier: ^3.3.1
-        version: 3.3.1(zod@4.4.3)
+        specifier: ^3.4.0
+        version: 3.4.0(zod@4.4.3)
     devDependencies:
       '@types/react':
         specifier: ^19.0.0
@@ -1950,8 +1950,8 @@ packages:
     peerDependencies:
       zod: ^3.25.28 || ^4
 
-  zod-v4-mocks@3.3.1:
-    resolution: {integrity: sha512-cmCti1W49QlN9kJMYbAsnmCYHlzt7TI5HVKv/xOCsExJg8qOKIB+ZhQXYCL1+6XwhoI7zqSfMKx2EtsVhXixGA==}
+  zod-v4-mocks@3.4.0:
+    resolution: {integrity: sha512-iUTcSJXHlr4TLoxVYz3WyaDmM2fPv70FpJOtWEvZkEbKbw/NokKetE1sDiRTrkZazKudXOkNXAU5cz8ev/dgsw==}
     engines: {node: '>=20'}
     hasBin: true
     peerDependencies:
@@ -4177,7 +4177,7 @@ snapshots:
       zod: 4.4.3
     optional: true
 
-  zod-v4-mocks@3.3.1(zod@4.4.3):
+  zod-v4-mocks@3.4.0(zod@4.4.3):
     dependencies:
       '@faker-js/faker': 10.3.0
       c12: 4.0.0-beta.4(jiti@2.7.0)
