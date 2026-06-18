@@ -1,5 +1,5 @@
 import { Box, Text, Badge, VStack, HStack } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@tanstack/react-router";
 import type { ProblemMeta } from "../core/schemas";
 
 const stageLabel: Record<string, string> = {
@@ -38,7 +38,7 @@ export function ProblemCard({ problem }: Props) {
       cursor="pointer"
       _hover={{ borderColor: "blue.400", shadow: "sm" }}
       transition="all 0.15s"
-      onClick={() => navigate(`/problem/${problem.id}`)}
+      onClick={() => navigate({ to: "/problem/$id", params: { id: problem.id } })}
     >
       <VStack align="start" gap={2}>
         <HStack>

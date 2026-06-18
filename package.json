@@ -16,10 +16,10 @@
   "dependencies": {
     "@chakra-ui/react": "3.36.0",
     "@monaco-editor/react": "4.7.0",
+    "@tanstack/react-router": "1.170.16",
     "es-toolkit": "1.47.1",
     "react": "19.2.7",
     "react-dom": "19.2.7",
-    "react-router-dom": "7.18.0",
     "zod": "4.4.3",
     "zod-v4-mocks": "3.4.0"
   },

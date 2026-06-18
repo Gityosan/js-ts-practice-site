@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "@tanstack/react-router";
 import {
   Box,
   Container,
@@ -16,6 +16,7 @@ import { runGrader } from "../core/grader";
 import { EditorPane, type EditorHandle } from "../components/EditorPane";
 import { ResultPanel } from "../components/ResultPanel";
 import type { GradeResult } from "../grade/types";
+import { problemRoute } from "../router";
 
 const stageLabel: Record<string, string> = {
   read: "読む",
@@ -32,9 +33,9 @@ const stageColor: Record<string, string> = {
 };
 
 export function ProblemPage() {
-  const { id } = useParams<{ id: string }>();
+  const { id } = problemRoute.useParams();
   const navigate = useNavigate();
-  const problem = id ? getProblemById(id) : undefined;
+  const problem = getProblemById(id);
 
   const [code, setCode] = useState(problem?.initialCode ?? "");
   const [result, setResult] = useState<GradeResult | null>(null);
@@ -69,7 +70,7 @@ export function ProblemPage() {
     return (
       <Container maxW="container.md" py={20} textAlign="center">
         <Text color="gray.500">問題が見つかりません: {id}</Text>
-        <Button mt={4} onClick={() => navigate("/")}>
+        <Button mt={4} onClick={() => navigate({ to: "/" })}>
           一覧に戻る
         </Button>
       </Container>
@@ -83,7 +84,7 @@ export function ProblemPage() {
           {/* Header */}
           <HStack justify="space-between" wrap="wrap" gap={2}>
             <HStack gap={2}>
-              <Button variant="ghost" size="sm" onClick={() => navigate("/")}>
+              <Button variant="ghost" size="sm" onClick={() => navigate({ to: "/" })}>
                 ← 一覧
               </Button>
               <Badge colorPalette={stageColor[problem.stage]}>{stageLabel[problem.stage]}</Badge>
