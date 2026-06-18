@@ -3,8 +3,7 @@ type Rule = { name?: string; re: RegExp; format: (m: RegExpMatchArray) => string
 const rules: Rule[] = [
   {
     re: /(\S+) is not a function/,
-    format: (m) =>
-      `「${m[1]}」という名前の関数が見つからないか、関数でないものを呼んでいます。`,
+    format: (m) => `「${m[1]}」という名前の関数が見つからないか、関数でないものを呼んでいます。`,
   },
   {
     name: "ReferenceError",
