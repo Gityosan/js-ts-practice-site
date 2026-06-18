@@ -1,4 +1,3 @@
-import { z } from "zod";
 import { defineProblem } from "../../core/schemas";
 
 export default defineProblem({
@@ -37,16 +36,4 @@ function solve( nums: number[] ): number[] {
   solutionCode: `function solve(nums: number[]): number[] {
   return nums.filter(n => n % 2 === 0);
 }`,
-  grader: {
-    kind: "io",
-    entry: "solve",
-    outputSchema: z.array(z.number()),
-    cases: [
-      { input: [[1, 2, 3, 4, 5]], expected: [2, 4] },
-      { input: [[2, 4, 6]], expected: [2, 4, 6] },
-      { input: [[1, 3, 5]], expected: [] },
-      { input: [[]], expected: [] },
-      { input: [[0, -2, 7]], expected: [0, -2] },
-    ],
-  },
 });

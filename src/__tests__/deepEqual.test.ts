@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { deepEqual } from "../core/deepEqual";
+import { deepEqual } from "../grade/deepEqual";
 
 describe("deepEqual", () => {
   describe("プリミティブ", () => {

@@ -1,4 +1,3 @@
-import { z } from "zod";
 import { defineProblem } from "../../core/schemas";
 
 export default defineProblem({
@@ -40,16 +39,4 @@ function solve( nums: number[] ): number {
   solutionCode: `function solve(nums: number[]): number {
   return nums.reduce((acc, n) => acc + n, 0);
 }`,
-  grader: {
-    kind: "io",
-    entry: "solve",
-    outputSchema: z.number(),
-    cases: [
-      { input: [[1, 2, 3]], expected: 6 },
-      { input: [[10, 20, 30]], expected: 60 },
-      { input: [[]], expected: 0 },
-      { input: [[-1, 1]], expected: 0 },
-      { input: [[100]], expected: 100 },
-    ],
-  },
 });

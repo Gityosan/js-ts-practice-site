@@ -1,6 +1,6 @@
 import { Box, Text, Badge, VStack, HStack } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import type { Problem } from "../core/schemas";
+import type { ProblemMeta } from "../core/schemas";
 
 const stageLabel: Record<string, string> = {
   read: "読む",
@@ -23,7 +23,7 @@ const scenarioLabel: Record<string, string> = {
   chrome: "Chrome拡張",
 };
 
-type Props = { problem: Problem };
+type Props = { problem: ProblemMeta };
 
 export function ProblemCard({ problem }: Props) {
   const navigate = useNavigate();

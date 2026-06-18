@@ -15,7 +15,7 @@ import { getProblemById } from "../problems";
 import { runGrader } from "../core/grader";
 import { EditorPane, type EditorHandle } from "../components/EditorPane";
 import { ResultPanel } from "../components/ResultPanel";
-import type { GraderResult } from "../core/schemas";
+import type { GradeResult } from "../grade/types";
 
 const stageLabel: Record<string, string> = {
   read: "読む",
@@ -37,7 +37,7 @@ export function ProblemPage() {
   const problem = id ? getProblemById(id) : undefined;
 
   const [code, setCode] = useState(problem?.initialCode ?? "");
-  const [result, setResult] = useState<GraderResult | null>(null);
+  const [result, setResult] = useState<GradeResult | null>(null);
   const [running, setRunning] = useState(false);
   const [runError, setRunError] = useState<string | undefined>();
   const editorRef = useRef<EditorHandle>(null);
@@ -48,9 +48,8 @@ export function ProblemPage() {
     setResult(null);
     setRunError(undefined);
     try {
-      // Monaco TS worker でトランスパイル（型注釈を除去してJS化）
       const jsCode = (await editorRef.current?.getTranspiledJs()) ?? code;
-      const r = await runGrader(problem, jsCode);
+      const r = await runGrader(problem.id, jsCode);
       setResult(r);
     } catch (e: unknown) {
       setRunError((e as Error).message);
