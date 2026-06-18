@@ -350,3 +350,214 @@ function spy<F extends (...a: any[]) => any>(impl?: F) {
 1. **`runGrader` 本体**（次の検討対象）: Worker 起動・コード注入・タイムアウト・`grader.kind` dispatch・結果集計。本書の部品（deepEqual 一本化 / spy / registry / kind union）が全部ここに集約される。
 2. **TS 卒業ライン**: 「null チェックを自然に書ける」まで持っていくか、「注釈が読めて怖くない」で十分か。総合問題のモックが返す型のリッチさがこれで決まる。
 3. io の `epsilon` / `unordered` は当面「元データ設計で発生回避 + 既定 epsilon=1e-9」で運用。境界が増えたら deepEqual を拡張。
+
+---
+
+## 10. runGrader（採点実行エンジン）
+
+全部品の合流点。kind union / deepEqual / spy / registry / friendly がここに集約される。
+
+### 10.1 実行コンテキストの境界（最重要決定）
+
+- **grader は丸ごと Worker 側で動かす**。`setupMocks → 学習者コード → check(scope)` は同一コンテキストで生の scope（スパイのクロージャ含む）を共有しないと成立しない。scope を postMessage すると structured clone がスパイ関数を剥がして記録が壊れるため。
+- **関数は境界を越えさせない**。`setupMocks` / `check` / `outputSchema` は非直列化。`.toString()`+`eval` はクロージャが死ぬ。→ **Worker 自身がレジストリを動的 import する**（コードコアは Worker 側に解決させる）。
+- **越えるのは直列化可能なものだけ**: メイン→Worker は `{ problemId, learnerJs }`、Worker→メインは `{ type, ... }`（meta / case / done / error）。
+- **§6 訂正**: `outputSchema` が非直列化（Zod スキーマ）なので、**io の `cases` ごとコードコア側**に置く。直列化可能コアに残すのは UI 向けメタ（`copy / id / stage / scenario`）のみ。expected は翻訳対象でなく、遅延ロードは Worker の動的 import で効くので厳密に上位互換。
+
+### 10.2 タイムアウト（絶対制約）
+
+- `while(true)` は同期で Worker のイベントループごと止める → **Worker 内 setTimeout は発火しない**。殺せるのは**メインスレッドの `worker.terminate()` だけ**。
+- **ケース結果を逐次 postMessage で stream** し、メインは**ケース単位でタイマーをリセット**。ハングしたケースでタイマーが切れて terminate。**ハング前に通ったケースは部分点として残る**（部分正解の原則が実行モデルに乗る）。
+
+### 10.3 Worker ライフサイクル
+
+- **毎回 spawn**（`new GraderWorker()` → `terminate()`）。プール管理不要、terminate と相性◎。クリック駆動の呼水なら体感コストなし。
+- Vite `?worker` import で専用チャンク化。初回クリック時に一度ロード。気になれば初回問題表示時に空 spawn で warm 可（任意・現状不要）。
+
+### 10.4 メインスレッド（runGrader.ts）
+
+```ts
+import GraderWorker from "./grader.worker?worker";
+
+export type CaseResult = { label: string; passed: boolean; detail?: string };
+export type GradeResult = {
+  passed: number; total: number; results: CaseResult[];
+  status: "ok" | "timeout" | "error"; error?: string;
+};
+
+const CASE_TIMEOUT_MS = 2000;
+
+// learnerJs は transpile 済み JS（ブラウザ=Monaco / CI=esbuild、後述 seam）
+export function runGrader(problemId: string, learnerJs: string): Promise<GradeResult> {
+  return new Promise((resolve) => {
+    const worker = new GraderWorker();
+    const results: CaseResult[] = [];
+    let total = 0;
+    let timer: ReturnType<typeof setTimeout>;
+
+    const finish = (status: GradeResult["status"], error?: string) => {
+      clearTimeout(timer);
+      worker.terminate();
+      resolve({
+        passed: results.filter((r) => r.passed).length,
+        total: Math.max(total, results.length),
+        results, status, error,
+      });
+    };
+
+    const arm = () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        for (let i = results.length; i < total; i++)
+          results.push({ label: `ケース${i + 1}`, passed: false, detail: "時間切れ" });
+        finish("timeout");
+      }, CASE_TIMEOUT_MS);
+    };
+
+    worker.onmessage = (e: MessageEvent) => {
+      const m = e.data;
+      if (m.type === "meta") { total = m.total; arm(); }
+      else if (m.type === "case") { results.push(m.result); arm(); }
+      else if (m.type === "done") finish("ok");
+      else if (m.type === "error") finish("error", m.message);
+    };
+    worker.onerror = (e) => finish("error", e.message);
+
+    worker.postMessage({ problemId, learnerJs });
+    arm();
+  });
+}
+```
+
+### 10.5 Worker（grader.worker.ts, type: "module"）
+
+```ts
+import { graders } from "../graders/registry";
+import { deepEqual } from "../grade/deepEqual";
+import { friendly } from "../grade/friendly";
+import { fmt } from "../grade/fmt";
+
+self.onmessage = async (e: MessageEvent<{ problemId: string; learnerJs: string }>) => {
+  const { problemId, learnerJs } = e.data;
+  try {
+    const g = await graders[problemId]();
+
+    if (g.kind === "io") {
+      self.postMessage({ type: "meta", total: g.cases.length });
+      const fn = new Function(`${learnerJs}; return ${g.entry ?? "solve"};`)();
+      for (let i = 0; i < g.cases.length; i++) {
+        const c = g.cases[i];
+        const label = c.label ?? `ケース${i + 1}`;
+        try {
+          const out = await fn(...c.input);
+          if (g.outputSchema && !g.outputSchema.safeParse(out).success) {
+            self.postMessage({ type: "case", result: { label, passed: false, detail: "形が違う" } });
+            continue;
+          }
+          const ok = deepEqual(out, c.expected, { epsilon: c.epsilon ?? 1e-9, unordered: c.unordered });
+          self.postMessage({ type: "case", result: {
+            label, passed: ok,
+            detail: ok ? undefined : `期待 ${fmt(c.expected)} / 実際 ${fmt(out)}`,
+          }});
+        } catch (err) {
+          self.postMessage({ type: "case", result: { label, passed: false, detail: friendly(err).message } });
+        }
+      }
+      self.postMessage({ type: "done" });
+
+    } else { // state
+      self.postMessage({ type: "meta", total: g.asserts.length });
+      const scope = g.setupMocks();
+      try {
+        const run = new Function(...Object.keys(scope), learnerJs);
+        await run(...Object.values(scope));
+      } catch {
+        // 途中で落ちても現状の scope で asserts を評価＝部分点を残す
+      }
+      for (const a of g.asserts) {
+        let passed = false;
+        try { passed = a.check(scope); } catch { passed = false; }
+        self.postMessage({ type: "case", result: { label: a.label, passed } });
+      }
+      self.postMessage({ type: "done" });
+    }
+  } catch (err) {
+    self.postMessage({ type: "error", message: friendly(err).message });
+  }
+};
+```
+
+### 10.6 transpile seam（差し替え可能に）
+
+- `runGrader` は **JS** を受ける。ブラウザは Monaco が TS→JS emit（`getTypeScriptWorker()`、診断用に既に持つのでタダ）。CI（Node, Monaco 不在）は esbuild。
+- CI: `runGrader(p, transpileNode(p.solutionCode))`。Worker に TS コンパイラを積まない方針を維持。
+- **構文エラーは transpile 時に出る**（実行前）→ transpile seam の catch でも `friendly()` を通す。「埋める/いじる」段の不完全コードがここに来やすい。
+- **型エラーで実行を gate しない**。narrowing 怠り → Monaco 赤波線は出るが JS は走り結果が狂う → deepEqual が落とす。§2「絞らないと結果が間違う」がここで成立。
+
+### 10.7 エラー対訳 friendly()（離脱率に直結）
+
+- Worker と CI が共有する**純粋・小さいモジュール**。rule（`{ name?, re, format }`）の配列を順に当て、`{ message, matched }` を返す。`matched:false`＝未対訳の検知点。
+- 識別子をキャプチャして埋め込む（`(\S+) is not a function` → 「`foo` が…」）。
+
+```ts
+type Rule = { name?: string; re: RegExp; format: (m: RegExpMatchArray) => string };
+
+const rules: Rule[] = [
+  { re: /(\S+) is not a function/,
+    format: (m) => `「${m[1]}」という名前の関数が見つからないか、関数でないものを呼んでいます。` },
+  { name: "ReferenceError", re: /(\w+) is not defined/,
+    format: (m) => `「${m[1]}」がどこにも定義されていません。タイプミスか、宣言し忘れかもしれません。` },
+  { re: /Cannot read propert(?:y|ies) of (null|undefined)/,
+    format: (m) => `空（${m[1]}）の値のプロパティを読もうとしています。先に「あるか」を確かめてみましょう。` },
+  { name: "SyntaxError", re: /.*/,
+    format: () => `書き方の文法が崩れています。( ) { } の対応や、, ; の付け忘れを確認してみましょう。` },
+];
+
+export function friendly(err: unknown): { message: string; matched: boolean } {
+  const e = err as { name?: string; message?: string };
+  const name = e?.name ?? "Error";
+  const msg = e?.message ?? String(err);
+  for (const r of rules) {
+    if (r.name && r.name !== name) continue;
+    const m = msg.match(r.re);
+    if (m) return { message: r.format(m), matched: true };
+  }
+  return { message: "うまく動きませんでした。コードを見直してみましょう。", matched: false };
+}
+```
+
+#### 対訳表の洗い出しループ（Claude × vitest）
+
+- vitest を「未対訳エラーを炙り出すオラクル」にする。fixture の初学者ミスを実行 → 生エラーを捕捉 → `matched:false` でテスト失敗（生メッセージ付き）→ Claude が rule を追加 → 緑まで反復。回帰ガードも兼ねる。
+
+```ts
+// grade/errors.fixtures.ts
+export const beginnerMistakes = [
+  { id: "call-non-fn",  code: `const x = 5; x();` },
+  { id: "undef-ref",    code: `total + 1;` },
+  { id: "null-prop",    code: `const el = null; el.value;` },
+  { id: "syntax-paren", code: `return [1, 2, 3` },
+];
+
+// grade/friendly.test.ts
+import { test, expect } from "vitest";
+import { friendly } from "./friendly";
+import { beginnerMistakes } from "./errors.fixtures";
+
+test.each(beginnerMistakes)("$id: 生エラーを捕まえ優しい対訳がある", ({ code }) => {
+  let raw: unknown;
+  try { new Function(code)(); } catch (e) { raw = e; }
+  expect(raw, "エラーを投げる想定").toBeDefined();
+  const f = friendly(raw);
+  expect(f.matched, `未対訳: ${(raw as Error)?.message}`).toBe(true);
+});
+```
+
+- **運用**: Claude Code に「stage / 練習帳メソッドごとに初学者がやりがちなミスのコードを列挙して fixture を増やせ」と振る → スイートが未覆エラーを示す → Claude が埋める。
+- **本番で `matched:false` をログ収集 → fixture に昇格**。実データでループが閉じる。
+
+### 10.8 既知の限界
+
+- **エラー文言はエンジン依存**。Chrome / Node は共に V8 で本番とCIの文言がほぼ一致 → V8 前提の部分一致でよい。Firefox / Safari まで広げるなら `name` 主体に寄せる。
+- **隔離限界**: 学習者コードは Worker の `self` を共有 → 理屈上 `self.postMessage` で結果偽装可。信頼ユーザー（サークル内）＝呼水なら terminate タイムアウトで実用上十分。公開・非信頼に広げる段で sandboxed iframe / nested worker による realm 分離を検討（将来の分岐）。
+- **per-case 隔離**: terminate は Worker ごと殺すのでハング後のケースは走らない（時間切れ扱い）。完全隔離が要れば「io は 1ケース1 Worker」に振れるが spawn コスト増。呼水は逐次 stream で十分、隔離強化は後の最適化。
