@@ -17,7 +17,10 @@ self.onmessage = async (e: MessageEvent<{ problemId: string; learnerJs: string }
         try {
           const out = await fn(...c.input);
           if (g.outputSchema && !g.outputSchema.safeParse(out).success) {
-            self.postMessage({ type: "case", result: { label, passed: false, detail: "形が違う" } });
+            self.postMessage({
+              type: "case",
+              result: { label, passed: false, detail: "形が違う" },
+            });
             continue;
           }
           const ok = deepEqual(out, c.expected, {

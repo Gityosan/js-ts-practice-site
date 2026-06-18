@@ -11,7 +11,7 @@ export function deepEqual(a: unknown, b: unknown, o: EqOpts = {}): boolean {
   if (Array.isArray(a) && Array.isArray(b)) {
     if (a.length !== b.length) return false;
     if (o.unordered) {
-      const used = new Array(b.length).fill(false);
+      const used = Array.from({ length: b.length }, () => false);
       return a.every((av) => {
         const i = b.findIndex((bv, j) => !used[j] && deepEqual(av, bv, o));
         if (i === -1) return false;
@@ -29,7 +29,7 @@ export function deepEqual(a: unknown, b: unknown, o: EqOpts = {}): boolean {
   if (a instanceof Set && b instanceof Set) {
     if (a.size !== b.size) return false;
     const bs = [...b],
-      used = new Array(bs.length).fill(false);
+      used = Array.from({ length: bs.length }, () => false);
     return [...a].every((av) => {
       const i = bs.findIndex((bv, j) => !used[j] && deepEqual(av, bv, o));
       if (i === -1) return false;
@@ -54,10 +54,6 @@ export function deepEqual(a: unknown, b: unknown, o: EqOpts = {}): boolean {
   return ka.every(
     (k) =>
       Object.prototype.hasOwnProperty.call(b, k) &&
-      deepEqual(
-        (a as Record<string, unknown>)[k],
-        (b as Record<string, unknown>)[k],
-        o,
-      ),
+      deepEqual((a as Record<string, unknown>)[k], (b as Record<string, unknown>)[k], o),
   );
 }

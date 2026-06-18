@@ -19,9 +19,7 @@ const grader: IoGraderDef = {
   cases: [
     {
       input: [salesData],
-      expected: salesData
-        .filter((s) => s.region === "東京")
-        .reduce((acc, s) => acc + s.amount, 0),
+      expected: salesData.filter((s) => s.region === "東京").reduce((acc, s) => acc + s.amount, 0),
     },
     {
       input: [[{ id: "a", region: "東京", amount: 500 }]],

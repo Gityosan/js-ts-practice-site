@@ -243,11 +243,7 @@ function MarkdownLite({ source }: { source: string }) {
 function renderInline(text: string): React.ReactNode {
   const parts = text.split(/(`[^`]+`)/g);
   return parts.map((part, i) =>
-    part.startsWith("`") && part.endsWith("`") ? (
-      <code key={i}>{part.slice(1, -1)}</code>
-    ) : (
-      part
-    ),
+    part.startsWith("`") && part.endsWith("`") ? <code key={i}>{part.slice(1, -1)}</code> : part,
   );
 }
 
