@@ -12,6 +12,7 @@ const grader: IoGraderDef = {
     { label: "ゼロのみ（0 は正ではない）", input: [[0, 0]], expected: false },
     { label: "最後だけ正", input: [[-5, -3, 2]], expected: true },
   ],
+  assertMethod: "some",
 };
 
 export default grader;

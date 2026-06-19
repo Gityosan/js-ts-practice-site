@@ -14,6 +14,7 @@ export type IoGraderDef = {
   entry?: string;
   outputSchema?: z.ZodType;
   cases: IoCase[];
+  assertMethod?: string; // 練習帳用: 学習者コードが指定メソッドを呼んでいるか確認 (例: "map", "filter")
 };
 
 export type StateAssert = {

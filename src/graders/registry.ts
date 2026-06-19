@@ -28,4 +28,6 @@ export const graders: Record<string, () => Promise<GraderDef>> = {
   "read-star-count": () => import("./read/star-count").then((m) => m.default),
   // write
   "write-average": () => import("./data/average").then((m) => m.default),
+  "write-max-value": () => import("./data/max-value").then((m) => m.default),
+  "write-unique": () => import("./data/unique").then((m) => m.default),
 };

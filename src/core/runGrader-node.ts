@@ -46,6 +46,14 @@ export async function runGrader(problemId: string, learnerTs: string): Promise<G
         results.push({ label, passed: false, detail: friendly(err).message });
       }
     }
+    if (g.assertMethod) {
+      const used = new RegExp(`\\.${g.assertMethod}\\s*\\(`).test(learnerJs);
+      results.push({
+        label: `\`.${g.assertMethod}()\` を使った`,
+        passed: used,
+        detail: used ? undefined : `\`.${g.assertMethod}()\` を使ってみよう`,
+      });
+    }
     return {
       passed: results.filter((r) => r.passed).length,
       total: results.length,

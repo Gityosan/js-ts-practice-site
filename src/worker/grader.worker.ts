@@ -9,7 +9,7 @@ self.onmessage = async (e: MessageEvent<{ problemId: string; learnerJs: string }
     const g = await graders[problemId]();
 
     if (g.kind === "io") {
-      self.postMessage({ type: "meta", total: g.cases.length });
+      self.postMessage({ type: "meta", total: g.cases.length + (g.assertMethod ? 1 : 0) });
       const fn = new Function(`${learnerJs}; return ${g.entry ?? "solve"};`)();
       for (let i = 0; i < g.cases.length; i++) {
         const c = g.cases[i];
@@ -41,6 +41,17 @@ self.onmessage = async (e: MessageEvent<{ problemId: string; learnerJs: string }
             result: { label, passed: false, detail: friendly(err).message },
           });
         }
+      }
+      if (g.assertMethod) {
+        const used = new RegExp(`\\.${g.assertMethod}\\s*\\(`).test(learnerJs);
+        self.postMessage({
+          type: "case",
+          result: {
+            label: `\`.${g.assertMethod}()\` を使った`,
+            passed: used,
+            detail: used ? undefined : `\`.${g.assertMethod}()\` を使ってみよう`,
+          },
+        });
       }
       self.postMessage({ type: "done" });
     } else {

@@ -14,6 +14,8 @@ import gasSum from "./gas/sum-column";
 import emailWeekly from "./email/weekly-report";
 import starCount from "./read/star-count";
 import average from "./data/average";
+import maxValue from "./data/max-value";
+import unique from "./data/unique";
 import tweakKeywordSum from "./tweak/keyword-sum";
 import tweakParsonsFilter from "./tweak/parsons-filter";
 import tweakMethodDouble from "./tweak/method-double";
@@ -50,6 +52,8 @@ export const allProblems: ProblemMeta[] = [
   chromeFillForm,
   // write
   average,
+  maxValue,
+  unique,
 ];
 
 export function getProblemById(id: string): ProblemMeta | undefined {

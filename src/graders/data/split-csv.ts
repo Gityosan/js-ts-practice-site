@@ -32,6 +32,7 @@ const grader: IoGraderDef = {
       expected: ["10", "20", "30"],
     },
   ],
+  assertMethod: "split",
 };
 
 export default grader;

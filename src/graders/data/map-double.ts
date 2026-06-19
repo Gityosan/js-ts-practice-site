@@ -12,6 +12,7 @@ const grader: IoGraderDef = {
     { input: [[0, 5]], expected: [0, 10] },
     { input: [[-3, 4]], expected: [-6, 8] },
   ],
+  assertMethod: "map",
 };
 
 export default grader;

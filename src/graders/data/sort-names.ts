@@ -28,6 +28,7 @@ const grader: IoGraderDef = {
       expected: ["Solo"],
     },
   ],
+  assertMethod: "sort",
 };
 
 export default grader;

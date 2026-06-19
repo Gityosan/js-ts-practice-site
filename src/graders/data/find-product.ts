@@ -59,6 +59,7 @@ const grader: IoGraderDef = {
       expected: { id: "x3", name: "消しゴム", price: 80 },
     },
   ],
+  assertMethod: "find",
 };
 
 export default grader;
