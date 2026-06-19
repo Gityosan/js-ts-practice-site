@@ -33,6 +33,10 @@ const grader: IoGraderDef = {
     },
   ],
   assertMethod: "replace",
+  bonusCases: [
+    { label: "/g フラグ付き正規表現で全置換した", pattern: "/g" },
+    { label: "replaceAll() で全置換した", pattern: "\\.replaceAll\\s*\\(" },
+  ],
 };
 
 export default grader;

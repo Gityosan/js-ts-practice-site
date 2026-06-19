@@ -33,6 +33,11 @@ const grader: IoGraderDef = {
     },
   ],
   assertMethod: "entries",
+  bonusCases: [
+    { label: "分割代入（const [k, v]）で受け取った", pattern: "const\\s*\\[" },
+    { label: "toFixed() で小数を丸めた", pattern: "\\.toFixed\\s*\\(" },
+    { label: "Math.round() で丸めた", pattern: "Math\\.round\\s*\\(" },
+  ],
 };
 
 export default grader;

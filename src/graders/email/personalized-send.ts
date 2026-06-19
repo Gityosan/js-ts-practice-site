@@ -49,6 +49,11 @@ const grader: StateGraderDef = {
       },
     },
   ],
+  bonusCases: [
+    { label: "forEach で全員に送った", pattern: "\\.forEach\\s*\\(" },
+    { label: "for...of で全員に送った", pattern: "for\\s*\\(.*of\\s" },
+    { label: "+ 演算子で名前を差し込んだ", pattern: "\\+.*様|様.*\\+" },
+  ],
 };
 
 export default grader;

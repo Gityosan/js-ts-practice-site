@@ -80,6 +80,13 @@ self.onmessage = async (e: MessageEvent<{ problemId: string; learnerJs: string }
         }
         self.postMessage({ type: "case", result: { label: a.label, passed } });
       }
+      if (g.bonusCases) {
+        for (const bc of g.bonusCases) {
+          if (new RegExp(bc.pattern).test(learnerJs)) {
+            self.postMessage({ type: "bonus", result: { label: bc.label, passed: true, bonus: true } });
+          }
+        }
+      }
       self.postMessage({ type: "done" });
     }
   } catch (err) {

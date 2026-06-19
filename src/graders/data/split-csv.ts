@@ -33,6 +33,10 @@ const grader: IoGraderDef = {
     },
   ],
   assertMethod: "split",
+  bonusCases: [
+    { label: "正規表現で空白込みの区切りを処理した", pattern: "/[,\\s]" },
+    { label: "trim() で前後の空白を除いた", pattern: "\\.trim\\s*\\(" },
+  ],
 };
 
 export default grader;

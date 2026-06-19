@@ -51,6 +51,10 @@ const grader: IoGraderDef = {
     },
   ],
   assertMethod: "reduce",
+  bonusCases: [
+    { label: "for...of で繰り返した", pattern: "for\\s*\\(.*of\\s" },
+    { label: "forEach で繰り返した", pattern: "\\.forEach\\s*\\(" },
+  ],
 };
 
 export default grader;

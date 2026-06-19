@@ -27,6 +27,10 @@ const grader: IoGraderDef = {
       expected: "様 週次レポート（2024/06/01）",
     },
   ],
+  bonusCases: [
+    { label: "+ 演算子で文字列を連結した", pattern: "[\"'`]\\s*\\+|\\+\\s*[\"'`]" },
+    { label: ".concat() で連結した", pattern: "\\.concat\\s*\\(" },
+  ],
 };
 
 export default grader;

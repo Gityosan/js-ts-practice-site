@@ -40,6 +40,11 @@ const grader: StateGraderDef = {
       },
     },
   ],
+  bonusCases: [
+    { label: "forEach で全員に送った", pattern: "\\.forEach\\s*\\(" },
+    { label: "for...of で全員に送った", pattern: "for\\s*\\(.*of\\s" },
+    { label: "for...in でインデックスを使った", pattern: "for\\s*\\(.*in\\s" },
+  ],
 };
 
 export default grader;

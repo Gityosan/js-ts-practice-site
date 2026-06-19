@@ -40,6 +40,11 @@ const grader: StateGraderDef = {
       },
     },
   ],
+  bonusCases: [
+    { label: "for...of で行を繰り返した", pattern: "for\\s*\\(.*of\\s" },
+    { label: "filter() で条件絞り込みした", pattern: "\\.filter\\s*\\(" },
+    { label: "reduce で条件付き合計した", pattern: "\\.reduce\\s*\\(" },
+  ],
 };
 
 export default grader;

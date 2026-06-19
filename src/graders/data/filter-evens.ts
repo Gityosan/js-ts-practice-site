@@ -13,6 +13,10 @@ const grader: IoGraderDef = {
     { input: [[0, -2, 7]], expected: [0, -2] },
   ],
   assertMethod: "filter",
+  bonusCases: [
+    { label: "ビット演算（& 1）で偶数判定した", pattern: "&\\s*1" },
+    { label: "剰余演算子（%）で偶数判定した", pattern: "%\\s*2" },
+  ],
 };
 
 export default grader;

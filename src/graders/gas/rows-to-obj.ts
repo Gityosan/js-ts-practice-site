@@ -33,6 +33,11 @@ const grader: IoGraderDef = {
       expected: [{ item: "A" }, { item: "B" }, { item: "C" }],
     },
   ],
+  bonusCases: [
+    { label: "Object.fromEntries() を使った", pattern: "Object\\.fromEntries\\s*\\(" },
+    { label: "for...of で行を繰り返した", pattern: "for\\s*\\(.*of\\s" },
+    { label: "reduce でまとめた", pattern: "\\.reduce\\s*\\(" },
+  ],
 };
 
 export default grader;

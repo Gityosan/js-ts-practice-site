@@ -87,10 +87,18 @@ export async function runGrader(problemId: string, learnerTs: string): Promise<G
       }
       results.push({ label: a.label, passed });
     }
+    const stateBonusResults: CaseResult[] = [];
+    if (g.bonusCases) {
+      for (const bc of g.bonusCases) {
+        if (new RegExp(bc.pattern).test(learnerJs)) {
+          stateBonusResults.push({ label: bc.label, passed: true, bonus: true });
+        }
+      }
+    }
     return {
       passed: results.filter((r) => r.passed).length,
       total: results.length,
-      results,
+      results: [...results, ...stateBonusResults],
       status: "ok",
     };
   }

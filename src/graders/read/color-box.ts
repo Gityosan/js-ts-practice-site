@@ -13,6 +13,11 @@ const grader: IoGraderDef = {
       skipValueCheck: true,
     },
   ],
+  bonusCases: [
+    { label: "rgb() で色を指定した", pattern: "rgb\\s*\\(" },
+    { label: "hsl() で色を指定した", pattern: "hsl\\s*\\(" },
+    { label: "16進数カラーコードで指定した", pattern: "#[0-9a-fA-F]{3,6}" },
+  ],
 };
 
 export default grader;

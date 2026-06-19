@@ -27,6 +27,7 @@ export type StateGraderDef = {
   kind: "state";
   setupMocks: () => Record<string, unknown>;
   asserts: StateAssert[];
+  bonusCases?: { label: string; pattern: string }[];
 };
 
 export type GraderDef = IoGraderDef | StateGraderDef;

@@ -12,6 +12,11 @@ const grader: IoGraderDef = {
     { label: "空配列", input: [[]], expected: [] },
     { label: "1 要素", input: [[7]], expected: [7] },
   ],
+  bonusCases: [
+    { label: "Set を使って重複を除いた", pattern: "new Set" },
+    { label: "indexOf() で重複チェックした", pattern: "\\.indexOf\\s*\\(" },
+    { label: "includes() で重複チェックした", pattern: "\\.includes\\s*\\(" },
+  ],
 };
 
 export default grader;

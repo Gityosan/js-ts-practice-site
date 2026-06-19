@@ -45,6 +45,11 @@ const grader: StateGraderDef = {
       },
     },
   ],
+  bonusCases: [
+    { label: "for ループで合計した", pattern: "for\\s*\\(" },
+    { label: "forEach で合計した", pattern: "\\.forEach\\s*\\(" },
+    { label: "reduce で合計した", pattern: "\\.reduce\\s*\\(" },
+  ],
 };
 
 export default grader;

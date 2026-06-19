@@ -13,6 +13,10 @@ const grader: IoGraderDef = {
     { label: "最後だけ正", input: [[-5, -3, 2]], expected: true },
   ],
   assertMethod: "some",
+  bonusCases: [
+    { label: "Math.sign() で正負を判定した", pattern: "Math\\.sign" },
+    { label: "> 0 で正の数を判定した", pattern: ">\\s*0" },
+  ],
 };
 
 export default grader;

@@ -49,6 +49,10 @@ const grader: StateGraderDef = {
       },
     },
   ],
+  bonusCases: [
+    { label: "getElementById() で要素を取得した", pattern: "getElementById\\s*\\(" },
+    { label: "as HTMLInputElement で型アサーションした", pattern: "as\\s+HTMLInputElement" },
+  ],
 };
 
 export default grader;

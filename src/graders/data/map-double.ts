@@ -13,6 +13,10 @@ const grader: IoGraderDef = {
     { input: [[-3, 4]], expected: [-6, 8] },
   ],
   assertMethod: "map",
+  bonusCases: [
+    { label: "n + n で 2 倍にした", pattern: "n\\s*\\+\\s*n" },
+    { label: "ビットシフト（<< 1）で 2 倍にした", pattern: "<<\\s*1" },
+  ],
 };
 
 export default grader;

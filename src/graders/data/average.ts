@@ -12,6 +12,10 @@ const grader: IoGraderDef = {
     { label: "空配列 → 0", input: [[]], expected: 0 },
     { label: "負の数を含む", input: [[-10, 0, 10]], expected: 0 },
   ],
+  bonusCases: [
+    { label: "for ループで合計した", pattern: "for\\s*\\(" },
+    { label: "reduce で合計した", pattern: "\\.reduce\\s*\\(" },
+  ],
 };
 
 export default grader;

@@ -40,6 +40,10 @@ const grader: StateGraderDef = {
       },
     },
   ],
+  bonusCases: [
+    { label: "for...of でループした", pattern: "for\\s*\\(.*of\\s" },
+    { label: "innerText でテキストを取得した", pattern: "\\.innerText" },
+  ],
 };
 
 export default grader;
