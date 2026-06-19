@@ -69,7 +69,7 @@ export function ProblemCard({ problem, solved = false }: Props) {
         <Text fontWeight="bold" fontSize="md" color="gray.800" wordBreak="break-word" overflowWrap="break-word">
           {problem.copy.title}
         </Text>
-        <Text fontSize="xs" color="gray.500" fontFamily="mono">
+        <Text fontSize="xs" color="gray.500" fontFamily="mono" wordBreak="break-all">
           {problem.id}
         </Text>
       </VStack>
