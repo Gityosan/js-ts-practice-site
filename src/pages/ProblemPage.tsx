@@ -13,7 +13,7 @@ import {
   Separator,
 } from "@chakra-ui/react";
 import { AnimatePresence, motion } from "motion/react";
-import { getProblemById } from "../problems";
+import { getProblemById, allProblems } from "../problems";
 import { runGrader } from "../core/grader";
 import { EditorPane, type EditorHandle } from "../components/EditorPane";
 import { TweakPane } from "../components/TweakPane";
@@ -48,6 +48,10 @@ export function ProblemPage() {
   const problem = getProblemById(id);
 
   const isTweak = problem?.stage === "tweak" && !!problem.tweak;
+
+  const currentIndex = allProblems.findIndex((p) => p.id === id);
+  const prevProblem = currentIndex > 0 ? allProblems[currentIndex - 1] : null;
+  const nextProblem = currentIndex < allProblems.length - 1 ? allProblems[currentIndex + 1] : null;
 
   const [code, setCode] = useState(problem?.initialCode ?? "");
   const [tweakCode, setTweakCode] = useState("");
@@ -119,6 +123,27 @@ export function ProblemPage() {
               </Button>
               <Badge colorPalette={stageColor[problem.stage]}>{stageLabel[problem.stage]}</Badge>
               <Badge colorPalette="gray">{problem.scenario}</Badge>
+            </HStack>
+            <HStack gap={2}>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={!prevProblem}
+                onClick={() => prevProblem && navigate({ to: "/problem/$id", params: { id: prevProblem.id } })}
+              >
+                ← 前へ
+              </Button>
+              <Text fontSize="xs" color="gray.400" minW="max-content">
+                {currentIndex + 1} / {allProblems.length}
+              </Text>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={!nextProblem}
+                onClick={() => nextProblem && navigate({ to: "/problem/$id", params: { id: nextProblem.id } })}
+              >
+                次へ →
+              </Button>
             </HStack>
           </HStack>
 
