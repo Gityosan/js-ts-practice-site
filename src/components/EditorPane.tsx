@@ -66,11 +66,13 @@ export const EditorPane = forwardRef<EditorHandle, Props>(function EditorPane(
           minimap: { enabled: false },
           fontSize: 14,
           lineNumbers: "on",
+          lineNumbersMinChars: 3,
           scrollBeyondLastLine: false,
           wordWrap: "on",
           tabSize: 2,
           insertSpaces: true,
           automaticLayout: true,
+          padding: { top: 12, bottom: 12 },
         }}
       />
     </Box>

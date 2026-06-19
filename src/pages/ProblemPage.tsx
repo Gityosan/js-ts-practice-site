@@ -11,7 +11,7 @@ import {
   Badge,
   Separator,
 } from "@chakra-ui/react";
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { getProblemById } from "../problems";
 import { runGrader } from "../core/grader";
 import { EditorPane, type EditorHandle } from "../components/EditorPane";
@@ -23,6 +23,9 @@ import { problemRoute } from "../router";
 import { markSolved } from "../lib/progress";
 
 const MotionButton = motion.create(Button);
+const MotionDiv = motion.create(
+  "div" as unknown as React.ComponentType<React.HTMLAttributes<HTMLDivElement>>,
+);
 
 const stageLabel: Record<string, string> = {
   read: "読む",
@@ -65,7 +68,7 @@ export function ProblemPage() {
           setRunError("すべての空欄を埋めてから実行してね。");
           return;
         }
-        jsCode = tweakCode; // tweak は組み立て済みの実行可能 JS
+        jsCode = tweakCode;
       } else {
         jsCode = (await editorRef.current?.getTranspiledJs()) ?? code;
       }
@@ -89,7 +92,7 @@ export function ProblemPage() {
     setCode(problem.initialCode);
     setResult(null);
     setRunError(undefined);
-    if (isTweak) setTweakResetKey((k) => k + 1); // パズルをシャッフルし直す
+    if (isTweak) setTweakResetKey((k) => k + 1);
   }, [problem, isTweak]);
 
   if (!problem) {
@@ -118,10 +121,10 @@ export function ProblemPage() {
             </HStack>
           </HStack>
 
-          {/* Main 3-column layout */}
+          {/* Main 2-column layout: 3:7 */}
           <Box
             display="grid"
-            gridTemplateColumns={{ base: "1fr", lg: "340px 1fr 300px" }}
+            gridTemplateColumns={{ base: "1fr", lg: "3fr 7fr" }}
             gap={5}
             alignItems="start"
           >
@@ -143,6 +146,7 @@ export function ProblemPage() {
                       marginTop: "12px",
                       marginBottom: "4px",
                     },
+                    "& strong": { fontWeight: "bold" },
                     "& code": {
                       background: "#f3f4f6",
                       borderRadius: "3px",
@@ -154,9 +158,17 @@ export function ProblemPage() {
                       background: "#1e1e1e",
                       color: "#d4d4d4",
                       borderRadius: "6px",
-                      padding: "10px",
+                      padding: "10px 12px",
                       overflow: "auto",
                       fontSize: "0.8rem",
+                      lineHeight: "1.6",
+                    },
+                    "& pre code": {
+                      background: "transparent",
+                      padding: 0,
+                      fontSize: "inherit",
+                      color: "inherit",
+                      borderRadius: 0,
                     },
                     "& ul": { paddingLeft: "20px" },
                     "& p": { margin: "4px 0" },
@@ -179,48 +191,44 @@ export function ProblemPage() {
               </VStack>
             </Box>
 
-            {/* Center: Editor or Tweak puzzle */}
-            <Box>
-              <VStack align="stretch" gap={3}>
-                {isTweak ? (
-                  <Box
-                    bg="white"
-                    borderRadius="md"
-                    border="1px solid"
-                    borderColor="gray.200"
-                    p={4}
-                    minH="420px"
-                  >
-                    <TweakPane
-                      key={tweakResetKey}
-                      tweak={problem.tweak!}
-                      onChange={setTweakCode}
-                    />
-                  </Box>
-                ) : (
-                  <EditorPane ref={editorRef} value={code} onChange={setCode} height="420px" />
-                )}
-                <HStack gap={3}>
-                  <MotionButton
-                    colorPalette="blue"
-                    onClick={handleRun}
-                    disabled={running}
-                    flex={1}
-                    fontFamily="mono"
-                    whileTap={{ scale: 0.95 }}
-                    whileHover={{ scale: 1.02 }}
-                  >
-                    ▶ 実行
-                  </MotionButton>
-                  <Button variant="outline" onClick={handleReset} disabled={running}>
-                    {isTweak ? "シャッフル" : "リセット"}
-                  </Button>
-                </HStack>
-              </VStack>
-            </Box>
-
-            {/* Right: Visual output (read stage) + Results */}
+            {/* Right: Editor + Results stacked */}
             <VStack align="stretch" gap={3}>
+              {isTweak ? (
+                <Box
+                  bg="white"
+                  borderRadius="md"
+                  border="1px solid"
+                  borderColor="gray.200"
+                  p={4}
+                  minH="420px"
+                >
+                  <TweakPane
+                    key={tweakResetKey}
+                    tweak={problem.tweak!}
+                    onChange={setTweakCode}
+                  />
+                </Box>
+              ) : (
+                <EditorPane ref={editorRef} value={code} onChange={setCode} height="420px" />
+              )}
+
+              <HStack gap={3}>
+                <MotionButton
+                  colorPalette="blue"
+                  onClick={handleRun}
+                  disabled={running}
+                  flex={1}
+                  fontFamily="mono"
+                  whileTap={{ scale: 0.95 }}
+                  whileHover={{ scale: 1.02 }}
+                >
+                  ▶ 実行
+                </MotionButton>
+                <Button variant="outline" onClick={handleReset} disabled={running}>
+                  {isTweak ? "シャッフル" : "リセット"}
+                </Button>
+              </HStack>
+
               {problem.stage === "read" && result?.results[0]?.output !== undefined && (
                 <Box
                   bg="white"
@@ -235,19 +243,17 @@ export function ProblemPage() {
                     </Text>
                   </Box>
                   <Box p={3}>
-                    <VisualOutput
-                      problemId={problem.id}
-                      output={result.results[0].output}
-                    />
+                    <VisualOutput problemId={problem.id} output={result.results[0].output} />
                   </Box>
                 </Box>
               )}
+
               <Box
                 bg="white"
                 borderRadius="lg"
                 border="1px solid"
                 borderColor="gray.200"
-                minH="200px"
+                minH="120px"
               >
                 <Box p={3} borderBottom="1px solid" borderColor="gray.100">
                   <Text fontSize="sm" fontWeight="bold" color="gray.600">
@@ -310,38 +316,52 @@ function MarkdownLite({ source }: { source: string }) {
 }
 
 function renderInline(text: string): React.ReactNode {
-  const parts = text.split(/(`[^`]+`)/g);
-  return parts.map((part, i) =>
-    part.startsWith("`") && part.endsWith("`") ? <code key={i}>{part.slice(1, -1)}</code> : part,
-  );
+  const parts = text.split(/(`[^`]+`|\*\*[^*]+\*\*)/g);
+  return parts.map((part, i) => {
+    if (part.startsWith("`") && part.endsWith("`")) return <code key={i}>{part.slice(1, -1)}</code>;
+    if (part.startsWith("**") && part.endsWith("**")) return <strong key={i}>{part.slice(2, -2)}</strong>;
+    return part;
+  });
 }
 
 function HintBox({ hint, index }: { hint: string; index: number }) {
   const [open, setOpen] = useState(false);
   return (
-    <Box
-      border="1px solid"
-      borderColor="blue.100"
-      borderRadius="md"
-      overflow="hidden"
-      fontSize="xs"
-    >
+    <Box border="1px solid" borderColor="blue.100" borderRadius="md" overflow="hidden" fontSize="xs">
       <Box
         p={2}
         bg="blue.50"
         cursor="pointer"
         onClick={() => setOpen((v) => !v)}
         _hover={{ bg: "blue.100" }}
+        userSelect="none"
       >
-        <Text color="blue.700">
-          {open ? "▼" : "▶"} ヒント {index + 1}
-        </Text>
+        <HStack gap={2}>
+          <motion.span
+            animate={{ rotate: open ? 90 : 0 }}
+            transition={{ duration: 0.18, ease: "easeOut" }}
+            style={{ display: "inline-block", color: "var(--chakra-colors-blue-500)" }}
+          >
+            ▶
+          </motion.span>
+          <Text color="blue.700">ヒント {index + 1}</Text>
+        </HStack>
       </Box>
-      {open && (
-        <Box p={2} color="gray.700">
-          {renderInline(hint)}
-        </Box>
-      )}
+      <AnimatePresence initial={false}>
+        {open && (
+          <MotionDiv
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2, ease: "easeInOut" }}
+            style={{ overflow: "hidden" }}
+          >
+            <Box p={2} color="gray.700" borderTop="1px solid" borderColor="blue.50">
+              {renderInline(hint)}
+            </Box>
+          </MotionDiv>
+        )}
+      </AnimatePresence>
     </Box>
   );
 }
