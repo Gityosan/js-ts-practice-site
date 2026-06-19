@@ -15,9 +15,10 @@ export function runGrader(problemId: string, learnerJs: string): Promise<GradeRe
     const finish = (status: GradeResult["status"], error?: string) => {
       clearTimeout(timer);
       worker.terminate();
+      const normalResults = results.filter((r) => !r.bonus);
       resolve({
-        passed: results.filter((r) => r.passed).length,
-        total: Math.max(total, results.length),
+        passed: normalResults.filter((r) => r.passed).length,
+        total: Math.max(total, normalResults.length),
         results,
         status,
         error,
@@ -38,7 +39,7 @@ export function runGrader(problemId: string, learnerJs: string): Promise<GradeRe
       if (m.type === "meta") {
         total = m.total;
         arm();
-      } else if (m.type === "case") {
+      } else if (m.type === "case" || m.type === "bonus") {
         results.push(m.result);
         arm();
       } else if (m.type === "done") {

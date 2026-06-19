@@ -1,4 +1,5 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
+import { getHighlighter } from "../lib/highlighter";
 import { useNavigate } from "@tanstack/react-router";
 import {
   Box,
@@ -11,12 +12,21 @@ import {
   Badge,
   Separator,
 } from "@chakra-ui/react";
-import { getProblemById } from "../problems";
+import { AnimatePresence, motion } from "motion/react";
+import { getProblemById, allProblems } from "../problems";
 import { runGrader } from "../core/grader";
 import { EditorPane, type EditorHandle } from "../components/EditorPane";
+import { TweakPane } from "../components/TweakPane";
 import { ResultPanel } from "../components/ResultPanel";
+import { VisualOutput } from "../components/VisualOutput";
 import type { GradeResult } from "../grade/types";
 import { problemRoute } from "../router";
+import { markSolved } from "../lib/progress";
+
+const MotionButton = motion.create(Button);
+const MotionDiv = motion.create(
+  "div" as unknown as React.ComponentType<React.HTMLAttributes<HTMLDivElement>>,
+);
 
 const stageLabel: Record<string, string> = {
   read: "読む",
@@ -26,10 +36,10 @@ const stageLabel: Record<string, string> = {
 };
 
 const stageColor: Record<string, string> = {
-  read: "blue",
-  tweak: "purple",
-  fill: "orange",
-  write: "red",
+  read: "cyan",
+  tweak: "indigo",
+  fill: "teal",
+  write: "purple",
 };
 
 export function ProblemPage() {
@@ -37,7 +47,15 @@ export function ProblemPage() {
   const navigate = useNavigate();
   const problem = getProblemById(id);
 
+  const isTweak = problem?.stage === "tweak" && !!problem.tweak;
+
+  const currentIndex = allProblems.findIndex((p) => p.id === id);
+  const prevProblem = currentIndex > 0 ? allProblems[currentIndex - 1] : null;
+  const nextProblem = currentIndex < allProblems.length - 1 ? allProblems[currentIndex + 1] : null;
+
   const [code, setCode] = useState(problem?.initialCode ?? "");
+  const [tweakCode, setTweakCode] = useState("");
+  const [tweakResetKey, setTweakResetKey] = useState(0);
   const [result, setResult] = useState<GradeResult | null>(null);
   const [running, setRunning] = useState(false);
   const [runError, setRunError] = useState<string | undefined>();
@@ -49,7 +67,16 @@ export function ProblemPage() {
     setResult(null);
     setRunError(undefined);
     try {
-      const jsCode = (await editorRef.current?.getTranspiledJs()) ?? code;
+      let jsCode: string;
+      if (isTweak) {
+        if (tweakCode.includes("___")) {
+          setRunError("すべての空欄を埋めてから実行してね。");
+          return;
+        }
+        jsCode = tweakCode;
+      } else {
+        jsCode = (await editorRef.current?.getTranspiledJs()) ?? code;
+      }
       const r = await runGrader(problem.id, jsCode);
       setResult(r);
     } catch (e: unknown) {
@@ -57,14 +84,21 @@ export function ProblemPage() {
     } finally {
       setRunning(false);
     }
-  }, [problem, code]);
+  }, [problem, code, isTweak, tweakCode]);
+
+  useEffect(() => {
+    if (result && result.passed === result.total && result.total > 0) {
+      markSolved(problem!.id);
+    }
+  }, [result, problem]);
 
   const handleReset = useCallback(() => {
     if (!problem) return;
     setCode(problem.initialCode);
     setResult(null);
     setRunError(undefined);
-  }, [problem]);
+    if (isTweak) setTweakResetKey((k) => k + 1);
+  }, [problem, isTweak]);
 
   if (!problem) {
     return (
@@ -90,17 +124,46 @@ export function ProblemPage() {
               <Badge colorPalette={stageColor[problem.stage]}>{stageLabel[problem.stage]}</Badge>
               <Badge colorPalette="gray">{problem.scenario}</Badge>
             </HStack>
+            <HStack gap={2}>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={!prevProblem}
+                onClick={() => prevProblem && navigate({ to: "/problem/$id", params: { id: prevProblem.id } })}
+              >
+                ← 前へ
+              </Button>
+              <Text fontSize="xs" color="gray.400" minW="max-content">
+                {currentIndex + 1} / {allProblems.length}
+              </Text>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={!nextProblem}
+                onClick={() => nextProblem && navigate({ to: "/problem/$id", params: { id: nextProblem.id } })}
+              >
+                次へ →
+              </Button>
+            </HStack>
           </HStack>
 
-          {/* Main 3-column layout */}
+          {/* Main 2-column layout: 3:7 */}
           <Box
             display="grid"
-            gridTemplateColumns={{ base: "1fr", lg: "340px 1fr 300px" }}
+            gridTemplateColumns={{ base: "1fr", lg: "3fr 7fr" }}
             gap={5}
             alignItems="start"
           >
             {/* Left: Problem description */}
-            <Box bg="white" borderRadius="lg" borderWidth="1px" borderStyle="solid" borderColor="gray.200" p={5} minWidth="0">
+            <Box
+              bg="white"
+              borderRadius="lg"
+              borderWidth="1px"
+              borderStyle="solid"
+              borderColor="gray.200"
+              p={5}
+              minWidth="0"
+            >
               <VStack align="stretch" gap={3}>
                 <Heading size="md" color="gray.800" wordBreak="break-word">
                   {problem.copy.title}
@@ -119,8 +182,9 @@ export function ProblemPage() {
                       marginTop: "12px",
                       marginBottom: "4px",
                     },
+                    "& strong": { fontWeight: "bold" },
                     "& code": {
-                      background: "#f3f4f6",
+                      background: "#eaf0f8",
                       borderRadius: "3px",
                       padding: "0 4px",
                       fontFamily: "monospace",
@@ -130,9 +194,24 @@ export function ProblemPage() {
                       background: "#1e1e1e",
                       color: "#d4d4d4",
                       borderRadius: "6px",
-                      padding: "10px",
+                      padding: "10px 12px",
                       overflow: "auto",
                       fontSize: "0.8rem",
+                      lineHeight: "1.6",
+                    },
+                    "& pre code": {
+                      background: "transparent",
+                      padding: 0,
+                      fontSize: "inherit",
+                      color: "inherit",
+                      borderRadius: 0,
+                    },
+                    "& .shiki": {
+                      borderRadius: "6px",
+                      padding: "10px 12px",
+                      overflow: "auto",
+                      fontSize: "0.8rem",
+                      lineHeight: "1.6",
                     },
                     "& ul": { paddingLeft: "20px" },
                     "& p": { margin: "4px 0" },
@@ -171,46 +250,121 @@ export function ProblemPage() {
               </VStack>
             </Box>
 
-            {/* Center: Editor */}
-            <Box>
-              <VStack align="stretch" gap={3}>
+            {/* Right: Editor + Results stacked */}
+            <VStack align="stretch" gap={3}>
+              {isTweak ? (
+                <Box
+                  bg="white"
+                  borderRadius="md"
+                  borderWidth="1px"
+                  borderStyle="solid"
+                  borderColor="gray.200"
+                  p={4}
+                  minH="420px"
+                >
+                  <TweakPane
+                    key={tweakResetKey}
+                    tweak={problem.tweak!}
+                    onChange={setTweakCode}
+                  />
+                </Box>
+              ) : (
                 <EditorPane ref={editorRef} value={code} onChange={setCode} height="420px" />
-                <HStack gap={3}>
-                  <Button
-                    colorPalette="blue"
-                    onClick={handleRun}
-                    disabled={running}
-                    flex={1}
-                    fontFamily="mono"
-                  >
-                    ▶ 実行
-                  </Button>
-                  <Button variant="outline" onClick={handleReset} disabled={running}>
-                    リセット
-                  </Button>
-                </HStack>
-              </VStack>
-            </Box>
+              )}
 
-            {/* Right: Results */}
-            <Box
-              bg="white"
-              borderRadius="lg"
-              borderWidth="1px" borderStyle="solid"
-              borderColor="gray.200"
-              minH="200px"
-            >
-              <Box p={3} borderBottomWidth="1px" borderBottomStyle="solid" borderColor="gray.100">
-                <Text fontSize="sm" fontWeight="bold" color="gray.600">
-                  採点結果
-                </Text>
+              <HStack gap={3}>
+                <MotionButton
+                  colorPalette="blue"
+                  onClick={handleRun}
+                  disabled={running}
+                  flex={1}
+                  fontFamily="mono"
+                  whileTap={{ scale: 0.95 }}
+                  whileHover={{ scale: 1.02 }}
+                >
+                  ▶ 実行
+                </MotionButton>
+                <Button variant="outline" onClick={handleReset} disabled={running}>
+                  {isTweak ? "シャッフル" : "リセット"}
+                </Button>
+              </HStack>
+
+              {problem.stage === "read" && result?.results[0]?.output !== undefined && (
+                <Box
+                  bg="white"
+                  borderRadius="lg"
+                  borderWidth="1px"
+                  borderStyle="solid"
+                  borderColor="gray.200"
+                  overflow="hidden"
+                >
+                  <Box p={3} borderBottomWidth="1px" borderBottomStyle="solid" borderColor="gray.100">
+                    <Text fontSize="sm" fontWeight="bold" color="gray.600">
+                      出力プレビュー
+                    </Text>
+                  </Box>
+                  <Box p={3}>
+                    <VisualOutput problemId={problem.id} output={result.results[0].output} />
+                  </Box>
+                </Box>
+              )}
+
+              <Box
+                bg="white"
+                borderRadius="lg"
+                borderWidth="1px"
+                borderStyle="solid"
+                borderColor="gray.200"
+                minH="120px"
+              >
+                <Box p={3} borderBottomWidth="1px" borderBottomStyle="solid" borderColor="gray.100">
+                  <Text fontSize="sm" fontWeight="bold" color="gray.600">
+                    採点結果
+                  </Text>
+                </Box>
+                <ResultPanel result={result} running={running} error={runError} />
               </Box>
-              <ResultPanel result={result} running={running} error={runError} />
-            </Box>
+            </VStack>
           </Box>
         </VStack>
       </Container>
     </Box>
+  );
+}
+
+function ShikiBlock({ code, lang }: { code: string; lang: string }) {
+  const [html, setHtml] = useState<string>("");
+
+  useEffect(() => {
+    getHighlighter().then((h) => {
+      const resolvedLang = h.getLoadedLanguages().includes(lang as never) ? lang : "text";
+      setHtml(h.codeToHtml(code, { lang: resolvedLang, theme: "github-dark" }));
+    });
+  }, [code, lang]);
+
+  if (!html) {
+    return (
+      <pre
+        style={{
+          background: "#24292e",
+          color: "#e1e4e8",
+          borderRadius: "6px",
+          padding: "10px 12px",
+          overflow: "auto",
+          fontSize: "0.8rem",
+          lineHeight: "1.6",
+          margin: "4px 0",
+        }}
+      >
+        <code>{code}</code>
+      </pre>
+    );
+  }
+  return (
+    <div
+      dangerouslySetInnerHTML={{ __html: html }}
+      style={{ margin: "4px 0" }}
+    />
   );
 }
 
@@ -230,6 +384,7 @@ function MarkdownLite({ source }: { source: string }) {
   const elements: React.ReactNode[] = [];
   let inCode = false;
   let codeLines: string[] = [];
+  let codeLang = "text";
   let key = 0;
   let i = 0;
 
@@ -238,14 +393,12 @@ function MarkdownLite({ source }: { source: string }) {
 
     if (line.startsWith("```")) {
       if (inCode) {
-        elements.push(
-          <pre key={key++}>
-            <code>{codeLines.join("\n")}</code>
-          </pre>,
-        );
+        elements.push(<ShikiBlock key={key++} code={codeLines.join("\n")} lang={codeLang} />);
         codeLines = [];
+        codeLang = "text";
         inCode = false;
       } else {
+        codeLang = line.slice(3).trim() || "text";
         inCode = true;
       }
       i++;
@@ -264,7 +417,6 @@ function MarkdownLite({ source }: { source: string }) {
         tableLines.push(lines[i]);
         i++;
       }
-      // find separator row index
       const sepIdx = tableLines.findIndex(isTableSeparator);
       const headerLines = sepIdx > 0 ? tableLines.slice(0, sepIdx) : tableLines.slice(0, 1);
       const bodyLines = sepIdx >= 0 ? tableLines.slice(sepIdx + 1) : tableLines.slice(1);
@@ -317,38 +469,52 @@ function MarkdownLite({ source }: { source: string }) {
 }
 
 function renderInline(text: string): React.ReactNode {
-  const parts = text.split(/(`[^`]+`)/g);
-  return parts.map((part, i) =>
-    part.startsWith("`") && part.endsWith("`") ? <code key={i}>{part.slice(1, -1)}</code> : part,
-  );
+  const parts = text.split(/(`[^`]+`|\*\*[^*]+\*\*)/g);
+  return parts.map((part, i) => {
+    if (part.startsWith("`") && part.endsWith("`")) return <code key={i}>{part.slice(1, -1)}</code>;
+    if (part.startsWith("**") && part.endsWith("**")) return <strong key={i}>{part.slice(2, -2)}</strong>;
+    return part;
+  });
 }
 
 function HintBox({ hint, index }: { hint: string; index: number }) {
   const [open, setOpen] = useState(false);
   return (
-    <Box
-      borderWidth="1px" borderStyle="solid"
-      borderColor="blue.100"
-      borderRadius="md"
-      overflow="hidden"
-      fontSize="xs"
-    >
+    <Box borderWidth="1px" borderStyle="solid" borderColor="blue.100" borderRadius="md" overflow="hidden" fontSize="xs">
       <Box
         p={2}
         bg="blue.50"
         cursor="pointer"
         onClick={() => setOpen((v) => !v)}
         _hover={{ bg: "blue.100" }}
+        userSelect="none"
       >
-        <Text color="blue.700">
-          {open ? "▼" : "▶"} ヒント {index + 1}
-        </Text>
+        <HStack gap={2}>
+          <motion.span
+            animate={{ rotate: open ? 90 : 0 }}
+            transition={{ duration: 0.18, ease: "easeOut" }}
+            style={{ display: "inline-block", color: "var(--chakra-colors-blue-500)" }}
+          >
+            ▶
+          </motion.span>
+          <Text color="blue.700">ヒント {index + 1}</Text>
+        </HStack>
       </Box>
-      {open && (
-        <Box p={2} color="gray.700">
-          {renderInline(hint)}
-        </Box>
-      )}
+      <AnimatePresence initial={false}>
+        {open && (
+          <MotionDiv
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2, ease: "easeInOut" }}
+            style={{ overflow: "hidden" }}
+          >
+            <Box p={2} color="gray.700" borderTopWidth="1px" borderTopStyle="solid" borderColor="blue.50">
+              {renderInline(hint)}
+            </Box>
+          </MotionDiv>
+        )}
+      </AnimatePresence>
     </Box>
   );
 }

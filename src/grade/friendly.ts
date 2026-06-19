@@ -17,6 +17,23 @@ const rules: Rule[] = [
       `空（${m[1]}）の値のプロパティを読もうとしています。先に「あるか」を確かめてみましょう。`,
   },
   {
+    name: "TypeError",
+    re: /Assignment to constant variable/,
+    format: () =>
+      `const で宣言した変数には値を代入できません。変えたいなら let を使いましょう。`,
+  },
+  {
+    re: /Reduce of empty array with no initial value/,
+    format: () =>
+      `空の配列に対して reduce() を使いましたが、初期値がありません。第 2 引数（例: \`, 0\`）を追加しましょう。`,
+  },
+  {
+    name: "RangeError",
+    re: /Maximum call stack size exceeded/,
+    format: () =>
+      `関数が自分自身を呼び続けて止まらなくなっています（無限再帰）。終了条件（ベースケース）を確認しましょう。`,
+  },
+  {
     name: "SyntaxError",
     re: /.*/,
     format: () =>

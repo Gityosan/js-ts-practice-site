@@ -1,10 +1,82 @@
 import type { ProblemMeta } from "../core/schemas";
+
 import sumNumbers from "./data/sum-numbers";
 import filterEvens from "./data/filter-evens";
 import mapDouble from "./data/map-double";
 import sumSales from "./data/sum-sales";
+import findProduct from "./data/find-product";
+import somePositive from "./data/some-positive";
+import sortNames from "./data/sort-names";
+import entriesTax from "./data/entries-tax";
+import splitCsv from "./data/split-csv";
+import replaceTemplate from "./data/replace-template";
+import gasSum from "./gas/sum-column";
+import emailWeekly from "./email/weekly-report";
+import starCount from "./read/star-count";
+import readGreeting from "./read/greeting";
+import readProgress from "./read/progress";
+import readColorBox from "./read/color-box";
+import readBoolLight from "./read/bool-light";
+import average from "./data/average";
+import maxValue from "./data/max-value";
+import unique from "./data/unique";
+import groupSum from "./data/group-sum";
+import tweakKeywordSum from "./tweak/keyword-sum";
+import tweakParsonsFilter from "./tweak/parsons-filter";
+import tweakMethodDouble from "./tweak/method-double";
+import tweakGasParsons from "./tweak/gas-parsons";
+import tweakEmailChoice from "./tweak/email-choice";
+import tweakChromeChoice from "./tweak/chrome-choice";
+import chromeFillForm from "./chrome/fill-form";
+import chromeGetText from "./chrome/get-text";
+import gasConditionalSum from "./gas/conditional-sum";
+import gasRowsToObj from "./gas/rows-to-obj";
+import emailPersonalized from "./email/personalized-send";
+import emailMakeSubject from "./email/make-subject";
 
-export const allProblems: ProblemMeta[] = [sumNumbers, filterEvens, mapDouble, sumSales];
+export const allProblems: ProblemMeta[] = [
+  // read
+  starCount,
+  readGreeting,
+  readProgress,
+  readColorBox,
+  readBoolLight,
+  // tweak
+  tweakKeywordSum,
+  tweakParsonsFilter,
+  tweakMethodDouble,
+  tweakGasParsons,
+  tweakEmailChoice,
+  tweakChromeChoice,
+  // fill / data（メソッド練習帳）
+  sumNumbers,
+  filterEvens,
+  mapDouble,
+  findProduct,
+  somePositive,
+  sortNames,
+  entriesTax,
+  splitCsv,
+  replaceTemplate,
+  // fill / 総合問題
+  sumSales,
+  // fill / gas
+  gasSum,
+  gasConditionalSum,
+  // fill / email
+  emailWeekly,
+  emailPersonalized,
+  // fill / chrome
+  chromeFillForm,
+  chromeGetText,
+  // write
+  average,
+  maxValue,
+  unique,
+  groupSum,
+  gasRowsToObj,
+  emailMakeSubject,
+];
 
 export function getProblemById(id: string): ProblemMeta | undefined {
   return allProblems.find((p) => p.id === id);

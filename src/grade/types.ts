@@ -6,6 +6,7 @@ export type IoCase = {
   expected: unknown;
   epsilon?: number;
   unordered?: boolean;
+  skipValueCheck?: boolean; // read ステージ用: スキーマ合格で OK、値は問わない
 };
 
 export type IoGraderDef = {
@@ -13,6 +14,8 @@ export type IoGraderDef = {
   entry?: string;
   outputSchema?: z.ZodType;
   cases: IoCase[];
+  assertMethod?: string; // 練習帳用: 学習者コードが指定メソッドを呼んでいるか確認 (例: "map", "filter")
+  bonusCases?: { label: string; pattern: string }[]; // 裏回答検出: パターンにマッチしたら bonus フラグ付きで結果に追加
 };
 
 export type StateAssert = {
@@ -24,11 +27,12 @@ export type StateGraderDef = {
   kind: "state";
   setupMocks: () => Record<string, unknown>;
   asserts: StateAssert[];
+  bonusCases?: { label: string; pattern: string }[];
 };
 
 export type GraderDef = IoGraderDef | StateGraderDef;
 
-export type CaseResult = { label: string; passed: boolean; detail?: string };
+export type CaseResult = { label: string; passed: boolean; detail?: string; output?: unknown; bonus?: boolean };
 
 export type GradeResult = {
   passed: number;
