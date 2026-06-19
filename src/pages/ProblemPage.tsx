@@ -100,7 +100,7 @@ export function ProblemPage() {
             alignItems="start"
           >
             {/* Left: Problem description */}
-            <Box bg="white" borderRadius="lg" border="1px solid" borderColor="gray.200" p={5} minWidth="0">
+            <Box bg="white" borderRadius="lg" borderWidth="1px" borderStyle="solid" borderColor="gray.200" p={5} minWidth="0">
               <VStack align="stretch" gap={3}>
                 <Heading size="md" color="gray.800" wordBreak="break-word">
                   {problem.copy.title}
@@ -196,11 +196,11 @@ export function ProblemPage() {
             <Box
               bg="white"
               borderRadius="lg"
-              border="1px solid"
+              borderWidth="1px" borderStyle="solid"
               borderColor="gray.200"
               minH="200px"
             >
-              <Box p={3} borderBottom="1px solid" borderColor="gray.100">
+              <Box p={3} borderBottomWidth="1px" borderBottomStyle="solid" borderColor="gray.100">
                 <Text fontSize="sm" fontWeight="bold" color="gray.600">
                   採点結果
                 </Text>
@@ -327,7 +327,7 @@ function HintBox({ hint, index }: { hint: string; index: number }) {
   const [open, setOpen] = useState(false);
   return (
     <Box
-      border="1px solid"
+      borderWidth="1px" borderStyle="solid"
       borderColor="blue.100"
       borderRadius="md"
       overflow="hidden"

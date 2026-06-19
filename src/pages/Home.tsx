@@ -40,7 +40,8 @@ export function Home() {
                   p={4}
                   bg="white"
                   borderRadius="lg"
-                  border="1px solid"
+                  borderWidth="1px"
+                  borderStyle="solid"
                   borderColor="gray.200"
                   opacity={s.key === "fill" ? 1 : 0.55}
                 >
@@ -78,7 +79,7 @@ export function Home() {
           </Box>
 
           {/* Footer */}
-          <Box pt={6} borderTop="1px solid" borderColor="gray.200" textAlign="center">
+          <Box pt={6} borderTopWidth="1px" borderTopStyle="solid" borderColor="gray.200" textAlign="center">
             <Text fontSize="xs" color="gray.400">
               採点は振る舞いで判定。reduce でも for でも、動けば正解。
             </Text>

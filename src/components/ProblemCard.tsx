@@ -31,7 +31,7 @@ export function ProblemCard({ problem }: Props) {
   return (
     <Box
       p={5}
-      border="1px solid"
+      borderWidth="1px" borderStyle="solid"
       borderColor="gray.200"
       borderRadius="lg"
       bg="white"

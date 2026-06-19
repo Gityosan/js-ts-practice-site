@@ -21,7 +21,7 @@ export function ResultPanel({ result, running, error }: Props) {
 
   if (error) {
     return (
-      <Box p={4} bg="red.50" borderRadius="md" border="1px solid" borderColor="red.200">
+      <Box p={4} bg="red.50" borderRadius="md" borderWidth="1px" borderStyle="solid" borderColor="red.200">
         <Text color="red.700" fontFamily="mono" fontSize="sm" whiteSpace="pre-wrap">
           {error}
         </Text>
@@ -60,7 +60,7 @@ export function ResultPanel({ result, running, error }: Props) {
       </HStack>
 
       {result.status === "error" && result.error && (
-        <Box bg="red.50" borderRadius="md" p={3} border="1px solid" borderColor="red.200">
+        <Box bg="red.50" borderRadius="md" p={3} borderWidth="1px" borderStyle="solid" borderColor="red.200">
           <Text fontSize="xs" color="red.700" fontFamily="mono">
             {result.error}
           </Text>
@@ -74,7 +74,7 @@ export function ResultPanel({ result, running, error }: Props) {
             p={3}
             borderRadius="md"
             bg={r.passed ? "green.50" : "red.50"}
-            border="1px solid"
+            borderWidth="1px" borderStyle="solid"
             borderColor={r.passed ? "green.200" : "red.200"}
           >
             <HStack>
