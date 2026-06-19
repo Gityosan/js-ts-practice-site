@@ -15,6 +15,27 @@ type Props = {
   height?: string;
 };
 
+/**
+ * Lightweight TS→JS stripper for the simple annotation patterns used in this project.
+ * Used as a fallback when Monaco's emit output is unavailable.
+ */
+function fallbackStripTs(src: string): string {
+  // Remove type alias / interface declarations (whole line)
+  let out = src
+    .split("\n")
+    .map((line) => (/^\s*(type|interface)\s+\w+/.test(line) ? "" : line))
+    .join("\n");
+  // Remove "as TypeName" type assertions
+  out = out.replace(/\s+as\s+[\w<>[\]]+/g, "");
+  // Remove generic type args on calls: .method<Type>( or Constructor<Type>(
+  out = out.replace(/([\w])<([\w<>[\] |,]+)>\s*\(/g, "$1(");
+  // Remove return type annotation before { or ;
+  out = out.replace(/\)\s*:\s*[\w<>[\] |,]+\s*(?=[{;])/g, ")");
+  // Remove parameter type annotations: param: Type before , or )
+  out = out.replace(/(\b\w+)\s*\??\s*:\s*[\w<>[\] |,]+(?=[,)])/g, "$1");
+  return out;
+}
+
 export const EditorPane = forwardRef<EditorHandle, Props>(function EditorPane(
   { value, onChange, height = "400px" },
   ref,
@@ -24,18 +45,22 @@ export const EditorPane = forwardRef<EditorHandle, Props>(function EditorPane(
   useImperativeHandle(ref, () => ({
     async getTranspiledJs(): Promise<string> {
       const editor = editorRef.current;
-      if (!editor) return value;
+      const currentCode = editor?.getModel()?.getValue() ?? value;
+
+      if (!editor) return fallbackStripTs(value);
 
       const model = editor.getModel();
-      if (!model) return value;
+      if (!model) return fallbackStripTs(value);
 
       try {
         const getWorker = await monacoTs.getTypeScriptWorker();
         const client = await getWorker(model.uri);
         const output = await client.getEmitOutput(model.uri.toString());
-        return output.outputFiles[0]?.text ?? value;
+        const js = output.outputFiles[0]?.text;
+        // If Monaco returned valid JS, use it; otherwise strip TS annotations as fallback
+        return js && js.trim() ? js : fallbackStripTs(currentCode);
       } catch {
-        return value;
+        return fallbackStripTs(currentCode);
       }
     },
   }));
@@ -47,6 +72,9 @@ export const EditorPane = forwardRef<EditorHandle, Props>(function EditorPane(
         language="typescript"
         value={value}
         theme="vs-dark"
+        // path="solve.ts" ensures Monaco registers the model with a .ts URI so the
+        // TypeScript language service recognizes it and getEmitOutput produces JS output.
+        path="solve.ts"
         onChange={(v) => onChange(v ?? "")}
         onMount={(editor) => {
           editorRef.current = editor;
