@@ -23,16 +23,16 @@ self.onmessage = async (e: MessageEvent<{ problemId: string; learnerJs: string }
             });
             continue;
           }
-          const ok = deepEqual(out, c.expected, {
-            epsilon: c.epsilon ?? 1e-9,
-            unordered: c.unordered,
-          });
+          const ok = c.skipValueCheck
+            ? true
+            : deepEqual(out, c.expected, { epsilon: c.epsilon ?? 1e-9, unordered: c.unordered });
           self.postMessage({
             type: "case",
             result: {
               label,
               passed: ok,
               detail: ok ? undefined : `期待 ${fmt(c.expected)} / 実際 ${fmt(out)}`,
+              output: c.skipValueCheck ? out : undefined,
             },
           });
         } catch (err) {

@@ -23,31 +23,38 @@ const scenarioLabel: Record<string, string> = {
   chrome: "Chrome拡張",
 };
 
-type Props = { problem: ProblemMeta };
+type Props = { problem: ProblemMeta; solved?: boolean };
 
-export function ProblemCard({ problem }: Props) {
+export function ProblemCard({ problem, solved = false }: Props) {
   const navigate = useNavigate();
 
   return (
     <Box
       p={5}
       border="1px solid"
-      borderColor="gray.200"
+      borderColor={solved ? "green.300" : "gray.200"}
       borderRadius="lg"
-      bg="white"
+      bg={solved ? "green.50" : "white"}
       cursor="pointer"
-      _hover={{ borderColor: "blue.400", shadow: "sm" }}
+      _hover={{ borderColor: solved ? "green.400" : "blue.400", shadow: "sm" }}
       transition="all 0.15s"
       onClick={() => navigate({ to: "/problem/$id", params: { id: problem.id } })}
     >
       <VStack align="start" gap={2}>
-        <HStack>
-          <Badge colorPalette={stageColor[problem.stage]} fontSize="xs">
-            {stageLabel[problem.stage]}
-          </Badge>
-          <Badge colorPalette="gray" fontSize="xs">
-            {scenarioLabel[problem.scenario]}
-          </Badge>
+        <HStack justify="space-between" width="100%">
+          <HStack>
+            <Badge colorPalette={stageColor[problem.stage]} fontSize="xs">
+              {stageLabel[problem.stage]}
+            </Badge>
+            <Badge colorPalette="gray" fontSize="xs">
+              {scenarioLabel[problem.scenario]}
+            </Badge>
+          </HStack>
+          {solved && (
+            <Badge colorPalette="green" fontSize="xs">
+              ✓ クリア
+            </Badge>
+          )}
         </HStack>
         <Text fontWeight="bold" fontSize="md" color="gray.800">
           {problem.copy.title}

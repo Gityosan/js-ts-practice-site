@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import {
   Box,
@@ -15,8 +15,10 @@ import { getProblemById } from "../problems";
 import { runGrader } from "../core/grader";
 import { EditorPane, type EditorHandle } from "../components/EditorPane";
 import { ResultPanel } from "../components/ResultPanel";
+import { VisualOutput } from "../components/VisualOutput";
 import type { GradeResult } from "../grade/types";
 import { problemRoute } from "../router";
+import { markSolved } from "../lib/progress";
 
 const stageLabel: Record<string, string> = {
   read: "読む",
@@ -58,6 +60,12 @@ export function ProblemPage() {
       setRunning(false);
     }
   }, [problem, code]);
+
+  useEffect(() => {
+    if (result && result.passed === result.total && result.total > 0) {
+      markSolved(problem!.id);
+    }
+  }, [result, problem]);
 
   const handleReset = useCallback(() => {
     if (!problem) return;
@@ -174,21 +182,44 @@ export function ProblemPage() {
               </VStack>
             </Box>
 
-            {/* Right: Results */}
-            <Box
-              bg="white"
-              borderRadius="lg"
-              border="1px solid"
-              borderColor="gray.200"
-              minH="200px"
-            >
-              <Box p={3} borderBottom="1px solid" borderColor="gray.100">
-                <Text fontSize="sm" fontWeight="bold" color="gray.600">
-                  採点結果
-                </Text>
+            {/* Right: Visual output (read stage) + Results */}
+            <VStack align="stretch" gap={3}>
+              {problem.stage === "read" && result?.results[0]?.output !== undefined && (
+                <Box
+                  bg="white"
+                  borderRadius="lg"
+                  border="1px solid"
+                  borderColor="gray.200"
+                  overflow="hidden"
+                >
+                  <Box p={3} borderBottom="1px solid" borderColor="gray.100">
+                    <Text fontSize="sm" fontWeight="bold" color="gray.600">
+                      出力プレビュー
+                    </Text>
+                  </Box>
+                  <Box p={3}>
+                    <VisualOutput
+                      problemId={problem.id}
+                      output={result.results[0].output}
+                    />
+                  </Box>
+                </Box>
+              )}
+              <Box
+                bg="white"
+                borderRadius="lg"
+                border="1px solid"
+                borderColor="gray.200"
+                minH="200px"
+              >
+                <Box p={3} borderBottom="1px solid" borderColor="gray.100">
+                  <Text fontSize="sm" fontWeight="bold" color="gray.600">
+                    採点結果
+                  </Text>
+                </Box>
+                <ResultPanel result={result} running={running} error={runError} />
               </Box>
-              <ResultPanel result={result} running={running} error={runError} />
-            </Box>
+            </VStack>
           </Box>
         </VStack>
       </Container>

@@ -33,14 +33,14 @@ export async function runGrader(problemId: string, learnerTs: string): Promise<G
           results.push({ label, passed: false, detail: "形が違う" });
           continue;
         }
-        const ok = deepEqual(out, c.expected, {
-          epsilon: c.epsilon ?? 1e-9,
-          unordered: c.unordered,
-        });
+        const ok = c.skipValueCheck
+          ? true
+          : deepEqual(out, c.expected, { epsilon: c.epsilon ?? 1e-9, unordered: c.unordered });
         results.push({
           label,
           passed: ok,
           detail: ok ? undefined : `期待 ${fmt(c.expected)} / 実際 ${fmt(out)}`,
+          output: c.skipValueCheck ? out : undefined,
         });
       } catch (err) {
         results.push({ label, passed: false, detail: friendly(err).message });

@@ -1,16 +1,46 @@
-import { Box, Container, Heading, Text, VStack, SimpleGrid, Badge, HStack } from "@chakra-ui/react";
+import { useMemo } from "react";
+import {
+  Box,
+  Container,
+  Heading,
+  Text,
+  VStack,
+  SimpleGrid,
+  Badge,
+  HStack,
+  Separator,
+} from "@chakra-ui/react";
 import { allProblems } from "../problems";
 import { ProblemCard } from "../components/ProblemCard";
+import { getAllSolved } from "../lib/progress";
 
-const stages = [
-  { key: "read", label: "読む", desc: "動くコードを触って変化を見る" },
-  { key: "tweak", label: "いじる", desc: "骨格を選んでピースをはめる" },
-  { key: "fill", label: "埋める", desc: "骨格を見て中身を書く" },
-  { key: "write", label: "書く", desc: "白紙から書く" },
+const stageConfig = [
+  { key: "read", label: "読む", color: "blue", desc: "動くコードを触って変化を見る", available: true },
+  { key: "fill", label: "埋める", color: "orange", desc: "骨格を見て中身を書く", available: true },
+  { key: "write", label: "書く", color: "red", desc: "白紙から書く", available: true },
+  { key: "tweak", label: "いじる", color: "purple", desc: "骨格を選んでピースをはめる", available: false },
 ] as const;
 
+const scenarioLabel: Record<string, string> = {
+  data: "データ集計",
+  gas: "GAS",
+  email: "メール自動化",
+  chrome: "Chrome拡張",
+};
+
 export function Home() {
-  const fillProblems = allProblems.filter((p) => p.stage === "fill");
+  const solved = useMemo(() => getAllSolved(), []);
+
+  const byStage = useMemo(() => {
+    const map: Record<string, typeof allProblems> = {};
+    for (const p of allProblems) {
+      (map[p.stage] ??= []).push(p);
+    }
+    return map;
+  }, []);
+
+  const totalCount = allProblems.length;
+  const solvedCount = allProblems.filter((p) => solved.has(p.id)).length;
 
   return (
     <Box bg="gray.50" minH="100vh">
@@ -26,56 +56,101 @@ export function Home() {
               <br />
               型注釈は最初からついている。気づいたら TS が書けてた、を目指す。
             </Text>
+            {solvedCount > 0 && (
+              <Badge colorPalette="green" fontSize="sm" px={3} py={1}>
+                {solvedCount} / {totalCount} 問クリア
+              </Badge>
+            )}
           </VStack>
 
           {/* Stage funnel */}
           <Box>
             <Heading size="md" mb={4} color="gray.700">
-              ステージ構成
+              ステージ構成（funnel）
             </Heading>
             <SimpleGrid columns={{ base: 2, md: 4 }} gap={3}>
-              {stages.map((s, i) => (
-                <Box
-                  key={s.key}
-                  p={4}
-                  bg="white"
-                  borderRadius="lg"
-                  border="1px solid"
-                  borderColor="gray.200"
-                  opacity={s.key === "fill" ? 1 : 0.55}
-                >
-                  <HStack mb={1}>
-                    <Badge colorPalette="blue" fontSize="xs">
-                      Stage {i}
-                    </Badge>
-                    {s.key !== "fill" && (
-                      <Badge colorPalette="gray" fontSize="xs">
-                        近日公開
+              {stageConfig.map((s, i) => {
+                const problems = byStage[s.key] ?? [];
+                const solvedInStage = problems.filter((p) => solved.has(p.id)).length;
+                return (
+                  <Box
+                    key={s.key}
+                    p={4}
+                    bg="white"
+                    borderRadius="lg"
+                    border="1px solid"
+                    borderColor={s.available ? `${s.color}.200` : "gray.200"}
+                    opacity={s.available ? 1 : 0.5}
+                  >
+                    <HStack mb={1} justify="space-between">
+                      <Badge colorPalette={s.available ? s.color : "gray"} fontSize="xs">
+                        Stage {i}
                       </Badge>
-                    )}
-                  </HStack>
-                  <Text fontWeight="bold" fontSize="sm" color="gray.800">
-                    {s.label}
-                  </Text>
-                  <Text fontSize="xs" color="gray.500" mt={0.5}>
-                    {s.desc}
-                  </Text>
-                </Box>
-              ))}
+                      {s.available && problems.length > 0 && (
+                        <Text fontSize="xs" color="gray.400">
+                          {solvedInStage}/{problems.length}
+                        </Text>
+                      )}
+                    </HStack>
+                    <Text fontWeight="bold" fontSize="sm" color="gray.800">
+                      {s.label}
+                    </Text>
+                    <Text fontSize="xs" color="gray.500" mt={0.5}>
+                      {s.desc}
+                    </Text>
+                  </Box>
+                );
+              })}
             </SimpleGrid>
           </Box>
 
-          {/* Problem list */}
-          <Box>
-            <Heading size="md" mb={4} color="gray.700">
-              問題一覧（埋める）
-            </Heading>
-            <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
-              {fillProblems.map((p) => (
-                <ProblemCard key={p.id} problem={p} />
-              ))}
-            </SimpleGrid>
-          </Box>
+          <Separator />
+
+          {/* Problems by stage */}
+          {stageConfig
+            .filter((s) => s.available && (byStage[s.key]?.length ?? 0) > 0)
+            .map((s) => {
+              const problems = byStage[s.key] ?? [];
+              const byScenario = problems.reduce<Record<string, typeof problems>>((acc, p) => {
+                (acc[p.scenario] ??= []).push(p);
+                return acc;
+              }, {});
+
+              return (
+                <Box key={s.key}>
+                  <HStack mb={4} gap={3}>
+                    <Badge colorPalette={s.color} fontSize="sm" px={2} py={1}>
+                      {s.label}
+                    </Badge>
+                    <Text fontSize="sm" color="gray.500">
+                      {problems.filter((p) => solved.has(p.id)).length} / {problems.length} 問クリア
+                    </Text>
+                  </HStack>
+
+                  <VStack align="stretch" gap={5}>
+                    {Object.entries(byScenario).map(([scenario, ps]) => (
+                      <Box key={scenario}>
+                        <Text
+                          fontSize="xs"
+                          fontWeight="bold"
+                          color="gray.400"
+                          mb={2}
+                          textTransform="uppercase"
+                          letterSpacing="wider"
+                        >
+                          {scenarioLabel[scenario] ?? scenario}
+                        </Text>
+                        <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
+                          {ps.map((p) => (
+                            <ProblemCard key={p.id} problem={p} solved={solved.has(p.id)} />
+                          ))}
+                        </SimpleGrid>
+                      </Box>
+                    ))}
+                  </VStack>
+                </Box>
+              );
+            })}
 
           {/* Footer */}
           <Box pt={6} borderTop="1px solid" borderColor="gray.200" textAlign="center">

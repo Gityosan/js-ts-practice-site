@@ -6,6 +6,7 @@ export type IoCase = {
   expected: unknown;
   epsilon?: number;
   unordered?: boolean;
+  skipValueCheck?: boolean; // read ステージ用: スキーマ合格で OK、値は問わない
 };
 
 export type IoGraderDef = {
@@ -28,7 +29,7 @@ export type StateGraderDef = {
 
 export type GraderDef = IoGraderDef | StateGraderDef;
 
-export type CaseResult = { label: string; passed: boolean; detail?: string };
+export type CaseResult = { label: string; passed: boolean; detail?: string; output?: unknown };
 
 export type GradeResult = {
   passed: number;
