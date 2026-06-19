@@ -11,6 +11,7 @@ import {
   Badge,
   Separator,
 } from "@chakra-ui/react";
+import { motion } from "motion/react";
 import { getProblemById } from "../problems";
 import { runGrader } from "../core/grader";
 import { EditorPane, type EditorHandle } from "../components/EditorPane";
@@ -19,6 +20,8 @@ import { VisualOutput } from "../components/VisualOutput";
 import type { GradeResult } from "../grade/types";
 import { problemRoute } from "../router";
 import { markSolved } from "../lib/progress";
+
+const MotionButton = motion.create(Button);
 
 const stageLabel: Record<string, string> = {
   read: "読む",
@@ -166,15 +169,17 @@ export function ProblemPage() {
               <VStack align="stretch" gap={3}>
                 <EditorPane ref={editorRef} value={code} onChange={setCode} height="420px" />
                 <HStack gap={3}>
-                  <Button
+                  <MotionButton
                     colorPalette="blue"
                     onClick={handleRun}
                     disabled={running}
                     flex={1}
                     fontFamily="mono"
+                    whileTap={{ scale: 0.95 }}
+                    whileHover={{ scale: 1.02 }}
                   >
                     ▶ 実行
-                  </Button>
+                  </MotionButton>
                   <Button variant="outline" onClick={handleReset} disabled={running}>
                     リセット
                   </Button>

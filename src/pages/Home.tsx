@@ -10,9 +10,13 @@ import {
   HStack,
   Separator,
 } from "@chakra-ui/react";
+import { motion } from "motion/react";
 import { allProblems } from "../problems";
 import { ProblemCard } from "../components/ProblemCard";
 import { getAllSolved } from "../lib/progress";
+
+const MotionVStack = motion.create(VStack);
+const MotionBox = motion.create(Box);
 
 const stageConfig = [
   { key: "read", label: "読む", color: "blue", desc: "動くコードを触って変化を見る", available: true },
@@ -47,7 +51,14 @@ export function Home() {
       <Container maxW="container.lg" py={10}>
         <VStack align="stretch" gap={10}>
           {/* Hero */}
-          <VStack align="center" gap={4} py={8}>
+          <MotionVStack
+            align="center"
+            gap={4}
+            py={8}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+          >
             <Heading size="2xl" textAlign="center" color="gray.800">
               コードはこわくない
             </Heading>
@@ -61,7 +72,7 @@ export function Home() {
                 {solvedCount} / {totalCount} 問クリア
               </Badge>
             )}
-          </VStack>
+          </MotionVStack>
 
           {/* Stage funnel */}
           <Box>
@@ -73,14 +84,16 @@ export function Home() {
                 const problems = byStage[s.key] ?? [];
                 const solvedInStage = problems.filter((p) => solved.has(p.id)).length;
                 return (
-                  <Box
+                  <MotionBox
                     key={s.key}
                     p={4}
                     bg="white"
                     borderRadius="lg"
                     border="1px solid"
                     borderColor={s.available ? `${s.color}.200` : "gray.200"}
-                    opacity={s.available ? 1 : 0.5}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: s.available ? 1 : 0.5, y: 0 }}
+                    transition={{ delay: 0.2 + i * 0.1, duration: 0.35 }}
                   >
                     <HStack mb={1} justify="space-between">
                       <Badge colorPalette={s.available ? s.color : "gray"} fontSize="xs">
@@ -98,7 +111,7 @@ export function Home() {
                     <Text fontSize="xs" color="gray.500" mt={0.5}>
                       {s.desc}
                     </Text>
-                  </Box>
+                  </MotionBox>
                 );
               })}
             </SimpleGrid>

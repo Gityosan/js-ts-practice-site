@@ -1,4 +1,7 @@
 import { Box, Text } from "@chakra-ui/react";
+import { motion } from "motion/react";
+
+const MotionText = motion.create(Text);
 
 type Props = { problemId: string; output: unknown };
 
@@ -31,9 +34,17 @@ function StarRenderer(output: unknown): React.ReactNode {
       </Text>
       <Box display="flex" flexWrap="wrap" gap={1} justifyContent="center" maxW="280px">
         {Array.from({ length: n }, (_, i) => (
-          <Text key={i} fontSize="xl" lineHeight={1}>
+          <MotionText
+            key={`${n}-${i}`}
+            fontSize="xl"
+            lineHeight={1}
+            color="yellow.300"
+            initial={{ scale: 0, rotate: -45, opacity: 0 }}
+            animate={{ scale: 1, rotate: 0, opacity: 1 }}
+            transition={{ delay: i * 0.05, type: "spring", stiffness: 320, damping: 14 }}
+          >
             ★
-          </Text>
+          </MotionText>
         ))}
       </Box>
     </Box>
