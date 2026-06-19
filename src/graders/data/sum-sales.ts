@@ -34,6 +34,11 @@ const grader: IoGraderDef = {
       expected: 0,
     },
   ],
+  bonusCases: [
+    { label: "for...of で繰り返した", pattern: "for\\s*\\(.*of\\s" },
+    { label: "forEach で繰り返した", pattern: "\\.forEach\\s*\\(" },
+    { label: "filter + reduce で集計した", pattern: "\\.filter\\s*\\(.*\\.reduce|reduce.*filter" },
+  ],
 };
 
 // re-export so grader can reference the same schema as the test

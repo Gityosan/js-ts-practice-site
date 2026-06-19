@@ -33,23 +33,41 @@ export async function runGrader(problemId: string, learnerTs: string): Promise<G
           results.push({ label, passed: false, detail: "形が違う" });
           continue;
         }
-        const ok = deepEqual(out, c.expected, {
-          epsilon: c.epsilon ?? 1e-9,
-          unordered: c.unordered,
-        });
+        const ok = c.skipValueCheck
+          ? true
+          : deepEqual(out, c.expected, { epsilon: c.epsilon ?? 1e-9, unordered: c.unordered });
         results.push({
           label,
           passed: ok,
           detail: ok ? undefined : `期待 ${fmt(c.expected)} / 実際 ${fmt(out)}`,
+          output: c.skipValueCheck ? out : undefined,
         });
       } catch (err) {
         results.push({ label, passed: false, detail: friendly(err).message });
       }
     }
+    if (g.assertMethod) {
+      const m = g.assertMethod;
+      const used = new RegExp(`(?:Object\\.${m}|\\.${m})\\s*\\(`).test(learnerJs);
+      results.push({
+        label: `\`.${m}()\` を使った`,
+        passed: used,
+        detail: used ? undefined : `\`.${m}()\` を使ってみよう`,
+      });
+    }
+    const bonusResults: CaseResult[] = [];
+    if (g.bonusCases) {
+      for (const bc of g.bonusCases) {
+        if (new RegExp(bc.pattern).test(learnerJs)) {
+          bonusResults.push({ label: bc.label, passed: true, bonus: true });
+        }
+      }
+    }
+    const allResults = [...results, ...bonusResults];
     return {
       passed: results.filter((r) => r.passed).length,
       total: results.length,
-      results,
+      results: allResults,
       status: "ok",
     };
   } else {
@@ -69,10 +87,18 @@ export async function runGrader(problemId: string, learnerTs: string): Promise<G
       }
       results.push({ label: a.label, passed });
     }
+    const stateBonusResults: CaseResult[] = [];
+    if (g.bonusCases) {
+      for (const bc of g.bonusCases) {
+        if (new RegExp(bc.pattern).test(learnerJs)) {
+          stateBonusResults.push({ label: bc.label, passed: true, bonus: true });
+        }
+      }
+    }
     return {
       passed: results.filter((r) => r.passed).length,
       total: results.length,
-      results,
+      results: [...results, ...stateBonusResults],
       status: "ok",
     };
   }

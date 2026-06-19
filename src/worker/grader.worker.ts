@@ -9,7 +9,7 @@ self.onmessage = async (e: MessageEvent<{ problemId: string; learnerJs: string }
     const g = await graders[problemId]();
 
     if (g.kind === "io") {
-      self.postMessage({ type: "meta", total: g.cases.length });
+      self.postMessage({ type: "meta", total: g.cases.length + (g.assertMethod ? 1 : 0) });
       const fn = new Function(`${learnerJs}; return ${g.entry ?? "solve"};`)();
       for (let i = 0; i < g.cases.length; i++) {
         const c = g.cases[i];
@@ -23,16 +23,16 @@ self.onmessage = async (e: MessageEvent<{ problemId: string; learnerJs: string }
             });
             continue;
           }
-          const ok = deepEqual(out, c.expected, {
-            epsilon: c.epsilon ?? 1e-9,
-            unordered: c.unordered,
-          });
+          const ok = c.skipValueCheck
+            ? true
+            : deepEqual(out, c.expected, { epsilon: c.epsilon ?? 1e-9, unordered: c.unordered });
           self.postMessage({
             type: "case",
             result: {
               label,
               passed: ok,
               detail: ok ? undefined : `期待 ${fmt(c.expected)} / 実際 ${fmt(out)}`,
+              output: c.skipValueCheck ? out : undefined,
             },
           });
         } catch (err) {
@@ -40,6 +40,25 @@ self.onmessage = async (e: MessageEvent<{ problemId: string; learnerJs: string }
             type: "case",
             result: { label, passed: false, detail: friendly(err).message },
           });
+        }
+      }
+      if (g.assertMethod) {
+        const m = g.assertMethod;
+        const used = new RegExp(`(?:Object\\.${m}|\\.${m})\\s*\\(`).test(learnerJs);
+        self.postMessage({
+          type: "case",
+          result: {
+            label: `\`.${m}()\` を使った`,
+            passed: used,
+            detail: used ? undefined : `\`.${m}()\` を使ってみよう`,
+          },
+        });
+      }
+      if (g.bonusCases) {
+        for (const bc of g.bonusCases) {
+          if (new RegExp(bc.pattern).test(learnerJs)) {
+            self.postMessage({ type: "bonus", result: { label: bc.label, passed: true, bonus: true } });
+          }
         }
       }
       self.postMessage({ type: "done" });
@@ -60,6 +79,13 @@ self.onmessage = async (e: MessageEvent<{ problemId: string; learnerJs: string }
           passed = false;
         }
         self.postMessage({ type: "case", result: { label: a.label, passed } });
+      }
+      if (g.bonusCases) {
+        for (const bc of g.bonusCases) {
+          if (new RegExp(bc.pattern).test(learnerJs)) {
+            self.postMessage({ type: "bonus", result: { label: bc.label, passed: true, bonus: true } });
+          }
+        }
       }
       self.postMessage({ type: "done" });
     }

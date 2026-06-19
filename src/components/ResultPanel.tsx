@@ -1,5 +1,8 @@
 import { Box, VStack, HStack, Text, Badge, Spinner } from "@chakra-ui/react";
+import { motion, AnimatePresence } from "motion/react";
 import type { GradeResult } from "../grade/types";
+
+const MotionBox = motion.create(Box);
 
 type Props = {
   result: GradeResult | null;
@@ -21,11 +24,20 @@ export function ResultPanel({ result, running, error }: Props) {
 
   if (error) {
     return (
-      <Box p={4} bg="red.50" borderRadius="md" border="1px solid" borderColor="red.200">
+      <MotionBox
+        p={4}
+        bg="red.50"
+        borderRadius="md"
+        border="1px solid"
+        borderColor="red.200"
+        initial={{ opacity: 0, x: -8 }}
+        animate={{ opacity: 1, x: [0, -6, 6, -4, 4, 0] }}
+        transition={{ duration: 0.4 }}
+      >
         <Text color="red.700" fontFamily="mono" fontSize="sm" whiteSpace="pre-wrap">
           {error}
         </Text>
-      </Box>
+      </MotionBox>
     );
   }
 
@@ -40,6 +52,8 @@ export function ResultPanel({ result, running, error }: Props) {
   }
 
   const allPassed = result.passed === result.total;
+  const normalResults = result.results.filter((r) => !r.bonus);
+  const bonusResults = result.results.filter((r) => r.bonus && r.passed);
 
   return (
     <VStack align="stretch" gap={3} p={4}>
@@ -68,14 +82,17 @@ export function ResultPanel({ result, running, error }: Props) {
       )}
 
       <VStack align="stretch" gap={2}>
-        {result.results.map((r, i) => (
-          <Box
+        {normalResults.map((r, i) => (
+          <MotionBox
             key={i}
             p={3}
             borderRadius="md"
             bg={r.passed ? "green.50" : "red.50"}
             border="1px solid"
             borderColor={r.passed ? "green.200" : "red.200"}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.08, duration: 0.25 }}
           >
             <HStack>
               <Text fontSize="lg">{r.passed ? "○" : "×"}</Text>
@@ -88,18 +105,65 @@ export function ResultPanel({ result, running, error }: Props) {
                 {r.detail}
               </Text>
             )}
-          </Box>
+          </MotionBox>
         ))}
       </VStack>
 
-      {allPassed && (
-        <Box bg="green.100" borderRadius="md" p={4} textAlign="center">
-          <Text fontSize="lg">全問正解！</Text>
-          <Text fontSize="sm" color="green.700" mt={1}>
-            どんな解き方でも正解。自分のやり方を信じよう。
-          </Text>
-        </Box>
-      )}
+      <AnimatePresence>
+        {bonusResults.length > 0 && (
+          <MotionBox
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ delay: normalResults.length * 0.08 + 0.05, duration: 0.3 }}
+          >
+            <VStack align="stretch" gap={2}>
+              <Text fontSize="xs" fontWeight="bold" color="yellow.600">
+                ✨ 裏技発見！
+              </Text>
+              {bonusResults.map((r, i) => (
+                <MotionBox
+                  key={i}
+                  p={3}
+                  borderRadius="md"
+                  bg="yellow.50"
+                  border="1px solid"
+                  borderColor="yellow.300"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: i * 0.1, type: "spring", stiffness: 280, damping: 16 }}
+                >
+                  <HStack>
+                    <Text fontSize="lg">★</Text>
+                    <Text fontSize="sm" color="yellow.800" fontWeight="medium">
+                      {r.label}
+                    </Text>
+                  </HStack>
+                </MotionBox>
+              ))}
+            </VStack>
+          </MotionBox>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {allPassed && (
+          <MotionBox
+            bg="green.100"
+            borderRadius="md"
+            p={4}
+            textAlign="center"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: result.total * 0.08 + 0.1, type: "spring", stiffness: 260, damping: 18 }}
+          >
+            <Text fontSize="lg">全問正解！🎉</Text>
+            <Text fontSize="sm" color="green.700" mt={1}>
+              どんな解き方でも正解。自分のやり方を信じよう。
+            </Text>
+          </MotionBox>
+        )}
+      </AnimatePresence>
     </VStack>
   );
 }
