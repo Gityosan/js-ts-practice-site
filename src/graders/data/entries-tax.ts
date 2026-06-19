@@ -32,6 +32,7 @@ const grader: IoGraderDef = {
       expected: 1430,
     },
   ],
+  assertMethod: "entries",
 };
 
 export default grader;

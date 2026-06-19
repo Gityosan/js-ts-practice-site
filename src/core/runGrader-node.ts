@@ -47,11 +47,12 @@ export async function runGrader(problemId: string, learnerTs: string): Promise<G
       }
     }
     if (g.assertMethod) {
-      const used = new RegExp(`\\.${g.assertMethod}\\s*\\(`).test(learnerJs);
+      const m = g.assertMethod;
+      const used = new RegExp(`(?:Object\\.${m}|\\.${m})\\s*\\(`).test(learnerJs);
       results.push({
-        label: `\`.${g.assertMethod}()\` を使った`,
+        label: `\`.${m}()\` を使った`,
         passed: used,
-        detail: used ? undefined : `\`.${g.assertMethod}()\` を使ってみよう`,
+        detail: used ? undefined : `\`.${m}()\` を使ってみよう`,
       });
     }
     return {

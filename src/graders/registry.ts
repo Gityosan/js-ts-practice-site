@@ -30,4 +30,5 @@ export const graders: Record<string, () => Promise<GraderDef>> = {
   "write-average": () => import("./data/average").then((m) => m.default),
   "write-max-value": () => import("./data/max-value").then((m) => m.default),
   "write-unique": () => import("./data/unique").then((m) => m.default),
+  "write-group-sum": () => import("./data/group-sum").then((m) => m.default),
 };

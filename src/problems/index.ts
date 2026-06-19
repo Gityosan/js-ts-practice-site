@@ -16,6 +16,7 @@ import starCount from "./read/star-count";
 import average from "./data/average";
 import maxValue from "./data/max-value";
 import unique from "./data/unique";
+import groupSum from "./data/group-sum";
 import tweakKeywordSum from "./tweak/keyword-sum";
 import tweakParsonsFilter from "./tweak/parsons-filter";
 import tweakMethodDouble from "./tweak/method-double";
@@ -54,6 +55,7 @@ export const allProblems: ProblemMeta[] = [
   average,
   maxValue,
   unique,
+  groupSum,
 ];
 
 export function getProblemById(id: string): ProblemMeta | undefined {

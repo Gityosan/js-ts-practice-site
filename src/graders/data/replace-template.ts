@@ -32,6 +32,7 @@ const grader: IoGraderDef = {
       expected: "さん",
     },
   ],
+  assertMethod: "replace",
 };
 
 export default grader;
