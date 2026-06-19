@@ -13,6 +13,10 @@ import replaceTemplate from "./data/replace-template";
 import gasSum from "./gas/sum-column";
 import emailWeekly from "./email/weekly-report";
 import starCount from "./read/star-count";
+import readGreeting from "./read/greeting";
+import readProgress from "./read/progress";
+import readColorBox from "./read/color-box";
+import readBoolLight from "./read/bool-light";
 import average from "./data/average";
 import maxValue from "./data/max-value";
 import unique from "./data/unique";
@@ -33,6 +37,10 @@ import emailMakeSubject from "./email/make-subject";
 export const allProblems: ProblemMeta[] = [
   // read
   starCount,
+  readGreeting,
+  readProgress,
+  readColorBox,
+  readBoolLight,
   // tweak
   tweakKeywordSum,
   tweakParsonsFilter,

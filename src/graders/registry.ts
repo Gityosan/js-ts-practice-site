@@ -30,6 +30,10 @@ export const graders: Record<string, () => Promise<GraderDef>> = {
   "fill-chrome-get-text": () => import("./chrome/get-text").then((m) => m.default),
   // read
   "read-star-count": () => import("./read/star-count").then((m) => m.default),
+  "read-greeting": () => import("./read/greeting").then((m) => m.default),
+  "read-progress": () => import("./read/progress").then((m) => m.default),
+  "read-color-box": () => import("./read/color-box").then((m) => m.default),
+  "read-bool-light": () => import("./read/bool-light").then((m) => m.default),
   // write
   "write-average": () => import("./data/average").then((m) => m.default),
   "write-max-value": () => import("./data/max-value").then((m) => m.default),
