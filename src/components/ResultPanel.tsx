@@ -28,7 +28,8 @@ export function ResultPanel({ result, running, error }: Props) {
         p={4}
         bg="red.50"
         borderRadius="md"
-        border="1px solid"
+        borderWidth="1px"
+        borderStyle="solid"
         borderColor="red.200"
         initial={{ opacity: 0, x: -8 }}
         animate={{ opacity: 1, x: [0, -6, 6, -4, 4, 0] }}
@@ -74,7 +75,7 @@ export function ResultPanel({ result, running, error }: Props) {
       </HStack>
 
       {result.status === "error" && result.error && (
-        <Box bg="red.50" borderRadius="md" p={3} border="1px solid" borderColor="red.200">
+        <Box bg="red.50" borderRadius="md" p={3} borderWidth="1px" borderStyle="solid" borderColor="red.200">
           <Text fontSize="xs" color="red.700" fontFamily="mono">
             {result.error}
           </Text>
@@ -88,7 +89,8 @@ export function ResultPanel({ result, running, error }: Props) {
             p={3}
             borderRadius="md"
             bg={r.passed ? "green.50" : "red.50"}
-            border="1px solid"
+            borderWidth="1px"
+            borderStyle="solid"
             borderColor={r.passed ? "green.200" : "red.200"}
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
@@ -127,7 +129,8 @@ export function ResultPanel({ result, running, error }: Props) {
                   p={3}
                   borderRadius="md"
                   bg="yellow.50"
-                  border="1px solid"
+                  borderWidth="1px"
+                  borderStyle="solid"
                   borderColor="yellow.300"
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}

@@ -84,7 +84,8 @@ export function Home() {
                     p={4}
                     bg="white"
                     borderRadius="lg"
-                    border="1px solid"
+                    borderWidth="1px"
+                    borderStyle="solid"
                     borderColor={s.available ? `${s.color}.200` : "gray.200"}
                     initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: s.available ? 1 : 0.5, y: 0 }}
@@ -161,7 +162,7 @@ export function Home() {
             })}
 
           {/* Footer */}
-          <Box pt={6} borderTop="1px solid" borderColor="gray.200" textAlign="center">
+          <Box pt={6} borderTopWidth="1px" borderTopStyle="solid" borderColor="gray.200" textAlign="center">
             <Text fontSize="xs" color="gray.400">
               採点は振る舞いで判定。reduce でも for でも、動けば正解。
             </Text>

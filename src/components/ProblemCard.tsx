@@ -34,7 +34,8 @@ export function ProblemCard({ problem, solved = false }: Props) {
   return (
     <MotionBox
       p={5}
-      border="1px solid"
+      borderWidth="1px"
+      borderStyle="solid"
       borderColor={solved ? "green.300" : "gray.200"}
       borderRadius="lg"
       bg={solved ? "green.50" : "white"}

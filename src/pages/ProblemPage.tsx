@@ -155,9 +155,17 @@ export function ProblemPage() {
             alignItems="start"
           >
             {/* Left: Problem description */}
-            <Box bg="white" borderRadius="lg" border="1px solid" borderColor="gray.200" p={5}>
+            <Box
+              bg="white"
+              borderRadius="lg"
+              borderWidth="1px"
+              borderStyle="solid"
+              borderColor="gray.200"
+              p={5}
+              minWidth="0"
+            >
               <VStack align="stretch" gap={3}>
-                <Heading size="md" color="gray.800">
+                <Heading size="md" color="gray.800" wordBreak="break-word">
                   {problem.copy.title}
                 </Heading>
                 <Separator />
@@ -165,6 +173,8 @@ export function ProblemPage() {
                   fontSize="sm"
                   color="gray.700"
                   lineHeight="1.8"
+                  overflowWrap="break-word"
+                  wordBreak="break-word"
                   css={{
                     "& h2": {
                       fontWeight: "bold",
@@ -205,6 +215,22 @@ export function ProblemPage() {
                     },
                     "& ul": { paddingLeft: "20px" },
                     "& p": { margin: "4px 0" },
+                    "& table": {
+                      borderCollapse: "collapse",
+                      width: "100%",
+                      marginTop: "8px",
+                      marginBottom: "8px",
+                      fontSize: "0.8rem",
+                    },
+                    "& th, & td": {
+                      border: "1px solid #e2e8f0",
+                      padding: "4px 8px",
+                      textAlign: "left",
+                    },
+                    "& th": {
+                      background: "#f8fafc",
+                      fontWeight: "bold",
+                    },
                   }}
                 >
                   <MarkdownLite source={problem.copy.prompt} />
@@ -230,7 +256,8 @@ export function ProblemPage() {
                 <Box
                   bg="white"
                   borderRadius="md"
-                  border="1px solid"
+                  borderWidth="1px"
+                  borderStyle="solid"
                   borderColor="gray.200"
                   p={4}
                   minH="420px"
@@ -266,11 +293,12 @@ export function ProblemPage() {
                 <Box
                   bg="white"
                   borderRadius="lg"
-                  border="1px solid"
+                  borderWidth="1px"
+                  borderStyle="solid"
                   borderColor="gray.200"
                   overflow="hidden"
                 >
-                  <Box p={3} borderBottom="1px solid" borderColor="gray.100">
+                  <Box p={3} borderBottomWidth="1px" borderBottomStyle="solid" borderColor="gray.100">
                     <Text fontSize="sm" fontWeight="bold" color="gray.600">
                       出力プレビュー
                     </Text>
@@ -284,11 +312,12 @@ export function ProblemPage() {
               <Box
                 bg="white"
                 borderRadius="lg"
-                border="1px solid"
+                borderWidth="1px"
+                borderStyle="solid"
                 borderColor="gray.200"
                 minH="120px"
               >
-                <Box p={3} borderBottom="1px solid" borderColor="gray.100">
+                <Box p={3} borderBottomWidth="1px" borderBottomStyle="solid" borderColor="gray.100">
                   <Text fontSize="sm" fontWeight="bold" color="gray.600">
                     採点結果
                   </Text>
@@ -339,6 +368,17 @@ function ShikiBlock({ code, lang }: { code: string; lang: string }) {
   );
 }
 
+function parseTableRow(line: string): string[] {
+  return line
+    .split("|")
+    .slice(1, -1)
+    .map((c) => c.trim());
+}
+
+function isTableSeparator(line: string): boolean {
+  return /^\|[\s|:-]+\|$/.test(line.trim());
+}
+
 function MarkdownLite({ source }: { source: string }) {
   const lines = source.split("\n");
   const elements: React.ReactNode[] = [];
@@ -346,9 +386,11 @@ function MarkdownLite({ source }: { source: string }) {
   let codeLines: string[] = [];
   let codeLang = "text";
   let key = 0;
+  let i = 0;
 
-  for (let i = 0; i < lines.length; i++) {
+  while (i < lines.length) {
     const line = lines[i];
+
     if (line.startsWith("```")) {
       if (inCode) {
         elements.push(<ShikiBlock key={key++} code={codeLines.join("\n")} lang={codeLang} />);
@@ -359,12 +401,54 @@ function MarkdownLite({ source }: { source: string }) {
         codeLang = line.slice(3).trim() || "text";
         inCode = true;
       }
+      i++;
       continue;
     }
     if (inCode) {
       codeLines.push(line);
+      i++;
       continue;
     }
+
+    // Table: collect all consecutive | lines
+    if (line.trimStart().startsWith("|")) {
+      const tableLines: string[] = [];
+      while (i < lines.length && lines[i].trimStart().startsWith("|")) {
+        tableLines.push(lines[i]);
+        i++;
+      }
+      const sepIdx = tableLines.findIndex(isTableSeparator);
+      const headerLines = sepIdx > 0 ? tableLines.slice(0, sepIdx) : tableLines.slice(0, 1);
+      const bodyLines = sepIdx >= 0 ? tableLines.slice(sepIdx + 1) : tableLines.slice(1);
+      elements.push(
+        <table key={key++}>
+          {headerLines.length > 0 && (
+            <thead>
+              {headerLines.map((hl, ri) => (
+                <tr key={ri}>
+                  {parseTableRow(hl).map((cell, ci) => (
+                    <th key={ci}>{renderInline(cell)}</th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+          )}
+          {bodyLines.length > 0 && (
+            <tbody>
+              {bodyLines.map((bl, ri) => (
+                <tr key={ri}>
+                  {parseTableRow(bl).map((cell, ci) => (
+                    <td key={ci}>{renderInline(cell)}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          )}
+        </table>,
+      );
+      continue;
+    }
+
     if (line.startsWith("## ")) {
       elements.push(<h2 key={key++}>{line.slice(3)}</h2>);
     } else if (line.startsWith("- ")) {
@@ -378,6 +462,7 @@ function MarkdownLite({ source }: { source: string }) {
     } else {
       elements.push(<p key={key++}>{renderInline(line)}</p>);
     }
+    i++;
   }
 
   return <>{elements}</>;
@@ -395,7 +480,7 @@ function renderInline(text: string): React.ReactNode {
 function HintBox({ hint, index }: { hint: string; index: number }) {
   const [open, setOpen] = useState(false);
   return (
-    <Box border="1px solid" borderColor="blue.100" borderRadius="md" overflow="hidden" fontSize="xs">
+    <Box borderWidth="1px" borderStyle="solid" borderColor="blue.100" borderRadius="md" overflow="hidden" fontSize="xs">
       <Box
         p={2}
         bg="blue.50"
@@ -424,7 +509,7 @@ function HintBox({ hint, index }: { hint: string; index: number }) {
             transition={{ duration: 0.2, ease: "easeInOut" }}
             style={{ overflow: "hidden" }}
           >
-            <Box p={2} color="gray.700" borderTop="1px solid" borderColor="blue.50">
+            <Box p={2} color="gray.700" borderTopWidth="1px" borderTopStyle="solid" borderColor="blue.50">
               {renderInline(hint)}
             </Box>
           </MotionDiv>
