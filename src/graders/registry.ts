@@ -16,10 +16,14 @@ export const graders: Record<string, () => Promise<GraderDef>> = {
   "tweak-keyword-sum": () => import("./tweak/keyword-sum").then((m) => m.default),
   "tweak-parsons-filter": () => import("./tweak/parsons-filter").then((m) => m.default),
   "tweak-method-double": () => import("./tweak/method-double").then((m) => m.default),
+  "tweak-gas-parsons": () => import("./tweak/gas-parsons").then((m) => m.default),
+  "tweak-email-choice": () => import("./tweak/email-choice").then((m) => m.default),
   // fill / gas
   "fill-gas-sum-column": () => import("./gas/sum-column").then((m) => m.default),
   // fill / email
   "fill-email-weekly": () => import("./email/weekly-report").then((m) => m.default),
+  // fill / chrome
+  "fill-chrome-fill-form": () => import("./chrome/fill-form").then((m) => m.default),
   // read
   "read-star-count": () => import("./read/star-count").then((m) => m.default),
   // write

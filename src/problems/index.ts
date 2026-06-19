@@ -17,6 +17,9 @@ import average from "./data/average";
 import tweakKeywordSum from "./tweak/keyword-sum";
 import tweakParsonsFilter from "./tweak/parsons-filter";
 import tweakMethodDouble from "./tweak/method-double";
+import tweakGasParsons from "./tweak/gas-parsons";
+import tweakEmailChoice from "./tweak/email-choice";
+import chromeFillForm from "./chrome/fill-form";
 
 export const allProblems: ProblemMeta[] = [
   // read
@@ -25,6 +28,8 @@ export const allProblems: ProblemMeta[] = [
   tweakKeywordSum,
   tweakParsonsFilter,
   tweakMethodDouble,
+  tweakGasParsons,
+  tweakEmailChoice,
   // fill / data（メソッド練習帳）
   sumNumbers,
   filterEvens,
@@ -41,6 +46,8 @@ export const allProblems: ProblemMeta[] = [
   gasSum,
   // fill / email
   emailWeekly,
+  // fill / chrome
+  chromeFillForm,
   // write
   average,
 ];

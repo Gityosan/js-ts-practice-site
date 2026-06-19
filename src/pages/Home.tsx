@@ -29,7 +29,7 @@ const scenarioLabel: Record<string, string> = {
   data: "データ集計",
   gas: "GAS",
   email: "メール自動化",
-  chrome: "Chrome拡張",
+  chrome: "Chrome 拡張",
 };
 
 export function Home() {
