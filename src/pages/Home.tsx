@@ -19,10 +19,10 @@ const MotionVStack = motion.create(VStack);
 const MotionBox = motion.create(Box);
 
 const stageConfig = [
-  { key: "read", label: "読む", color: "blue", desc: "動くコードを触って変化を見る", available: true },
-  { key: "tweak", label: "いじる", color: "purple", desc: "並べ替え・選んで組み立てる", available: true },
-  { key: "fill", label: "埋める", color: "orange", desc: "骨格を見て中身を書く", available: true },
-  { key: "write", label: "書く", color: "red", desc: "白紙から書く", available: true },
+  { key: "read", label: "読む", color: "cyan", desc: "動くコードを触って変化を見る", available: true },
+  { key: "tweak", label: "いじる", color: "indigo", desc: "並べ替え・選んで組み立てる", available: true },
+  { key: "fill", label: "埋める", color: "teal", desc: "骨格を見て中身を書く", available: true },
+  { key: "write", label: "書く", color: "purple", desc: "白紙から書く", available: true },
 ] as const;
 
 const scenarioLabel: Record<string, string> = {

@@ -3,7 +3,7 @@ import { Link } from "@tanstack/react-router";
 
 export function Navbar() {
   return (
-    <Box as="nav" bg="blue.600" px={6} py={3} shadow="sm">
+    <Box as="nav" bg="blue.700" px={6} py={3} shadow="sm">
       <Flex align="center" gap={3}>
         <Link to="/" style={{ textDecoration: "none" }}>
           <Heading size="md" color="white" fontFamily="mono">

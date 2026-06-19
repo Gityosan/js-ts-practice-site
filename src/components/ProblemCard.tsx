@@ -13,10 +13,10 @@ const stageLabel: Record<string, string> = {
 };
 
 const stageColor: Record<string, string> = {
-  read: "blue",
-  tweak: "purple",
-  fill: "orange",
-  write: "red",
+  read: "cyan",
+  tweak: "indigo",
+  fill: "teal",
+  write: "purple",
 };
 
 const scenarioLabel: Record<string, string> = {

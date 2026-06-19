@@ -36,10 +36,10 @@ const stageLabel: Record<string, string> = {
 };
 
 const stageColor: Record<string, string> = {
-  read: "blue",
-  tweak: "purple",
-  fill: "orange",
-  write: "red",
+  read: "cyan",
+  tweak: "indigo",
+  fill: "teal",
+  write: "purple",
 };
 
 export function ProblemPage() {
@@ -174,7 +174,7 @@ export function ProblemPage() {
                     },
                     "& strong": { fontWeight: "bold" },
                     "& code": {
-                      background: "#f3f4f6",
+                      background: "#eaf0f8",
                       borderRadius: "3px",
                       padding: "0 4px",
                       fontFamily: "monospace",
