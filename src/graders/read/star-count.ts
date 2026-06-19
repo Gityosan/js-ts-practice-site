@@ -4,7 +4,7 @@ import type { IoGraderDef } from "../../grade/types";
 const grader: IoGraderDef = {
   kind: "io",
   entry: "solve",
-  outputSchema: z.number().int().min(1).max(20),
+  outputSchema: z.number(),
   cases: [
     {
       label: "実行できた（数値を返した）",
