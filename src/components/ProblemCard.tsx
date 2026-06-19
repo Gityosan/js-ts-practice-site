@@ -34,6 +34,7 @@ export function ProblemCard({ problem, solved = false }: Props) {
   return (
     <MotionBox
       p={5}
+      minWidth="0"
       borderWidth="1px"
       borderStyle="solid"
       borderColor={solved ? "green.300" : "gray.200"}
@@ -50,8 +51,8 @@ export function ProblemCard({ problem, solved = false }: Props) {
       transition={{ duration: 0.25 }}
     >
       <VStack align="start" gap={2}>
-        <HStack justify="space-between" width="100%">
-          <HStack>
+        <HStack justify="space-between" width="100%" flexWrap="wrap" gap={1}>
+          <HStack flexWrap="wrap" gap={1}>
             <Badge colorPalette={stageColor[problem.stage]} fontSize="xs">
               {stageLabel[problem.stage]}
             </Badge>
@@ -65,7 +66,7 @@ export function ProblemCard({ problem, solved = false }: Props) {
             </Badge>
           )}
         </HStack>
-        <Text fontWeight="bold" fontSize="md" color="gray.800">
+        <Text fontWeight="bold" fontSize="md" color="gray.800" wordBreak="break-word" overflowWrap="break-word">
           {problem.copy.title}
         </Text>
         <Text fontSize="xs" color="gray.500" fontFamily="mono">
