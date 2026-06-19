@@ -13,6 +13,11 @@ const grader: IoGraderDef = {
       skipValueCheck: true,
     },
   ],
+  bonusCases: [
+    { label: "!! で boolean 変換した（二重否定）", pattern: "!!" },
+    { label: "Boolean() で変換した", pattern: "Boolean\\s*\\(" },
+    { label: "比較演算子で boolean を作った", pattern: "[><=!]={1,2}" },
+  ],
 };
 
 export default grader;

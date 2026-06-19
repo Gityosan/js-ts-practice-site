@@ -55,10 +55,19 @@ export async function runGrader(problemId: string, learnerTs: string): Promise<G
         detail: used ? undefined : `\`.${m}()\` を使ってみよう`,
       });
     }
+    const bonusResults: CaseResult[] = [];
+    if (g.bonusCases) {
+      for (const bc of g.bonusCases) {
+        if (new RegExp(bc.pattern).test(learnerJs)) {
+          bonusResults.push({ label: bc.label, passed: true, bonus: true });
+        }
+      }
+    }
+    const allResults = [...results, ...bonusResults];
     return {
       passed: results.filter((r) => r.passed).length,
       total: results.length,
-      results,
+      results: allResults,
       status: "ok",
     };
   } else {

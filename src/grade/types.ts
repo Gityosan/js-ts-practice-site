@@ -15,6 +15,7 @@ export type IoGraderDef = {
   outputSchema?: z.ZodType;
   cases: IoCase[];
   assertMethod?: string; // 練習帳用: 学習者コードが指定メソッドを呼んでいるか確認 (例: "map", "filter")
+  bonusCases?: { label: string; pattern: string }[]; // 裏回答検出: パターンにマッチしたら bonus フラグ付きで結果に追加
 };
 
 export type StateAssert = {
@@ -30,7 +31,7 @@ export type StateGraderDef = {
 
 export type GraderDef = IoGraderDef | StateGraderDef;
 
-export type CaseResult = { label: string; passed: boolean; detail?: string; output?: unknown };
+export type CaseResult = { label: string; passed: boolean; detail?: string; output?: unknown; bonus?: boolean };
 
 export type GradeResult = {
   passed: number;

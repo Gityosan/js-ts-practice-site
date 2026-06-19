@@ -13,6 +13,10 @@ const grader: IoGraderDef = {
       skipValueCheck: true,
     },
   ],
+  bonusCases: [
+    { label: "計算式で数を出した（+−×÷）", pattern: "return[^;\\n]*[+\\-*/][^;\\n]*" },
+    { label: "Math を使った", pattern: "Math\\." },
+  ],
 };
 
 export default grader;
