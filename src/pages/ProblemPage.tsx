@@ -15,6 +15,7 @@ import { motion } from "motion/react";
 import { getProblemById } from "../problems";
 import { runGrader } from "../core/grader";
 import { EditorPane, type EditorHandle } from "../components/EditorPane";
+import { TweakPane } from "../components/TweakPane";
 import { ResultPanel } from "../components/ResultPanel";
 import { VisualOutput } from "../components/VisualOutput";
 import type { GradeResult } from "../grade/types";
@@ -42,7 +43,11 @@ export function ProblemPage() {
   const navigate = useNavigate();
   const problem = getProblemById(id);
 
+  const isTweak = problem?.stage === "tweak" && !!problem.tweak;
+
   const [code, setCode] = useState(problem?.initialCode ?? "");
+  const [tweakCode, setTweakCode] = useState("");
+  const [tweakResetKey, setTweakResetKey] = useState(0);
   const [result, setResult] = useState<GradeResult | null>(null);
   const [running, setRunning] = useState(false);
   const [runError, setRunError] = useState<string | undefined>();
@@ -54,7 +59,16 @@ export function ProblemPage() {
     setResult(null);
     setRunError(undefined);
     try {
-      const jsCode = (await editorRef.current?.getTranspiledJs()) ?? code;
+      let jsCode: string;
+      if (isTweak) {
+        if (tweakCode.includes("___")) {
+          setRunError("すべての空欄を埋めてから実行してね。");
+          return;
+        }
+        jsCode = tweakCode; // tweak は組み立て済みの実行可能 JS
+      } else {
+        jsCode = (await editorRef.current?.getTranspiledJs()) ?? code;
+      }
       const r = await runGrader(problem.id, jsCode);
       setResult(r);
     } catch (e: unknown) {
@@ -62,7 +76,7 @@ export function ProblemPage() {
     } finally {
       setRunning(false);
     }
-  }, [problem, code]);
+  }, [problem, code, isTweak, tweakCode]);
 
   useEffect(() => {
     if (result && result.passed === result.total && result.total > 0) {
@@ -75,7 +89,8 @@ export function ProblemPage() {
     setCode(problem.initialCode);
     setResult(null);
     setRunError(undefined);
-  }, [problem]);
+    if (isTweak) setTweakResetKey((k) => k + 1); // パズルをシャッフルし直す
+  }, [problem, isTweak]);
 
   if (!problem) {
     return (
@@ -164,10 +179,27 @@ export function ProblemPage() {
               </VStack>
             </Box>
 
-            {/* Center: Editor */}
+            {/* Center: Editor or Tweak puzzle */}
             <Box>
               <VStack align="stretch" gap={3}>
-                <EditorPane ref={editorRef} value={code} onChange={setCode} height="420px" />
+                {isTweak ? (
+                  <Box
+                    bg="white"
+                    borderRadius="md"
+                    border="1px solid"
+                    borderColor="gray.200"
+                    p={4}
+                    minH="420px"
+                  >
+                    <TweakPane
+                      key={tweakResetKey}
+                      tweak={problem.tweak!}
+                      onChange={setTweakCode}
+                    />
+                  </Box>
+                ) : (
+                  <EditorPane ref={editorRef} value={code} onChange={setCode} height="420px" />
+                )}
                 <HStack gap={3}>
                   <MotionButton
                     colorPalette="blue"
@@ -181,7 +213,7 @@ export function ProblemPage() {
                     ▶ 実行
                   </MotionButton>
                   <Button variant="outline" onClick={handleReset} disabled={running}>
-                    リセット
+                    {isTweak ? "シャッフル" : "リセット"}
                   </Button>
                 </HStack>
               </VStack>

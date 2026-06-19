@@ -12,6 +12,10 @@ export const graders: Record<string, () => Promise<GraderDef>> = {
   "fill-entries-tax": () => import("./data/entries-tax").then((m) => m.default),
   "fill-split-csv": () => import("./data/split-csv").then((m) => m.default),
   "fill-replace-template": () => import("./data/replace-template").then((m) => m.default),
+  // tweak
+  "tweak-keyword-sum": () => import("./tweak/keyword-sum").then((m) => m.default),
+  "tweak-parsons-filter": () => import("./tweak/parsons-filter").then((m) => m.default),
+  "tweak-method-double": () => import("./tweak/method-double").then((m) => m.default),
   // fill / gas
   "fill-gas-sum-column": () => import("./gas/sum-column").then((m) => m.default),
   // fill / email

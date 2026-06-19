@@ -14,10 +14,17 @@ import gasSum from "./gas/sum-column";
 import emailWeekly from "./email/weekly-report";
 import starCount from "./read/star-count";
 import average from "./data/average";
+import tweakKeywordSum from "./tweak/keyword-sum";
+import tweakParsonsFilter from "./tweak/parsons-filter";
+import tweakMethodDouble from "./tweak/method-double";
 
 export const allProblems: ProblemMeta[] = [
   // read
   starCount,
+  // tweak
+  tweakKeywordSum,
+  tweakParsonsFilter,
+  tweakMethodDouble,
   // fill / data（メソッド練習帳）
   sumNumbers,
   filterEvens,
