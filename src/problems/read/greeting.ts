@@ -15,16 +15,16 @@ export default defineProblem({
 ## コードを読んでみよう
 
 \`\`\`ts
-const name = "田中"; // 名前を変数に入れている
+const person = "田中"; // 名前を変数に入れている
 
 function solve(): string {
-  return \`\${name}さん、こんにちは！\`;
+  return \`\${person}さん、こんにちは！\`;
 }
 \`\`\`
 
-- \`const name = "田中"\` — 文字列を変数に入れる
+- \`const person = "田中"\` — 文字列を変数に入れる
 - バッククォートで囲んだ文字列が**テンプレートリテラル**
-- \`\${name}\` — テンプレートリテラルの中で変数を展開できる
+- \`\${person}\` — テンプレートリテラルの中で変数を展開できる
 
 **\`"田中"\` のところだけ変えれば OK。**`,
     hints: [
@@ -33,14 +33,14 @@ function solve(): string {
       "バッククォートと `${}` の組み合わせが「テンプレートリテラル」",
     ],
   },
-  initialCode: `const name = "田中"; // ← ここを変えてみよう
+  initialCode: `const person = "田中"; // ← ここを変えてみよう
 
 function solve(): string {
-  return \`\${name}さん、こんにちは！\`;
+  return \`\${person}さん、こんにちは！\`;
 }`,
-  solutionCode: `const name = "田中";
+  solutionCode: `const person = "田中";
 
 function solve(): string {
-  return \`\${name}さん、こんにちは！\`;
+  return \`\${person}さん、こんにちは！\`;
 }`,
 });
