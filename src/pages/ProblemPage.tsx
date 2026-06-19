@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from "react";
+import { getHighlighter } from "../lib/highlighter";
 import { useNavigate } from "@tanstack/react-router";
 import {
   Box,
@@ -170,6 +171,13 @@ export function ProblemPage() {
                       color: "inherit",
                       borderRadius: 0,
                     },
+                    "& .shiki": {
+                      borderRadius: "6px",
+                      padding: "10px 12px",
+                      overflow: "auto",
+                      fontSize: "0.8rem",
+                      lineHeight: "1.6",
+                    },
                     "& ul": { paddingLeft: "20px" },
                     "& p": { margin: "4px 0" },
                   }}
@@ -270,25 +278,60 @@ export function ProblemPage() {
   );
 }
 
+function ShikiBlock({ code, lang }: { code: string; lang: string }) {
+  const [html, setHtml] = useState<string>("");
+
+  useEffect(() => {
+    getHighlighter().then((h) => {
+      const resolvedLang = h.getLoadedLanguages().includes(lang as never) ? lang : "text";
+      setHtml(h.codeToHtml(code, { lang: resolvedLang, theme: "github-dark" }));
+    });
+  }, [code, lang]);
+
+  if (!html) {
+    return (
+      <pre
+        style={{
+          background: "#24292e",
+          color: "#e1e4e8",
+          borderRadius: "6px",
+          padding: "10px 12px",
+          overflow: "auto",
+          fontSize: "0.8rem",
+          lineHeight: "1.6",
+          margin: "4px 0",
+        }}
+      >
+        <code>{code}</code>
+      </pre>
+    );
+  }
+  return (
+    <div
+      dangerouslySetInnerHTML={{ __html: html }}
+      style={{ margin: "4px 0" }}
+    />
+  );
+}
+
 function MarkdownLite({ source }: { source: string }) {
   const lines = source.split("\n");
   const elements: React.ReactNode[] = [];
   let inCode = false;
   let codeLines: string[] = [];
+  let codeLang = "text";
   let key = 0;
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
     if (line.startsWith("```")) {
       if (inCode) {
-        elements.push(
-          <pre key={key++}>
-            <code>{codeLines.join("\n")}</code>
-          </pre>,
-        );
+        elements.push(<ShikiBlock key={key++} code={codeLines.join("\n")} lang={codeLang} />);
         codeLines = [];
+        codeLang = "text";
         inCode = false;
       } else {
+        codeLang = line.slice(3).trim() || "text";
         inCode = true;
       }
       continue;

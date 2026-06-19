@@ -11,7 +11,7 @@ export function Navbar() {
           </Heading>
         </Link>
         <Text color="blue.200" fontSize="sm" fontFamily="mono">
-          コードはこわくない
+          「構造から読む」JS/TS 入門
         </Text>
       </Flex>
     </Box>

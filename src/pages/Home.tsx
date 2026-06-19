@@ -60,13 +60,8 @@ export function Home() {
             transition={{ duration: 0.5, ease: "easeOut" }}
           >
             <Heading size="2xl" textAlign="center" color="gray.800">
-              コードはこわくない
+              「構造から読む」JS/TS 入門
             </Heading>
-            <Text color="gray.600" fontSize="lg" textAlign="center" maxW="480px">
-              「構造を読む力」から始める JS/TS 入門。
-              <br />
-              型注釈は最初からついている。気づいたら TS が書けてた、を目指す。
-            </Text>
             {solvedCount > 0 && (
               <Badge colorPalette="green" fontSize="sm" px={3} py={1}>
                 {solvedCount} / {totalCount} 問クリア
