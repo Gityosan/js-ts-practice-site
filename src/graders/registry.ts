@@ -18,12 +18,16 @@ export const graders: Record<string, () => Promise<GraderDef>> = {
   "tweak-method-double": () => import("./tweak/method-double").then((m) => m.default),
   "tweak-gas-parsons": () => import("./tweak/gas-parsons").then((m) => m.default),
   "tweak-email-choice": () => import("./tweak/email-choice").then((m) => m.default),
+  "tweak-chrome-choice": () => import("./tweak/chrome-choice").then((m) => m.default),
   // fill / gas
   "fill-gas-sum-column": () => import("./gas/sum-column").then((m) => m.default),
+  "fill-gas-conditional-sum": () => import("./gas/conditional-sum").then((m) => m.default),
   // fill / email
   "fill-email-weekly": () => import("./email/weekly-report").then((m) => m.default),
+  "fill-email-personalized": () => import("./email/personalized-send").then((m) => m.default),
   // fill / chrome
   "fill-chrome-fill-form": () => import("./chrome/fill-form").then((m) => m.default),
+  "fill-chrome-get-text": () => import("./chrome/get-text").then((m) => m.default),
   // read
   "read-star-count": () => import("./read/star-count").then((m) => m.default),
   // write
@@ -31,4 +35,6 @@ export const graders: Record<string, () => Promise<GraderDef>> = {
   "write-max-value": () => import("./data/max-value").then((m) => m.default),
   "write-unique": () => import("./data/unique").then((m) => m.default),
   "write-group-sum": () => import("./data/group-sum").then((m) => m.default),
+  "write-gas-rows-to-obj": () => import("./gas/rows-to-obj").then((m) => m.default),
+  "write-email-make-subject": () => import("./email/make-subject").then((m) => m.default),
 };

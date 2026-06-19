@@ -22,7 +22,13 @@ import tweakParsonsFilter from "./tweak/parsons-filter";
 import tweakMethodDouble from "./tweak/method-double";
 import tweakGasParsons from "./tweak/gas-parsons";
 import tweakEmailChoice from "./tweak/email-choice";
+import tweakChromeChoice from "./tweak/chrome-choice";
 import chromeFillForm from "./chrome/fill-form";
+import chromeGetText from "./chrome/get-text";
+import gasConditionalSum from "./gas/conditional-sum";
+import gasRowsToObj from "./gas/rows-to-obj";
+import emailPersonalized from "./email/personalized-send";
+import emailMakeSubject from "./email/make-subject";
 
 export const allProblems: ProblemMeta[] = [
   // read
@@ -33,6 +39,7 @@ export const allProblems: ProblemMeta[] = [
   tweakMethodDouble,
   tweakGasParsons,
   tweakEmailChoice,
+  tweakChromeChoice,
   // fill / data（メソッド練習帳）
   sumNumbers,
   filterEvens,
@@ -47,15 +54,20 @@ export const allProblems: ProblemMeta[] = [
   sumSales,
   // fill / gas
   gasSum,
+  gasConditionalSum,
   // fill / email
   emailWeekly,
+  emailPersonalized,
   // fill / chrome
   chromeFillForm,
+  chromeGetText,
   // write
   average,
   maxValue,
   unique,
   groupSum,
+  gasRowsToObj,
+  emailMakeSubject,
 ];
 
 export function getProblemById(id: string): ProblemMeta | undefined {
