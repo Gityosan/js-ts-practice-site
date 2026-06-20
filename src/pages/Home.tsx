@@ -82,6 +82,7 @@ export function Home() {
                   <MotionBox
                     key={s.key}
                     p={4}
+                    minWidth="0"
                     bg="white"
                     borderRadius="lg"
                     borderWidth="1px"
@@ -101,10 +102,10 @@ export function Home() {
                         </Text>
                       )}
                     </HStack>
-                    <Text fontWeight="bold" fontSize="sm" color="gray.800">
+                    <Text fontWeight="bold" fontSize="sm" color="gray.800" wordBreak="break-word">
                       {s.label}
                     </Text>
-                    <Text fontSize="xs" color="gray.500" mt={0.5}>
+                    <Text fontSize="xs" color="gray.500" mt={0.5} wordBreak="break-word">
                       {s.desc}
                     </Text>
                   </MotionBox>
