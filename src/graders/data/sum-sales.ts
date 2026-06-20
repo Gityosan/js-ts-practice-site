@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { autoTable } from "../../grade/visual";
 import type { IoGraderDef } from "../../grade/types";
 import { SaleSchema } from "../../problems/data/sum-sales";
 
@@ -15,6 +16,7 @@ const salesData: Sale[] = [
 const grader: IoGraderDef = {
   kind: "io",
   entry: "solve",
+  visualize: (output, input) => autoTable(input[0], { label: "東京の合計", value: output }),
   outputSchema: z.number(),
   cases: [
     {

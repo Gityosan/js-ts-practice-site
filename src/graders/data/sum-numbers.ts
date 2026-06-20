@@ -1,9 +1,11 @@
 import { z } from "zod";
+import { autoTable } from "../../grade/visual";
 import type { IoGraderDef } from "../../grade/types";
 
 const grader: IoGraderDef = {
   kind: "io",
   entry: "solve",
+  visualize: (output, input) => autoTable(input[0], { label: "合計", value: output }),
   outputSchema: z.number(),
   cases: [
     { input: [[1, 2, 3]], expected: 6 },

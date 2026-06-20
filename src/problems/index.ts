@@ -1,5 +1,9 @@
 import type { ProblemMeta } from "../core/schemas";
 
+import decodeConstName from "./decode/const-name";
+import decodeFunctionShape from "./decode/function-shape";
+import decodeIfCondition from "./decode/if-condition";
+import decodeObjectVsBlock from "./decode/object-vs-block";
 import sumNumbers from "./data/sum-numbers";
 import filterEvens from "./data/filter-evens";
 import mapDouble from "./data/map-double";
@@ -35,6 +39,11 @@ import emailPersonalized from "./email/personalized-send";
 import emailMakeSubject from "./email/make-subject";
 
 export const allProblems: ProblemMeta[] = [
+  // decode（解読）
+  decodeConstName,
+  decodeFunctionShape,
+  decodeIfCondition,
+  decodeObjectVsBlock,
   // read
   starCount,
   readGreeting,

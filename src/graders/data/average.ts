@@ -1,9 +1,11 @@
 import { z } from "zod";
+import { autoTable } from "../../grade/visual";
 import type { IoGraderDef } from "../../grade/types";
 
 const grader: IoGraderDef = {
   kind: "io",
   entry: "solve",
+  visualize: (output, input) => autoTable(input[0], { label: "平均", value: output }),
   outputSchema: z.number(),
   cases: [
     { label: "3 要素の平均", input: [[10, 20, 30]], expected: 20 },

@@ -1,10 +1,12 @@
 import { z } from "zod";
+import { autoTable } from "../../grade/visual";
 import type { IoGraderDef } from "../../grade/types";
 import { ProductSchema } from "../../problems/data/find-product";
 
 const grader: IoGraderDef = {
   kind: "io",
   entry: "solve",
+  visualize: (output, input) => autoTable(input[0], { label: "見つけた商品", value: output }),
   outputSchema: z.union([ProductSchema, z.undefined()]),
   cases: [
     {

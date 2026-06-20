@@ -11,11 +11,17 @@ self.onmessage = async (e: MessageEvent<{ problemId: string; learnerJs: string }
     if (g.kind === "io") {
       self.postMessage({ type: "meta", total: g.cases.length + (g.assertMethod ? 1 : 0) });
       const fn = new Function(`${learnerJs}; return ${g.entry ?? "solve"};`)();
+      let firstOutput: unknown;
+      let firstInput: unknown[] | undefined;
       for (let i = 0; i < g.cases.length; i++) {
         const c = g.cases[i];
         const label = c.label ?? `ケース${i + 1}`;
         try {
           const out = await fn(...c.input);
+          if (i === 0) {
+            firstOutput = out;
+            firstInput = c.input;
+          }
           if (g.outputSchema && !g.outputSchema.safeParse(out).success) {
             self.postMessage({
               type: "case",
@@ -61,6 +67,13 @@ self.onmessage = async (e: MessageEvent<{ problemId: string; learnerJs: string }
           }
         }
       }
+      if (g.visualize && firstInput) {
+        try {
+          self.postMessage({ type: "visual", state: g.visualize(firstOutput, firstInput) });
+        } catch {
+          // 視覚化失敗は採点に影響させない
+        }
+      }
       self.postMessage({ type: "done" });
     } else {
       self.postMessage({ type: "meta", total: g.asserts.length });
@@ -85,6 +98,13 @@ self.onmessage = async (e: MessageEvent<{ problemId: string; learnerJs: string }
           if (new RegExp(bc.pattern).test(learnerJs)) {
             self.postMessage({ type: "bonus", result: { label: bc.label, passed: true, bonus: true } });
           }
+        }
+      }
+      if (g.visualize) {
+        try {
+          self.postMessage({ type: "visual", state: g.visualize(scope) });
+        } catch {
+          // 視覚化失敗は採点に影響させない
         }
       }
       self.postMessage({ type: "done" });
