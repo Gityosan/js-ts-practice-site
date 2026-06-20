@@ -24,11 +24,17 @@ export async function runGrader(problemId: string, learnerTs: string): Promise<G
 
   if (g.kind === "io") {
     const fn = new Function(`${learnerJs}; return ${g.entry ?? "solve"};`)();
+    let firstOutput: unknown;
+    let firstInput: unknown[] | undefined;
     for (let i = 0; i < g.cases.length; i++) {
       const c = g.cases[i];
       const label = c.label ?? `ケース${i + 1}`;
       try {
         const out = await fn(...c.input);
+        if (i === 0) {
+          firstOutput = out;
+          firstInput = c.input;
+        }
         if (g.outputSchema && !g.outputSchema.safeParse(out).success) {
           results.push({ label, passed: false, detail: "形が違う" });
           continue;
@@ -64,11 +70,20 @@ export async function runGrader(problemId: string, learnerTs: string): Promise<G
       }
     }
     const allResults = [...results, ...bonusResults];
+    let visual;
+    if (g.visualize && firstInput) {
+      try {
+        visual = g.visualize(firstOutput, firstInput);
+      } catch {
+        // 視覚化失敗は採点に影響させない
+      }
+    }
     return {
       passed: results.filter((r) => r.passed).length,
       total: results.length,
       results: allResults,
       status: "ok",
+      visual,
     };
   } else {
     const scope = g.setupMocks();
@@ -95,11 +110,20 @@ export async function runGrader(problemId: string, learnerTs: string): Promise<G
         }
       }
     }
+    let stateVisual;
+    if (g.visualize) {
+      try {
+        stateVisual = g.visualize(scope);
+      } catch {
+        // 視覚化失敗は採点に影響させない
+      }
+    }
     return {
       passed: results.filter((r) => r.passed).length,
       total: results.length,
       results: [...results, ...stateBonusResults],
       status: "ok",
+      visual: stateVisual,
     };
   }
 }

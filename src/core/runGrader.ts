@@ -1,5 +1,6 @@
 import GraderWorker from "../worker/grader.worker?worker";
 import type { CaseResult, GradeResult } from "../grade/types";
+import type { VisualState } from "../grade/visual";
 
 export type { CaseResult, GradeResult };
 
@@ -10,6 +11,7 @@ export function runGrader(problemId: string, learnerJs: string): Promise<GradeRe
     const worker = new GraderWorker();
     const results: CaseResult[] = [];
     let total = 0;
+    let visual: VisualState | undefined;
     let timer: ReturnType<typeof setTimeout>;
 
     const finish = (status: GradeResult["status"], error?: string) => {
@@ -22,6 +24,7 @@ export function runGrader(problemId: string, learnerJs: string): Promise<GradeRe
         results,
         status,
         error,
+        visual,
       });
     };
 
@@ -42,6 +45,8 @@ export function runGrader(problemId: string, learnerJs: string): Promise<GradeRe
       } else if (m.type === "case" || m.type === "bonus") {
         results.push(m.result);
         arm();
+      } else if (m.type === "visual") {
+        visual = m.state;
       } else if (m.type === "done") {
         finish("ok");
       } else if (m.type === "error") {

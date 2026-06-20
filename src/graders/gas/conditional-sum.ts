@@ -45,6 +45,15 @@ const grader: StateGraderDef = {
     { label: "filter() で条件絞り込みした", pattern: "\\.filter\\s*\\(" },
     { label: "reduce で条件付き合計した", pattern: "\\.reduce\\s*\\(" },
   ],
+  visualize: (scope) => {
+    const sv = scope._setValue as ReturnType<typeof spy>;
+    const total = sv.calls.length ? sv.calls[sv.calls.length - 1][0] : "";
+    const grid: { value: string | number; highlight?: boolean }[][] = MOCK_VALUES.map((row) => [
+      { value: row[0], highlight: row[0] >= 1000 },
+    ]);
+    grid.push([{ value: typeof total === "number" ? total : String(total ?? "—"), highlight: true }]);
+    return { kind: "spreadsheet", headers: ["売上"], grid };
+  },
 };
 
 export default grader;

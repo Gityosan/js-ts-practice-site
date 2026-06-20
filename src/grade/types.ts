@@ -1,4 +1,5 @@
 import type { z } from "zod";
+import type { VisualState } from "./visual";
 
 export type IoCase = {
   label?: string;
@@ -16,6 +17,8 @@ export type IoGraderDef = {
   cases: IoCase[];
   assertMethod?: string; // 練習帳用: 学習者コードが指定メソッドを呼んでいるか確認 (例: "map", "filter")
   bonusCases?: { label: string; pattern: string }[]; // 裏回答検出: パターンにマッチしたら bonus フラグ付きで結果に追加
+  // 視覚出力: 先頭ケースの入力・出力から scenario の絵を作る（読み終わったら消す）
+  visualize?: (output: unknown, input: unknown[]) => VisualState;
 };
 
 export type StateAssert = {
@@ -28,6 +31,8 @@ export type StateGraderDef = {
   setupMocks: () => Record<string, unknown>;
   asserts: StateAssert[];
   bonusCases?: { label: string; pattern: string }[];
+  // 視覚出力: 学習者コード実行後の scope（スパイ記録・モック状態）から scenario の絵を作る
+  visualize?: (scope: Record<string, unknown>) => VisualState;
 };
 
 export type GraderDef = IoGraderDef | StateGraderDef;
@@ -40,4 +45,5 @@ export type GradeResult = {
   results: CaseResult[];
   status: "ok" | "timeout" | "error";
   error?: string;
+  visual?: VisualState; // scenario の視覚出力（あれば）
 };

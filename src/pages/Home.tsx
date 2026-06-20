@@ -19,6 +19,7 @@ const MotionVStack = motion.create(VStack);
 const MotionBox = motion.create(Box);
 
 const stageConfig = [
+  { key: "decode", label: "解読", color: "pink", desc: "1行を予約語・括弧に分解して読む", available: true },
   { key: "read", label: "読む", color: "cyan", desc: "動くコードを触って変化を見る", available: true },
   { key: "tweak", label: "いじる", color: "indigo", desc: "並べ替え・選んで組み立てる", available: true },
   { key: "fill", label: "埋める", color: "teal", desc: "骨格を見て中身を書く", available: true },
@@ -26,6 +27,7 @@ const stageConfig = [
 ] as const;
 
 const scenarioLabel: Record<string, string> = {
+  basic: "基礎",
   data: "データ集計",
   gas: "GAS",
   email: "メール自動化",
@@ -74,7 +76,7 @@ export function Home() {
             <Heading size="md" mb={4} color="gray.700">
               ステージ構成（funnel）
             </Heading>
-            <SimpleGrid columns={{ base: 2, md: 4 }} gap={3}>
+            <SimpleGrid columns={{ base: 2, md: 5 }} gap={3}>
               {stageConfig.map((s, i) => {
                 const problems = byStage[s.key] ?? [];
                 const solvedInStage = problems.filter((p) => solved.has(p.id)).length;

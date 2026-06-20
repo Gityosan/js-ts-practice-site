@@ -17,8 +17,9 @@ import { getProblemById, allProblems } from "../problems";
 import { runGrader } from "../core/grader";
 import { EditorPane, type EditorHandle } from "../components/EditorPane";
 import { TweakPane } from "../components/TweakPane";
+import { DecodePane } from "../components/DecodePane";
 import { ResultPanel } from "../components/ResultPanel";
-import { VisualOutput } from "../components/VisualOutput";
+import { VisualOutput, ScenarioVisual } from "../components/VisualOutput";
 import type { GradeResult } from "../grade/types";
 import { problemRoute } from "../router";
 import { markSolved } from "../lib/progress";
@@ -29,6 +30,7 @@ const MotionDiv = motion.create(
 );
 
 const stageLabel: Record<string, string> = {
+  decode: "解読",
   read: "読む",
   tweak: "いじる",
   fill: "埋める",
@@ -36,6 +38,7 @@ const stageLabel: Record<string, string> = {
 };
 
 const stageColor: Record<string, string> = {
+  decode: "pink",
   read: "cyan",
   tweak: "indigo",
   fill: "teal",
@@ -48,6 +51,7 @@ export function ProblemPage() {
   const problem = getProblemById(id);
 
   const isTweak = problem?.stage === "tweak" && !!problem.tweak;
+  const isDecode = problem?.stage === "decode" && !!problem.decode;
 
   const currentIndex = allProblems.findIndex((p) => p.id === id);
   const prevProblem = currentIndex > 0 ? allProblems[currentIndex - 1] : null;
@@ -250,8 +254,21 @@ export function ProblemPage() {
               </VStack>
             </Box>
 
-            {/* Right: Editor + Results stacked */}
+            {/* Right: Editor + Results stacked (decode は実行せず解読UIのみ) */}
             <VStack align="stretch" gap={3}>
+              {isDecode ? (
+                <Box
+                  bg="white"
+                  borderRadius="md"
+                  borderWidth="1px"
+                  borderStyle="solid"
+                  borderColor="gray.200"
+                  p={5}
+                >
+                  <DecodePane decode={problem.decode!} />
+                </Box>
+              ) : (
+                <>
               {isTweak ? (
                 <Box
                   bg="white"
@@ -309,6 +326,27 @@ export function ProblemPage() {
                 </Box>
               )}
 
+              {/* scenario の視覚出力（data/gas/email/chrome）。読み終わったら採点結果へ */}
+              {result?.visual && (
+                <Box
+                  bg="gray.50"
+                  borderRadius="lg"
+                  borderWidth="1px"
+                  borderStyle="solid"
+                  borderColor="gray.200"
+                  overflow="hidden"
+                >
+                  <Box p={3} borderBottomWidth="1px" borderBottomStyle="solid" borderColor="gray.100">
+                    <Text fontSize="sm" fontWeight="bold" color="gray.600">
+                      実行結果
+                    </Text>
+                  </Box>
+                  <Box p={4} display="flex" justifyContent="center">
+                    <ScenarioVisual state={result.visual} />
+                  </Box>
+                </Box>
+              )}
+
               <Box
                 bg="white"
                 borderRadius="lg"
@@ -324,6 +362,8 @@ export function ProblemPage() {
                 </Box>
                 <ResultPanel result={result} running={running} error={runError} />
               </Box>
+                </>
+              )}
             </VStack>
           </Box>
         </VStack>

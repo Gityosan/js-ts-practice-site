@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { objectsToTable } from "../../grade/visual";
 import type { IoGraderDef } from "../../grade/types";
 
 const grader: IoGraderDef = {
@@ -38,6 +39,8 @@ const grader: IoGraderDef = {
     { label: "for...of で行を繰り返した", pattern: "for\\s*\\(.*of\\s" },
     { label: "reduce でまとめた", pattern: "\\.reduce\\s*\\(" },
   ],
+  visualize: (output) =>
+    objectsToTable(Array.isArray(output) ? (output as Record<string, unknown>[]) : []),
 };
 
 export default grader;

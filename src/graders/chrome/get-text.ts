@@ -44,6 +44,15 @@ const grader: StateGraderDef = {
     { label: "for...of でループした", pattern: "for\\s*\\(.*of\\s" },
     { label: "innerText でテキストを取得した", pattern: "\\.innerText" },
   ],
+  visualize: (scope) => {
+    const texts = (scope.texts as string[]) ?? [];
+    return {
+      kind: "table",
+      columns: ["取得したテキスト"],
+      rows: texts.map((t) => [t]),
+      result: { label: "収集件数", value: String(texts.length) },
+    };
+  },
 };
 
 export default grader;

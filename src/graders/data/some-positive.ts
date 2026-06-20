@@ -1,9 +1,11 @@
 import { z } from "zod";
+import { autoTable } from "../../grade/visual";
 import type { IoGraderDef } from "../../grade/types";
 
 const grader: IoGraderDef = {
   kind: "io",
   entry: "solve",
+  visualize: (output, input) => autoTable(input[0], { label: "正の数あり？", value: output }),
   outputSchema: z.boolean(),
   cases: [
     { label: "正の数あり", input: [[1, -2, -3]], expected: true },

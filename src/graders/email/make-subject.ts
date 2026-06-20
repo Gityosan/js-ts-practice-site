@@ -31,6 +31,10 @@ const grader: IoGraderDef = {
     { label: "+ 演算子で文字列を連結した", pattern: "[\"'`]\\s*\\+|\\+\\s*[\"'`]" },
     { label: ".concat() で連結した", pattern: "\\.concat\\s*\\(" },
   ],
+  visualize: (output, input) => ({
+    kind: "emails",
+    sent: [{ to: `${String(input[0] ?? "")}様`, subject: String(output ?? ""), body: "（本文は別問題で）" }],
+  }),
 };
 
 export default grader;

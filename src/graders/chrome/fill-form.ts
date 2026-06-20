@@ -53,6 +53,19 @@ const grader: StateGraderDef = {
     { label: "getElementById() で要素を取得した", pattern: "getElementById\\s*\\(" },
     { label: "as HTMLInputElement で型アサーションした", pattern: "as\\s+HTMLInputElement" },
   ],
+  visualize: (scope) => {
+    const fields = scope._fields as Record<string, { value: string }>;
+    const labelOf: Record<string, string> = { "#username": "ユーザー名", "#password": "パスワード" };
+    return {
+      kind: "form",
+      title: "ログインフォーム（サンドボックス）",
+      fields: Object.entries(fields).map(([sel, f]) => ({
+        label: `${labelOf[sel] ?? sel}（${sel}）`,
+        value: f.value,
+        filled: f.value !== "",
+      })),
+    };
+  },
 };
 
 export default grader;
