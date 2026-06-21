@@ -126,7 +126,6 @@ export function ProblemPage() {
                 ← 一覧
               </Button>
               <Badge colorPalette={stageColor[problem.stage]}>{stageLabel[problem.stage]}</Badge>
-              <Badge colorPalette="gray">{problem.scenario}</Badge>
             </HStack>
             <HStack gap={2}>
               <Button

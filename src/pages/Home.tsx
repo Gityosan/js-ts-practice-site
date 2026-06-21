@@ -26,14 +26,6 @@ const stageConfig = [
   { key: "write", label: "書く", color: "purple", desc: "白紙から書く", available: true },
 ] as const;
 
-const scenarioLabel: Record<string, string> = {
-  basic: "基礎",
-  data: "データ集計",
-  gas: "GAS",
-  email: "メール自動化",
-  chrome: "Chrome 拡張",
-};
-
 export function Home() {
   const solved = useMemo(() => getAllSolved(), []);
 
@@ -123,10 +115,6 @@ export function Home() {
             .filter((s) => s.available && (byStage[s.key]?.length ?? 0) > 0)
             .map((s) => {
               const problems = byStage[s.key] ?? [];
-              const byScenario = problems.reduce<Record<string, typeof problems>>((acc, p) => {
-                (acc[p.scenario] ??= []).push(p);
-                return acc;
-              }, {});
 
               return (
                 <Box key={s.key}>
@@ -139,27 +127,11 @@ export function Home() {
                     </Text>
                   </HStack>
 
-                  <VStack align="stretch" gap={5}>
-                    {Object.entries(byScenario).map(([scenario, ps]) => (
-                      <Box key={scenario}>
-                        <Text
-                          fontSize="xs"
-                          fontWeight="bold"
-                          color="gray.400"
-                          mb={2}
-                          textTransform="uppercase"
-                          letterSpacing="wider"
-                        >
-                          {scenarioLabel[scenario] ?? scenario}
-                        </Text>
-                        <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
-                          {ps.map((p) => (
-                            <ProblemCard key={p.id} problem={p} solved={solved.has(p.id)} />
-                          ))}
-                        </SimpleGrid>
-                      </Box>
+                  <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
+                    {problems.map((p) => (
+                      <ProblemCard key={p.id} problem={p} solved={solved.has(p.id)} />
                     ))}
-                  </VStack>
+                  </SimpleGrid>
                 </Box>
               );
             })}

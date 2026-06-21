@@ -5,7 +5,7 @@ export default defineProblem({
   stage: "fill",
   scenario: "chrome",
   copy: {
-    title: ".item 要素のテキストを一覧取得しよう（Chrome拡張）",
+    title: ".item 要素のテキストを一覧取得しよう",
     prompt: `## やること
 
 Chrome 拡張のコンテンツスクリプトで、**クラス \`.item\` を持つ全要素のテキスト**を配列に集めるコードを書こう。

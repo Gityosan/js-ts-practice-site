@@ -19,13 +19,6 @@ const stageColor: Record<string, string> = {
   write: "purple",
 };
 
-const scenarioLabel: Record<string, string> = {
-  data: "データ集計",
-  gas: "GAS",
-  email: "メール自動化",
-  chrome: "Chrome拡張",
-};
-
 type Props = { problem: ProblemMeta; solved?: boolean };
 
 export function ProblemCard({ problem, solved = false }: Props) {
@@ -55,9 +48,6 @@ export function ProblemCard({ problem, solved = false }: Props) {
           <HStack flexWrap="wrap" gap={1}>
             <Badge colorPalette={stageColor[problem.stage]} fontSize="xs">
               {stageLabel[problem.stage]}
-            </Badge>
-            <Badge colorPalette="gray" fontSize="xs">
-              {scenarioLabel[problem.scenario]}
             </Badge>
           </HStack>
           {solved && (

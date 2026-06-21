@@ -5,7 +5,7 @@ export default defineProblem({
   stage: "fill",
   scenario: "chrome",
   copy: {
-    title: "フォームに値を自動入力しよう（Chrome拡張）",
+    title: "フォームに値を自動入力しよう",
     prompt: `## やること
 
 Chrome 拡張のコンテンツスクリプトで、**ログインフォームに値を自動入力**する関数を完成させよう。

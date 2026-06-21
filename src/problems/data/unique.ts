@@ -5,7 +5,7 @@ export default defineProblem({
   stage: "write",
   scenario: "data",
   copy: {
-    title: "重複を取り除こう（白紙から）",
+    title: "重複を取り除こう",
     prompt: `## やること
 
 数値の配列から**重複を除いたユニークな配列**を返す関数 \`solve\` を白紙から書こう。

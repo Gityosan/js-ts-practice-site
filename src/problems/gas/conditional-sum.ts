@@ -5,7 +5,7 @@ export default defineProblem({
   stage: "fill",
   scenario: "gas",
   copy: {
-    title: "売上が1000以上の行だけ合計して B6 にセットしよう（GAS）",
+    title: "売上が1000以上の行だけ合計して B6 にセットしよう",
     prompt: `## やること
 
 Google Apps Script（GAS）で、スプレッドシートの **B2〜B5 の値のうち 1000 以上のものだけを合計**し、**B6 にセット**するコードを書こう。
