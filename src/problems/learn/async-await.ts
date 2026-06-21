@@ -20,15 +20,27 @@ console.log("2");
 
 ## Promise という型
 
-時間のかかる非同期処理は、結果を直接返せない（まだ無いから）。代わりに **「未来に値が入る箱」= \`Promise\`** を返す。
+時間のかかる非同期処理は、結果を直接返せない（**まだ結果が無いから**）。代わりに **「未来に値が入る箱」= \`Promise\`** を返す。
 
 - Promise は3つの状態を持つ：**pending（待ち）→ fulfilled（成功）/ rejected（失敗）**。
 - 中身は直接取り出せない。**\`await\`** か **\`.then()\`** で受け取る。
 - 型は \`Promise<T>\`（例：\`Promise<string>\` は「いずれ string が入る」）。
 
+## 「同期で書けばいいのでは？」→ できない
+
+\`fetch\` などは、呼んだ瞬間にはまだ結果が無い。だから **結果ではなく Promise を返す**。同期的に中身を受け取る書き方は**用意されていない**。
+
+\`\`\`ts
+const res = fetch("/data.json");
+console.log(res); // → Promise（データ本体ではない！）
+\`\`\`
+
+「同期で待てば値が返る」わけではなく、返ってくるのは最初から Promise。だから \`await\` か \`.then()\` で「後で」受け取るしかない。
+（なお \`await\` で待っている間も、他の処理は止まらない。）
+
 ## 「待つ」処理を読みやすく書く
 
-\`await\` を付けると、その Promise の完了を**待って**結果を受け取れる。
+\`await\` を付けると、その Promise の完了を**待って**中身を受け取れる。
 
 \`\`\`ts
 async function load() {
@@ -77,6 +89,14 @@ async function load() {
         ],
         answer: "時間のかかる処理を待たずに次へ進める",
         explain: "非同期は完了を待たずに先へ進み、結果が出たら受け取る。だから画面が固まらない（速さの話ではない）。",
+      },
+      {
+        prompt: "`await` を付けずに `const res = fetch(url)` とすると、`res` は何？",
+        snippet: `const res = fetch("/data.json");`,
+        choices: ["Promise（データ本体ではない）", "取得したデータ本体", "エラー"],
+        answer: "Promise（データ本体ではない）",
+        explain:
+          "fetch は呼んだ瞬間まだ結果が無いので Promise を返す。同期でデータを受け取る書き方は無く、await か .then で取り出す。",
       },
       {
         prompt: "`Promise` が表すものは？",
