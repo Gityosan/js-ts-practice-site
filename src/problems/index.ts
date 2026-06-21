@@ -50,13 +50,13 @@ export const allProblems: ProblemMeta[] = [
   readProgress,
   readColorBox,
   readBoolLight,
-  // tweak
+  // tweak（choice → parsons の順、種類ごとにまとめる）
   tweakKeywordSum,
-  tweakParsonsFilter,
   tweakMethodDouble,
-  tweakGasParsons,
   tweakEmailChoice,
   tweakChromeChoice,
+  tweakParsonsFilter,
+  tweakGasParsons,
   // fill / data（メソッド練習帳）
   sumNumbers,
   filterEvens,
