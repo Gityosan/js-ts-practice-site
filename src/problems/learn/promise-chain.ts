@@ -46,12 +46,29 @@ console.log("B: fetch の後ろの行");
 const res = await fetch("/data.json");
 console.log("先");  // fetch 完了後
 console.log("次");  // その後
-\`\`\``,
+\`\`\`
+
+## ただし「B → A」は後ろが同期コードのときだけ
+
+間に \`await\`（中断する処理）が入ると、その**待っている隙に \`.then\` が割り込める**。
+
+\`\`\`ts
+fetch("/x").then(() => console.log("A"));
+await new Promise((r) => setTimeout(r, 3000)); // 3秒待つ
+console.log("B");
+// fetch が3秒以内に終われば、待っている間に A が走る → A → B
+\`\`\`
+
+- 後ろが**同期コードだけ**なら、fetch が速くても必ず **B → A**。
+- 間に \`await\` があると、A（then）と B は「fetch の所要時間」対「await の待ち時間」の**レース**。待ちが長いほど A が先になりやすい。
+
+（補足：\`setTimeout\` は Promise を返さないので \`await setTimeout(...)\` では待てない。\`await new Promise((r) => setTimeout(r, ms))\` と書く。）`,
     hints: [
       ".then は成功時、.catch は失敗時。",
       ".finally は結果に関わらず必ず最後に実行される。",
       ".then の中は後回し。fetch の直後に書いた行の方が先に動く（B → A）。",
       ".then の結果を fetch の下の行で使うことはできない。中に書くか await。",
+      "B → A は後ろが同期コードのときだけ。間に await を挟むとレースになる。",
     ],
   },
   learn: {
@@ -89,6 +106,17 @@ console.log("B");`,
         answer: "使えない（then の中はまだ走っていない）",
         explain:
           "下の行（同期コード）は .then の中より先に動くので、結果はまだ無い。続けて使うなら .then の中に書くか await でつなぐ。",
+      },
+      {
+        prompt:
+          "`fetch(\"/x\").then(() => console.log(\"A\"))` の後に `await`（3秒待ち）→ `console.log(\"B\")`。fetch が1秒で終わるなら？",
+        snippet: `fetch("/x").then(() => console.log("A"));
+await new Promise((r) => setTimeout(r, 3000));
+console.log("B");`,
+        choices: ["A → B", "B → A", "毎回 B → A で不変"],
+        answer: "A → B",
+        explain:
+          "await で待っている3秒の隙に、1秒で終わった fetch の .then(A) が走る。await が明けてから B。同期コードのときと違い、await を挟むと割り込まれる。",
       },
     ],
   },
