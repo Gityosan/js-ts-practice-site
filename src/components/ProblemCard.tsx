@@ -6,6 +6,7 @@ import type { ProblemMeta } from "../core/schemas";
 const MotionBox = motion.create(Box);
 
 const stageLabel: Record<string, string> = {
+  decode: "解読",
   read: "読む",
   tweak: "いじる",
   fill: "埋める",
@@ -13,6 +14,7 @@ const stageLabel: Record<string, string> = {
 };
 
 const stageColor: Record<string, string> = {
+  decode: "pink",
   read: "cyan",
   tweak: "indigo",
   fill: "teal",
@@ -58,9 +60,6 @@ export function ProblemCard({ problem, solved = false }: Props) {
         </HStack>
         <Text fontWeight="bold" fontSize="md" color="gray.800" wordBreak="break-word" overflowWrap="break-word">
           {problem.copy.title}
-        </Text>
-        <Text fontSize="xs" color="gray.500" fontFamily="mono" wordBreak="break-all">
-          {problem.id}
         </Text>
       </VStack>
     </MotionBox>
