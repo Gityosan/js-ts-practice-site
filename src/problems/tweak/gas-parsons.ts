@@ -5,7 +5,7 @@ export default defineProblem({
   stage: "tweak",
   scenario: "gas",
   copy: {
-    title: "GAS の行を正しい順に並べよう",
+    title: "行を並び替えて関数を組み立てよう②",
     prompt: `## やること
 
 **ドラッグして正しい順番**に並べ替え、A列の合計を B1 にセットする GAS コードを完成させよう。

@@ -5,7 +5,7 @@ export default defineProblem({
   stage: "tweak",
   scenario: "email",
   copy: {
-    title: "未送信のアドレスを選んでメールを送ろう",
+    title: "キーワードを選んで関数を組み立てよう③",
     prompt: `## やること
 
 送信済みリストに入っていないアドレスを絞り込み、まとめてメールを送るコードを完成させよう。

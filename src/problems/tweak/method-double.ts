@@ -5,7 +5,7 @@ export default defineProblem({
   stage: "tweak",
   scenario: "data",
   copy: {
-    title: "正しい配列メソッドを選ぼう",
+    title: "キーワードを選んで関数を組み立てよう②",
     prompt: `## やること
 
 各数値を **2倍** にした新しい配列を返したい。空欄に入る**メソッド名**を選ぼう。

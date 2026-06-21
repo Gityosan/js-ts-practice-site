@@ -5,7 +5,7 @@ export default defineProblem({
   stage: "tweak",
   scenario: "data",
   copy: {
-    title: "バラバラの行を正しい順に並べよう",
+    title: "行を並び替えて関数を組み立てよう①",
     prompt: `## やること
 
 行がバラバラになっている。**ドラッグして正しい順番**に並べ替え、偶数だけを取り出す関数を完成させよう。
