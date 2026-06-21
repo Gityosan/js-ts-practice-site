@@ -5,7 +5,7 @@ export default defineProblem({
   stage: "fill",
   scenario: "email",
   copy: {
-    title: "全員に送ろう",
+    title: "メールを送ろう①",
     prompt: `## やること
 
 宛先リストの**全員に** \`sendEmail\` でメールを送るコードを書こう。
