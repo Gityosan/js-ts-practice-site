@@ -2,10 +2,10 @@ import { defineProblem } from "../../core/schemas";
 
 export default defineProblem({
   id: "fill-entries-tax",
-  stage: "fill",
+  stage: "write",
   scenario: "data",
   copy: {
-    title: "商品の合計金額（税込み）を計算しよう",
+    title: "合計を計算する②",
     prompt: `## やること
 
 商品名 → 税抜価格のマップと税率を受け取って、**全商品の税込み合計**を返す関数 \`solve\` を完成させよう。

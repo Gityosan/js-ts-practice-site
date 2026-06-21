@@ -2,10 +2,10 @@ import { defineProblem } from "../../core/schemas";
 
 export default defineProblem({
   id: "fill-email-weekly",
-  stage: "fill",
+  stage: "write",
   scenario: "email",
   copy: {
-    title: "週次レポートをメンバー全員に送ろう",
+    title: "メールを送る①",
     prompt: `## やること
 
 宛先リストの**全員に** \`sendEmail\` でメールを送るコードを書こう。
@@ -15,12 +15,7 @@ export default defineProblem({
 - \`report: string\` — メール本文
 - \`sendEmail(to, subject, body)\` — メール送信関数（モック）
 
-\`\`\`ts
-// 書くコード（イメージ）
-for (const to of recipients) {
-  sendEmail(to, "週次レポート", report);
-}
-\`\`\`
+\`recipients\` をループで 1 件ずつ取り出し、それぞれに \`sendEmail\` を呼ぶ。
 
 ## ポイント
 

@@ -10,10 +10,10 @@ export type Sale = z.infer<typeof SaleSchema>;
 
 export default defineProblem({
   id: "fill-sum-sales",
-  stage: "fill",
+  stage: "write",
   scenario: "data",
   copy: {
-    title: "地域別売上を集計しよう（総合問題）",
+    title: "データを集計する",
     prompt: `## やること
 
 売上データの配列から**東京の売上合計**を返す関数 \`solve\` を書こう。

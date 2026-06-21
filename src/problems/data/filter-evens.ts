@@ -2,10 +2,10 @@ import { defineProblem } from "../../core/schemas";
 
 export default defineProblem({
   id: "fill-filter-evens",
-  stage: "fill",
+  stage: "write",
   scenario: "data",
   copy: {
-    title: "偶数だけを取り出そう",
+    title: "条件でデータを絞り込む",
     prompt: `## やること
 
 数値の配列から**偶数だけ**を取り出す関数 \`solve\` を完成させよう。

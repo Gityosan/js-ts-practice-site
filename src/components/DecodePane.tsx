@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Box, Text, VStack, HStack, Button } from "@chakra-ui/react";
+import { Box, Text, VStack, HStack } from "@chakra-ui/react";
 import { AnimatePresence, motion } from "motion/react";
 import {
   tokenize,
@@ -9,6 +9,7 @@ import {
   type TokenType,
 } from "../lib/tokenize";
 import type { Decode } from "../core/schemas";
+import { QuizList } from "./QuizList";
 
 const MotionDiv = motion.create(
   "div" as unknown as React.ComponentType<React.HTMLAttributes<HTMLDivElement>>,
@@ -36,7 +37,13 @@ const LEGEND: { label: string; color: string; note: string }[] = [
   { label: "文字列/数値", color: COLOR.string, note: "そのままのデータ" },
 ];
 
-export function DecodePane({ decode }: { decode: Decode }) {
+export function DecodePane({
+  decode,
+  onComplete,
+}: {
+  decode: Decode;
+  onComplete?: () => void;
+}) {
   const tokens = useMemo(() => tokenize(decode.code), [decode.code]);
   const pairs = useMemo(() => matchBrackets(tokens), [tokens]);
   const [selected, setSelected] = useState<number | null>(null);
@@ -167,16 +174,14 @@ export function DecodePane({ decode }: { decode: Decode }) {
       </Box>
 
       {/* クイズ */}
-      {decode.quiz.length > 0 && (
-        <VStack align="stretch" gap={3} pt={2}>
-          <Text fontSize="sm" fontWeight="bold" color="gray.600">
-            読めたか確認しよう
-          </Text>
-          {decode.quiz.map((q, i) => (
-            <QuizCard key={i} index={i} quiz={q} />
-          ))}
-        </VStack>
-      )}
+      <Box pt={2}>
+        <QuizList
+          quiz={decode.quiz}
+          heading="読めたか確認しよう"
+          clearedLabel="✓ 解読クリア！全問正解"
+          onComplete={onComplete}
+        />
+      </Box>
     </VStack>
   );
 }
@@ -219,87 +224,3 @@ function TokenSpan({
   );
 }
 
-type Quiz = Decode["quiz"][number];
-
-function QuizCard({ quiz, index }: { quiz: Quiz; index: number }) {
-  const [picked, setPicked] = useState<string | null>(null);
-  const correct = picked === quiz.answer;
-
-  return (
-    <Box
-      borderWidth="1px"
-      borderStyle="solid"
-      borderColor="gray.200"
-      borderRadius="md"
-      p={4}
-      bg="white"
-    >
-      <Text fontSize="sm" color="gray.700" mb={quiz.snippet ? 2 : 3} fontWeight="medium">
-        Q{index + 1}. {quiz.prompt}
-      </Text>
-      {quiz.snippet && (
-        <Box
-          as="pre"
-          bg="#1e1e1e"
-          color="#d4d4d4"
-          borderRadius="md"
-          px={3}
-          py={2}
-          mb={3}
-          fontFamily="mono"
-          fontSize="sm"
-          overflowX="auto"
-        >
-          {quiz.snippet}
-        </Box>
-      )}
-      <HStack wrap="wrap" gap={2}>
-        {quiz.choices.map((choice) => {
-          const isPicked = picked === choice;
-          const isAnswer = choice === quiz.answer;
-          const palette =
-            picked == null ? "gray" : isAnswer ? "green" : isPicked ? "red" : "gray";
-          return (
-            <Button
-              key={choice}
-              size="sm"
-              variant={isPicked ? "solid" : "outline"}
-              colorPalette={palette}
-              onClick={() => setPicked(choice)}
-            >
-              {choice}
-            </Button>
-          );
-        })}
-      </HStack>
-      <AnimatePresence>
-        {picked != null && (
-          <MotionDiv
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.2 }}
-            style={{ overflow: "hidden" }}
-          >
-            <Box
-              mt={3}
-              p={3}
-              borderRadius="md"
-              bg={correct ? "green.50" : "orange.50"}
-              borderWidth="1px"
-              borderStyle="solid"
-              borderColor={correct ? "green.200" : "orange.200"}
-            >
-              <Text fontSize="sm" fontWeight="bold" color={correct ? "green.700" : "orange.700"} mb={1}>
-                {correct ? "○ 正解！" : "もう一度考えてみよう"}
-              </Text>
-              <Text fontSize="sm" color="gray.700" lineHeight="1.7">
-                {quiz.explain}
-              </Text>
-            </Box>
-          </MotionDiv>
-        )}
-      </AnimatePresence>
-    </Box>
-  );
-}

@@ -2,10 +2,10 @@ import { defineProblem } from "../../core/schemas";
 
 export default defineProblem({
   id: "fill-split-csv",
-  stage: "fill",
+  stage: "write",
   scenario: "data",
   copy: {
-    title: "CSV 行を配列に分解しよう",
+    title: "データを配列に変換する",
     prompt: `## やること
 
 カンマ区切りの文字列（CSV の 1 行）を受け取って、**各値をトリム（前後の空白を除いた）した配列**を返す関数 \`solve\` を完成させよう。

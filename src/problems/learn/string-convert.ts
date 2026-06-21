@@ -1,0 +1,128 @@
+import { defineProblem } from "../../core/schemas";
+
+export default defineProblem({
+  id: "learn-string-convert",
+  stage: "learn",
+  scenario: "basic",
+  copy: {
+    title: "文字列変換を知る",
+    prompt: `## 変数を文字列に埋め込む（テンプレートリテラル）
+
+バッククォートで囲んだ文字列の中では、\`\${ }\` で変数を埋め込める。
+
+\`\`\`ts
+const name = "田中";
+\`\${name}さん、こんにちは\`   // → "田中さん、こんにちは"
+\`\`\`
+
+## 数値などを文字列にする
+
+\`\`\`ts
+String(42)        // "42"
+(42).toString()   // "42"
+String(null)      // "null"（安全）
+\`\`\`
+
+- \`String(x)\` は **null / undefined でも安全**に変換できる。
+- \`x.toString()\` は \`x\` が null / undefined だと**エラー**になる。
+
+## 文字列をつなぐ（\`+\` と \`.concat()\`）
+
+\`\`\`ts
+"Hello, " + "world"        // "Hello, world"
+"Hello, ".concat("world")  // "Hello, world"（同じ結果）
+\`\`\`
+
+## 数値 + 文字列 は「文字列の連結」になる
+
+片方が文字列だと、もう片方も文字列に変換されてつながる。**計算ではない**。
+
+\`\`\`ts
+0 + "1"        // "01"（数値の 0 が "0" になって連結）
+"金額: " + 500 // "金額: 500"
+1 + 2 + "3"    // "33"（左から：1+2=3、その 3 と "3" を連結）
+\`\`\`
+
+## オブジェクトや配列をつなぐと変な文字列になる
+
+\`+\` で文字列につなぐと、中身ではなく**決まった文字列**に変換される。
+
+\`\`\`ts
+"x" + {}          // "x[object Object]"
+"x" + { a: 1 }    // "x[object Object]"（中身は出ない！）
+"x" + [1, 2, 3]   // "x1,2,3"（配列はカンマ区切り）
+"x" + []          // "x"（空配列は空文字）
+\`\`\`
+
+中身を文字列で見たいときは \`JSON.stringify\` を使う。
+
+\`\`\`ts
+"x" + JSON.stringify({ a: 1 }) // 'x{"a":1}'
+\`\`\``,
+    hints: [
+      "`${変数}` はバッククォートで囲んだ文字列の中だけで使える。",
+      "null かもしれない値は String() で変換する方が安全。",
+      "文字列の結合は + か .concat()。片方が文字列だと数値も連結になる。",
+      "オブジェクトを + でつなぐと [object Object]。中身は JSON.stringify で。",
+    ],
+  },
+  learn: {
+    quiz: [
+      {
+        prompt: 'name が "田中" のとき、次の式の結果は？',
+        snippet: "`${name}さん`",
+        choices: ['"田中さん"', '"${name}さん"', '"nameさん"'],
+        answer: '"田中さん"',
+        explain: "テンプレートリテラルの ${name} は変数の中身に置き換わるので \"田中さん\"。",
+      },
+      {
+        prompt: "数値 42 を文字列にする書き方は？",
+        choices: ["String(42)", "Number(42)", "42.string"],
+        answer: "String(42)",
+        explain: "`String(42)` で \"42\" になる。`(42).toString()` でも同じ。",
+      },
+      {
+        prompt: "値が null かもしれないとき、安全に文字列化できるのは？",
+        choices: ["String(x)", "x.toString()"],
+        answer: "String(x)",
+        explain: "`String(null)` は \"null\" を返すが、`null.toString()` はエラーになる。",
+      },
+      {
+        prompt: '`0 + "1"` の結果は？',
+        snippet: `0 + "1"`,
+        choices: ['"01"', "1", '"1"'],
+        answer: '"01"',
+        explain: "片方が文字列だと連結。数値の 0 が \"0\" になって \"1\" とつながり \"01\"。計算の 1 ではない。",
+      },
+      {
+        prompt: '`"data: " + { a: 1 }` の結果は？',
+        snippet: `"data: " + { a: 1 }`,
+        choices: ['"data: [object Object]"', '"data: {a:1}"', '"data: 1"'],
+        answer: '"data: [object Object]"',
+        explain: "オブジェクトを + で文字列につなぐと中身は出ず `[object Object]` になる。中身を見るなら JSON.stringify。",
+      },
+      {
+        prompt: '`"items: " + [1, 2, 3]` の結果は？',
+        snippet: `"items: " + [1, 2, 3]`,
+        choices: ['"items: 1,2,3"', '"items: [1,2,3]"', '"items: [object Object]"'],
+        answer: '"items: 1,2,3"',
+        explain: "配列を文字列につなぐと、要素をカンマで区切った文字列になる（`[]` は付かない）。",
+      },
+      {
+        prompt: '`1 + (2 + "3")` の結果は？',
+        snippet: `1 + (2 + "3")`,
+        choices: ['"123"', '"33"', "6"],
+        answer: '"123"',
+        explain:
+          "( ) が先：`2 + \"3\"` は連結で \"23\"。次に `1 + \"23\"` も連結で \"123\"。文字列が混ざると以降ずっと連結になる。",
+      },
+      {
+        prompt: '`"items: " + [1, 2, 1 + 2]` の結果は？',
+        snippet: `"items: " + [1, 2, 1 + 2]`,
+        choices: ['"items: 1,2,3"', '"items: 1,2,1+2"', '"items: 1,2,12"'],
+        answer: '"items: 1,2,3"',
+        explain: "配列の中の `1 + 2` は先に計算されて 3。配列 [1, 2, 3] を文字列につないでカンマ区切りの \"1,2,3\"。",
+      },
+    ],
+  },
+});

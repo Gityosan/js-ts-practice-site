@@ -6,24 +6,17 @@ import type { ProblemMeta } from "../core/schemas";
 const MotionBox = motion.create(Box);
 
 const stageLabel: Record<string, string> = {
+  decode: "解読",
   read: "読む",
-  tweak: "いじる",
-  fill: "埋める",
+  learn: "知る",
   write: "書く",
 };
 
 const stageColor: Record<string, string> = {
+  decode: "pink",
   read: "cyan",
-  tweak: "indigo",
-  fill: "teal",
+  learn: "indigo",
   write: "purple",
-};
-
-const scenarioLabel: Record<string, string> = {
-  data: "データ集計",
-  gas: "GAS",
-  email: "メール自動化",
-  chrome: "Chrome拡張",
 };
 
 type Props = { problem: ProblemMeta; solved?: boolean };
@@ -56,9 +49,6 @@ export function ProblemCard({ problem, solved = false }: Props) {
             <Badge colorPalette={stageColor[problem.stage]} fontSize="xs">
               {stageLabel[problem.stage]}
             </Badge>
-            <Badge colorPalette="gray" fontSize="xs">
-              {scenarioLabel[problem.scenario]}
-            </Badge>
           </HStack>
           {solved && (
             <Badge colorPalette="green" fontSize="xs">
@@ -68,9 +58,6 @@ export function ProblemCard({ problem, solved = false }: Props) {
         </HStack>
         <Text fontWeight="bold" fontSize="md" color="gray.800" wordBreak="break-word" overflowWrap="break-word">
           {problem.copy.title}
-        </Text>
-        <Text fontSize="xs" color="gray.500" fontFamily="mono" wordBreak="break-all">
-          {problem.id}
         </Text>
       </VStack>
     </MotionBox>

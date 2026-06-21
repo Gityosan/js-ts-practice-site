@@ -5,7 +5,7 @@ export default defineProblem({
   stage: "write",
   scenario: "email",
   copy: {
-    title: "宛先名と日付からメール件名を生成しよう（白紙から）",
+    title: "宛先名と日付からメール件名を生成する",
     prompt: `## やること
 
 宛先の名前と日付を受け取って、**メール件名文字列を生成する**関数 \`solve\` を書こう。
@@ -27,19 +27,17 @@ solve("佐藤", "2024/02/01")
 
 ## テンプレートリテラル
 
-\`\`\`ts
-\`\${to}様 週次レポート（\${date}）\`
-\`\`\`
-
-バッククォートで囲み、\`\${変数名}\` の形で変数を埋め込む。`,
+バッククォートで囲んだ文字列の中では \`\${変数名}\` の形で変数を埋め込める。
+これを使って、上の書式どおりに組み立てよう。`,
     hints: [
       "テンプレートリテラルを使う: バッククォートで囲んで `${変数}` で埋め込む",
       '全角括弧 `（）` を使うこと — `（${date}）` の形',
       '`return \\`${to}様 週次レポート（${date}）\\`` だけで完成',
     ],
   },
-  initialCode: `// 白紙から書いてみよう！
-// function solve(to: string, date: string): string { ... }
+  initialCode: `function solve(to: string, date: string): string {
+  // ここに書こう
+}
 `,
   solutionCode: `function solve(to: string, date: string): string {
   return \`\${to}様 週次レポート（\${date}）\`;

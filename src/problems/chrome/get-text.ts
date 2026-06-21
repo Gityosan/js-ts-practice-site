@@ -2,10 +2,10 @@ import { defineProblem } from "../../core/schemas";
 
 export default defineProblem({
   id: "fill-chrome-get-text",
-  stage: "fill",
+  stage: "write",
   scenario: "chrome",
   copy: {
-    title: ".item 要素のテキストを一覧取得しよう（Chrome拡張）",
+    title: "要素のテキストを集める",
     prompt: `## やること
 
 Chrome 拡張のコンテンツスクリプトで、**クラス \`.item\` を持つ全要素のテキスト**を配列に集めるコードを書こう。
@@ -25,13 +25,9 @@ Chrome 拡張のコンテンツスクリプトで、**クラス \`.item\` を持
 - \`el.textContent\` → 要素内のテキスト文字列
 - \`texts\` → モックで用意済みの空配列（ここに追加していく）
 
-## 完成イメージ
+## 進め方
 
-\`\`\`ts
-const items = document.querySelectorAll(".item");
-items.forEach((el) => texts.push(el.textContent));
-// texts → ["りんご", "バナナ", "みかん"]
-\`\`\`
+\`querySelectorAll\` で全要素を取り、ループで各要素の \`textContent\` を \`texts\` に追加していく。
 
 ## document はモックです
 

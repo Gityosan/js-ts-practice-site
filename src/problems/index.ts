@@ -4,6 +4,20 @@ import decodeConstName from "./decode/const-name";
 import decodeFunctionShape from "./decode/function-shape";
 import decodeIfCondition from "./decode/if-condition";
 import decodeObjectVsBlock from "./decode/object-vs-block";
+import decodeArrayBrackets from "./decode/array-brackets";
+import decodeForLoop from "./decode/for-loop";
+import decodeMethodChain from "./decode/method-chain";
+import decodeOperators from "./decode/operators";
+import learnArithmetic from "./learn/arithmetic";
+import learnComparison from "./learn/comparison";
+import learnVariables from "./learn/variables";
+import learnStringConvert from "./learn/string-convert";
+import learnBoolean from "./learn/boolean";
+import learnFunctions from "./learn/functions";
+import learnAsyncAwait from "./learn/async-await";
+import learnPromiseChain from "./learn/promise-chain";
+import learnClass from "./learn/class";
+import learnTypes from "./learn/types";
 import sumNumbers from "./data/sum-numbers";
 import filterEvens from "./data/filter-evens";
 import mapDouble from "./data/map-double";
@@ -25,12 +39,6 @@ import average from "./data/average";
 import maxValue from "./data/max-value";
 import unique from "./data/unique";
 import groupSum from "./data/group-sum";
-import tweakKeywordSum from "./tweak/keyword-sum";
-import tweakParsonsFilter from "./tweak/parsons-filter";
-import tweakMethodDouble from "./tweak/method-double";
-import tweakGasParsons from "./tweak/gas-parsons";
-import tweakEmailChoice from "./tweak/email-choice";
-import tweakChromeChoice from "./tweak/chrome-choice";
 import chromeFillForm from "./chrome/fill-form";
 import chromeGetText from "./chrome/get-text";
 import gasConditionalSum from "./gas/conditional-sum";
@@ -44,38 +52,45 @@ export const allProblems: ProblemMeta[] = [
   decodeFunctionShape,
   decodeIfCondition,
   decodeObjectVsBlock,
+  decodeArrayBrackets,
+  decodeForLoop,
+  decodeMethodChain,
+  decodeOperators,
   // read
   starCount,
   readGreeting,
   readProgress,
   readColorBox,
   readBoolLight,
-  // tweak
-  tweakKeywordSum,
-  tweakParsonsFilter,
-  tweakMethodDouble,
-  tweakGasParsons,
-  tweakEmailChoice,
-  tweakChromeChoice,
-  // fill / data（メソッド練習帳）
+  // learn（知る）— 文法のキホン
+  learnArithmetic,
+  learnComparison,
+  learnVariables,
+  learnStringConvert,
+  learnBoolean,
+  learnFunctions,
+  learnAsyncAwait,
+  learnPromiseChain,
+  learnClass,
+  learnTypes,
+  // fill: 合計を計算する①〜④
   sumNumbers,
-  filterEvens,
-  mapDouble,
-  findProduct,
-  somePositive,
-  sortNames,
   entriesTax,
-  splitCsv,
-  replaceTemplate,
-  // fill / 総合問題
-  sumSales,
-  // fill / gas
   gasSum,
   gasConditionalSum,
-  // fill / email
+  // fill: その他のデータ操作
+  mapDouble,
+  filterEvens,
+  somePositive,
+  sortNames,
+  findProduct,
+  splitCsv,
+  replaceTemplate,
+  sumSales,
+  // fill: メールを送る①②
   emailWeekly,
   emailPersonalized,
-  // fill / chrome
+  // fill: 要素操作
   chromeFillForm,
   chromeGetText,
   // write

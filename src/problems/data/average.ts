@@ -5,7 +5,7 @@ export default defineProblem({
   stage: "write",
   scenario: "data",
   copy: {
-    title: "平均値を計算しよう（白紙から）",
+    title: "平均値を計算する",
     prompt: `## やること
 
 数値の配列を受け取って、その**平均値**を返す関数 \`solve\` を**白紙から**書こう。
@@ -28,8 +28,9 @@ solve([42])          // → 42
       "空配列ガード: `if (nums.length === 0) return 0;`",
     ],
   },
-  initialCode: `// 白紙から書いてみよう！
-// function solve(nums: number[]): number { ... }
+  initialCode: `function solve(nums: number[]): number {
+  // ここに書こう
+}
 `,
   solutionCode: `function solve(nums: number[]): number {
   if (nums.length === 0) return 0;

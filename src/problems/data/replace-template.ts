@@ -2,10 +2,10 @@ import { defineProblem } from "../../core/schemas";
 
 export default defineProblem({
   id: "fill-replace-template",
-  stage: "fill",
+  stage: "write",
   scenario: "data",
   copy: {
-    title: "テンプレートの {{name}} を埋めよう",
+    title: "文字列を置き換える",
     prompt: `## やること
 
 文字列テンプレート中の \`{{name}}\` を実際の名前に置き換える関数 \`solve\` を完成させよう。

@@ -2,10 +2,10 @@ import { defineProblem } from "../../core/schemas";
 
 export default defineProblem({
   id: "fill-map-double",
-  stage: "fill",
+  stage: "write",
   scenario: "data",
   copy: {
-    title: "全員の給与を2倍にしよう",
+    title: "数値を2倍にする",
     prompt: `## やること
 
 数値の配列を受け取り、**それぞれの値を2倍にした配列**を返す関数 \`solve\` を完成させよう。

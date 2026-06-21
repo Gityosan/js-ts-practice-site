@@ -2,10 +2,10 @@ import { defineProblem } from "../../core/schemas";
 
 export default defineProblem({
   id: "fill-sort-names",
-  stage: "fill",
+  stage: "write",
   scenario: "data",
   copy: {
-    title: "名前をあいうえお順に並べよう",
+    title: "データを並べ替える",
     prompt: `## やること
 
 文字列の配列を受け取って、**辞書順（abc/あいうえお順）に並べた新しい配列**を返す関数 \`solve\` を完成させよう。

@@ -5,7 +5,7 @@ export default defineProblem({
   stage: "read",
   scenario: "data",
   copy: {
-    title: "true / false でランプを切り替えよう",
+    title: "true / false でランプを切り替える",
     prompt: `## まず実行してみよう
 
 **▶ 実行** を押すと、緑のランプが点灯する。

@@ -10,10 +10,10 @@ export type Product = z.infer<typeof ProductSchema>;
 
 export default defineProblem({
   id: "fill-find-product",
-  stage: "fill",
+  stage: "write",
   scenario: "data",
   copy: {
-    title: "商品を ID で探そう",
+    title: "データを抜き出す",
     prompt: `## やること
 
 商品リストから、指定した \`id\` の商品を探して返す関数 \`solve\` を完成させよう。

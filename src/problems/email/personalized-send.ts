@@ -2,10 +2,10 @@ import { defineProblem } from "../../core/schemas";
 
 export default defineProblem({
   id: "fill-email-personalized",
-  stage: "fill",
+  stage: "write",
   scenario: "email",
   copy: {
-    title: "名前差し込みでメンバー全員に送ろう",
+    title: "メールを送る②",
     prompt: `## やること
 
 \`members\` 配列の各メンバーに、**名前を差し込んだ本文**でメールを送るコードを書こう。
@@ -14,13 +14,10 @@ export default defineProblem({
 - \`members: { name: string; email: string }[]\` — 送信先のリスト
 - \`sendEmail(to, subject, body)\` — メール送信関数（モック）
 
-## 完成イメージ
+## 進め方
 
-\`\`\`ts
-for (const member of members) {
-  sendEmail(member.email, "お知らせ", \`\${member.name}様、お知らせです。\`);
-}
-\`\`\`
+\`members\` をループで回し、各メンバーの \`email\` 宛に \`sendEmail\` を呼ぶ。
+本文は名前を差し込みたいので、テンプレートリテラルが便利。
 
 ## ポイント
 

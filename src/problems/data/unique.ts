@@ -5,7 +5,7 @@ export default defineProblem({
   stage: "write",
   scenario: "data",
   copy: {
-    title: "重複を取り除こう（白紙から）",
+    title: "重複を取り除く",
     prompt: `## やること
 
 数値の配列から**重複を除いたユニークな配列**を返す関数 \`solve\` を白紙から書こう。
@@ -20,23 +20,19 @@ solve([])                // → []
 
 ## アプローチのヒント
 
-**Set を使う方法**（最短）:
-\`\`\`ts
-[...new Set(nums)]   // Set は重複を自動除去、スプレッドで配列化
-\`\`\`
+- **Set** は重複を自動で落とす性質がある。配列に戻すには**スプレッド**。
+- もしくは **filter** で「いま見ている値が初登場の位置か？」を判定する手も（\`indexOf\` が使える）。
 
-**filter を使う方法**（インデックス活用）:
-\`\`\`ts
-nums.filter((n, i) => nums.indexOf(n) === i)  // 初回登場のもののみ残す
-\`\`\``,
+どちらでも正解。`,
     hints: [
       "`new Set(nums)` で重複が消え、`[...new Set(nums)]` で配列に戻せる",
       "`nums.indexOf(n) === i` で「今見ている n が初めて出てくるインデックスか」を判定できる",
       "関数の骨格: `function solve(nums: number[]): number[] { return ...; }`",
     ],
   },
-  initialCode: `// 白紙から書いてみよう！
-// function solve(nums: number[]): number[] { ... }
+  initialCode: `function solve(nums: number[]): number[] {
+  // ここに書こう
+}
 `,
   solutionCode: `function solve(nums: number[]): number[] {
   return [...new Set(nums)];
