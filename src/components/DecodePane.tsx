@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
-import { Box, Text, VStack, HStack, Button } from "@chakra-ui/react";
+import { useMemo, useState } from "react";
+import { Box, Text, VStack, HStack } from "@chakra-ui/react";
 import { AnimatePresence, motion } from "motion/react";
 import {
   tokenize,
@@ -9,6 +9,7 @@ import {
   type TokenType,
 } from "../lib/tokenize";
 import type { Decode } from "../core/schemas";
+import { QuizList } from "./QuizList";
 
 const MotionDiv = motion.create(
   "div" as unknown as React.ComponentType<React.HTMLAttributes<HTMLDivElement>>,
@@ -47,13 +48,6 @@ export function DecodePane({
   const pairs = useMemo(() => matchBrackets(tokens), [tokens]);
   const [selected, setSelected] = useState<number | null>(null);
   const [hovered, setHovered] = useState<number | null>(null);
-  // クイズ全問正解で「解読クリア」とみなす（一度正解したらラッチ）
-  const [solvedQuiz, setSolvedQuiz] = useState<boolean[]>(() => decode.quiz.map(() => false));
-  const allCleared = decode.quiz.length > 0 && solvedQuiz.every(Boolean);
-
-  useEffect(() => {
-    if (allCleared) onComplete?.();
-  }, [allCleared, onComplete]);
 
   const partnerOf = (idx: number | null) =>
     idx != null && pairs.has(idx) ? pairs.get(idx)! : null;
@@ -180,38 +174,14 @@ export function DecodePane({
       </Box>
 
       {/* クイズ */}
-      {decode.quiz.length > 0 && (
-        <VStack align="stretch" gap={3} pt={2}>
-          <Text fontSize="sm" fontWeight="bold" color="gray.600">
-            読めたか確認しよう
-          </Text>
-          {decode.quiz.map((q, i) => (
-            <QuizCard
-              key={i}
-              index={i}
-              quiz={q}
-              onCorrect={() =>
-                setSolvedQuiz((prev) => (prev[i] ? prev : prev.map((v, j) => (j === i ? true : v))))
-              }
-            />
-          ))}
-          {allCleared && (
-            <Box
-              bg="green.50"
-              borderWidth="1px"
-              borderStyle="solid"
-              borderColor="green.300"
-              borderRadius="md"
-              p={3}
-              textAlign="center"
-            >
-              <Text fontSize="sm" fontWeight="bold" color="green.700">
-                ✓ 解読クリア！全問正解
-              </Text>
-            </Box>
-          )}
-        </VStack>
-      )}
+      <Box pt={2}>
+        <QuizList
+          quiz={decode.quiz}
+          heading="読めたか確認しよう"
+          clearedLabel="✓ 解読クリア！全問正解"
+          onComplete={onComplete}
+        />
+      </Box>
     </VStack>
   );
 }
@@ -254,110 +224,3 @@ function TokenSpan({
   );
 }
 
-type Quiz = Decode["quiz"][number];
-
-function shuffleArray<T>(arr: T[]): T[] {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-
-function QuizCard({
-  quiz,
-  index,
-  onCorrect,
-}: {
-  quiz: Quiz;
-  index: number;
-  onCorrect?: () => void;
-}) {
-  const [picked, setPicked] = useState<string | null>(null);
-  const correct = picked === quiz.answer;
-  // 正解が常に先頭だと答えが透けるので、表示順をシャッフル（採点は値で判定）
-  const choices = useMemo(() => shuffleArray(quiz.choices), [quiz]);
-
-  useEffect(() => {
-    if (correct) onCorrect?.();
-  }, [correct, onCorrect]);
-
-  return (
-    <Box
-      borderWidth="1px"
-      borderStyle="solid"
-      borderColor="gray.200"
-      borderRadius="md"
-      p={4}
-      bg="white"
-    >
-      <Text fontSize="sm" color="gray.700" mb={quiz.snippet ? 2 : 3} fontWeight="medium">
-        Q{index + 1}. {quiz.prompt}
-      </Text>
-      {quiz.snippet && (
-        <Box
-          as="pre"
-          bg="#1e1e1e"
-          color="#d4d4d4"
-          borderRadius="md"
-          px={3}
-          py={2}
-          mb={3}
-          fontFamily="mono"
-          fontSize="sm"
-          overflowX="auto"
-        >
-          {quiz.snippet}
-        </Box>
-      )}
-      <HStack wrap="wrap" gap={2}>
-        {choices.map((choice) => {
-          const isPicked = picked === choice;
-          const isAnswer = choice === quiz.answer;
-          const palette =
-            picked == null ? "gray" : isAnswer ? "green" : isPicked ? "red" : "gray";
-          return (
-            <Button
-              key={choice}
-              size="sm"
-              variant={isPicked ? "solid" : "outline"}
-              colorPalette={palette}
-              onClick={() => setPicked(choice)}
-            >
-              {choice}
-            </Button>
-          );
-        })}
-      </HStack>
-      <AnimatePresence>
-        {picked != null && (
-          <MotionDiv
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.2 }}
-            style={{ overflow: "hidden" }}
-          >
-            <Box
-              mt={3}
-              p={3}
-              borderRadius="md"
-              bg={correct ? "green.50" : "orange.50"}
-              borderWidth="1px"
-              borderStyle="solid"
-              borderColor={correct ? "green.200" : "orange.200"}
-            >
-              <Text fontSize="sm" fontWeight="bold" color={correct ? "green.700" : "orange.700"} mb={1}>
-                {correct ? "○ 正解！" : "もう一度考えてみよう"}
-              </Text>
-              <Text fontSize="sm" color="gray.700" lineHeight="1.7">
-                {quiz.explain}
-              </Text>
-            </Box>
-          </MotionDiv>
-        )}
-      </AnimatePresence>
-    </Box>
-  );
-}

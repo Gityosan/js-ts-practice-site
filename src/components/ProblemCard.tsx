@@ -8,14 +8,14 @@ const MotionBox = motion.create(Box);
 const stageLabel: Record<string, string> = {
   decode: "解読",
   read: "読む",
-  tweak: "いじる",
+  learn: "知る",
   write: "書く",
 };
 
 const stageColor: Record<string, string> = {
   decode: "pink",
   read: "cyan",
-  tweak: "indigo",
+  learn: "indigo",
   write: "purple",
 };
 

@@ -21,7 +21,7 @@ const MotionBox = motion.create(Box);
 const stageConfig = [
   { key: "decode", label: "解読", color: "pink", desc: "1行を予約語・括弧に分解して読む", available: true },
   { key: "read", label: "読む", color: "cyan", desc: "動くコードを触って変化を見る", available: true },
-  { key: "tweak", label: "いじる", color: "indigo", desc: "並べ替え・選んで組み立てる", available: true },
+  { key: "learn", label: "知る", color: "indigo", desc: "文法のキホンを読んで確認する", available: true },
   { key: "write", label: "書く", color: "purple", desc: "骨格を埋める／白紙から書く", available: true },
 ] as const;
 

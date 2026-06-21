@@ -16,8 +16,8 @@ import { AnimatePresence, motion } from "motion/react";
 import { getProblemById, allProblems } from "../problems";
 import { runGrader } from "../core/grader";
 import { EditorPane, type EditorHandle } from "../components/EditorPane";
-import { TweakPane } from "../components/TweakPane";
 import { DecodePane } from "../components/DecodePane";
+import { QuizList } from "../components/QuizList";
 import { ResultPanel } from "../components/ResultPanel";
 import { VisualOutput, ScenarioVisual } from "../components/VisualOutput";
 import type { GradeResult } from "../grade/types";
@@ -32,14 +32,14 @@ const MotionDiv = motion.create(
 const stageLabel: Record<string, string> = {
   decode: "解読",
   read: "読む",
-  tweak: "いじる",
+  learn: "知る",
   write: "書く",
 };
 
 const stageColor: Record<string, string> = {
   decode: "pink",
   read: "cyan",
-  tweak: "indigo",
+  learn: "indigo",
   write: "purple",
 };
 
@@ -48,16 +48,14 @@ export function ProblemPage() {
   const navigate = useNavigate();
   const problem = getProblemById(id);
 
-  const isTweak = problem?.stage === "tweak" && !!problem.tweak;
   const isDecode = problem?.stage === "decode" && !!problem.decode;
+  const isLearn = problem?.stage === "learn" && !!problem.learn;
 
   const currentIndex = allProblems.findIndex((p) => p.id === id);
   const prevProblem = currentIndex > 0 ? allProblems[currentIndex - 1] : null;
   const nextProblem = currentIndex < allProblems.length - 1 ? allProblems[currentIndex + 1] : null;
 
   const [code, setCode] = useState(problem?.initialCode ?? "");
-  const [tweakCode, setTweakCode] = useState("");
-  const [tweakResetKey, setTweakResetKey] = useState(0);
   const [result, setResult] = useState<GradeResult | null>(null);
   const [running, setRunning] = useState(false);
   const [runError, setRunError] = useState<string | undefined>();
@@ -69,16 +67,7 @@ export function ProblemPage() {
     setResult(null);
     setRunError(undefined);
     try {
-      let jsCode: string;
-      if (isTweak) {
-        if (tweakCode.includes("___")) {
-          setRunError("すべての空欄を埋めてから実行してね。");
-          return;
-        }
-        jsCode = tweakCode;
-      } else {
-        jsCode = (await editorRef.current?.getTranspiledJs()) ?? code;
-      }
+      const jsCode = (await editorRef.current?.getTranspiledJs()) ?? code;
       const r = await runGrader(problem.id, jsCode);
       setResult(r);
     } catch (e: unknown) {
@@ -86,7 +75,7 @@ export function ProblemPage() {
     } finally {
       setRunning(false);
     }
-  }, [problem, code, isTweak, tweakCode]);
+  }, [problem, code]);
 
   useEffect(() => {
     if (result && result.passed === result.total && result.total > 0) {
@@ -94,7 +83,8 @@ export function ProblemPage() {
     }
   }, [result, problem]);
 
-  const handleDecodeComplete = useCallback(() => {
+  // decode / learn はクイズ全問正解でクリア扱い
+  const handleQuizComplete = useCallback(() => {
     if (problem) markSolved(problem.id);
   }, [problem]);
 
@@ -103,8 +93,7 @@ export function ProblemPage() {
     setCode(problem.initialCode);
     setResult(null);
     setRunError(undefined);
-    if (isTweak) setTweakResetKey((k) => k + 1);
-  }, [problem, isTweak]);
+  }, [problem]);
 
   if (!problem) {
     return (
@@ -255,7 +244,7 @@ export function ProblemPage() {
               </VStack>
             </Box>
 
-            {/* Right: Editor + Results stacked (decode は実行せず解読UIのみ) */}
+            {/* Right: decode / learn はクイズ、それ以外はエディタ＋採点 */}
             <VStack align="stretch" gap={3}>
               {isDecode ? (
                 <Box
@@ -266,29 +255,27 @@ export function ProblemPage() {
                   borderColor="gray.200"
                   p={5}
                 >
-                  <DecodePane decode={problem.decode!} onComplete={handleDecodeComplete} />
+                  <DecodePane decode={problem.decode!} onComplete={handleQuizComplete} />
                 </Box>
-              ) : (
-                <>
-              {isTweak ? (
+              ) : isLearn ? (
                 <Box
                   bg="white"
                   borderRadius="md"
                   borderWidth="1px"
                   borderStyle="solid"
                   borderColor="gray.200"
-                  p={4}
-                  minH="420px"
+                  p={5}
                 >
-                  <TweakPane
-                    key={tweakResetKey}
-                    tweak={problem.tweak!}
-                    onChange={setTweakCode}
+                  <QuizList
+                    quiz={problem.learn!.quiz}
+                    heading="理解できたか確認しよう"
+                    clearedLabel="✓ クリア！全問正解"
+                    onComplete={handleQuizComplete}
                   />
                 </Box>
               ) : (
-                <EditorPane ref={editorRef} value={code} onChange={setCode} height="420px" />
-              )}
+                <>
+              <EditorPane ref={editorRef} value={code} onChange={setCode} height="420px" />
 
               <HStack gap={3}>
                 <MotionButton
@@ -303,7 +290,7 @@ export function ProblemPage() {
                   ▶ 実行
                 </MotionButton>
                 <Button variant="outline" onClick={handleReset} disabled={running}>
-                  {isTweak ? "シャッフル" : "リセット"}
+                  リセット
                 </Button>
               </HStack>
 
