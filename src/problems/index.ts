@@ -4,6 +4,10 @@ import decodeConstName from "./decode/const-name";
 import decodeFunctionShape from "./decode/function-shape";
 import decodeIfCondition from "./decode/if-condition";
 import decodeObjectVsBlock from "./decode/object-vs-block";
+import decodeArrayBrackets from "./decode/array-brackets";
+import decodeForLoop from "./decode/for-loop";
+import decodeMethodChain from "./decode/method-chain";
+import decodeOperators from "./decode/operators";
 import sumNumbers from "./data/sum-numbers";
 import filterEvens from "./data/filter-evens";
 import mapDouble from "./data/map-double";
@@ -44,6 +48,10 @@ export const allProblems: ProblemMeta[] = [
   decodeFunctionShape,
   decodeIfCondition,
   decodeObjectVsBlock,
+  decodeArrayBrackets,
+  decodeForLoop,
+  decodeMethodChain,
+  decodeOperators,
   // read
   starCount,
   readGreeting,
