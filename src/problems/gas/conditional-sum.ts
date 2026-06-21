@@ -2,7 +2,7 @@ import { defineProblem } from "../../core/schemas";
 
 export default defineProblem({
   id: "fill-gas-conditional-sum",
-  stage: "fill",
+  stage: "write",
   scenario: "gas",
   copy: {
     title: "合計を計算する④",

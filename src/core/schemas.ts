@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const Stage = z.enum(["decode", "read", "tweak", "fill", "write"]);
+export const Stage = z.enum(["decode", "read", "tweak", "write"]);
 export type Stage = z.infer<typeof Stage>;
 
 export const Scenario = z.enum(["basic", "data", "gas", "email", "chrome"]);

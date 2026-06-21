@@ -2,7 +2,7 @@ import { defineProblem } from "../../core/schemas";
 
 export default defineProblem({
   id: "fill-sort-names",
-  stage: "fill",
+  stage: "write",
   scenario: "data",
   copy: {
     title: "データを並べ替える",

@@ -2,7 +2,7 @@ import { defineProblem } from "../../core/schemas";
 
 export default defineProblem({
   id: "fill-split-csv",
-  stage: "fill",
+  stage: "write",
   scenario: "data",
   copy: {
     title: "データを配列に変換する",

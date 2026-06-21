@@ -2,7 +2,7 @@ import { defineProblem } from "../../core/schemas";
 
 export default defineProblem({
   id: "fill-chrome-fill-form",
-  stage: "fill",
+  stage: "write",
   scenario: "chrome",
   copy: {
     title: "要素に値をセットする",

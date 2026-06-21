@@ -2,7 +2,7 @@ import { defineProblem } from "../../core/schemas";
 
 export default defineProblem({
   id: "fill-map-double",
-  stage: "fill",
+  stage: "write",
   scenario: "data",
   copy: {
     title: "数値を2倍にする",

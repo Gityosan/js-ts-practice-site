@@ -22,8 +22,7 @@ const stageConfig = [
   { key: "decode", label: "解読", color: "pink", desc: "1行を予約語・括弧に分解して読む", available: true },
   { key: "read", label: "読む", color: "cyan", desc: "動くコードを触って変化を見る", available: true },
   { key: "tweak", label: "いじる", color: "indigo", desc: "並べ替え・選んで組み立てる", available: true },
-  { key: "fill", label: "埋める", color: "teal", desc: "骨格を見て中身を書く", available: true },
-  { key: "write", label: "書く", color: "purple", desc: "白紙から書く", available: true },
+  { key: "write", label: "書く", color: "purple", desc: "骨格を埋める／白紙から書く", available: true },
 ] as const;
 
 export function Home() {
@@ -68,7 +67,7 @@ export function Home() {
             <Heading size="md" mb={4} color="gray.700">
               ステージ構成
             </Heading>
-            <SimpleGrid columns={{ base: 2, md: 5 }} gap={3}>
+            <SimpleGrid columns={{ base: 2, md: 4 }} gap={3}>
               {stageConfig.map((s, i) => {
                 const problems = byStage[s.key] ?? [];
                 const solvedInStage = problems.filter((p) => solved.has(p.id)).length;
@@ -88,7 +87,7 @@ export function Home() {
                   >
                     <HStack mb={1} justify="space-between">
                       <Badge colorPalette={s.available ? s.color : "gray"} fontSize="xs">
-                        Stage {i}
+                        Stage {i + 1}
                       </Badge>
                       {s.available && problems.length > 0 && (
                         <Text fontSize="xs" color="gray.400">

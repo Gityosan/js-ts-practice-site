@@ -2,7 +2,7 @@ import { defineProblem } from "../../core/schemas";
 
 export default defineProblem({
   id: "fill-filter-evens",
-  stage: "fill",
+  stage: "write",
   scenario: "data",
   copy: {
     title: "条件でデータを絞り込む",

@@ -10,7 +10,7 @@ export type Sale = z.infer<typeof SaleSchema>;
 
 export default defineProblem({
   id: "fill-sum-sales",
-  stage: "fill",
+  stage: "write",
   scenario: "data",
   copy: {
     title: "データを集計する",

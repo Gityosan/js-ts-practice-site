@@ -2,7 +2,7 @@ import { defineProblem } from "../../core/schemas";
 
 export default defineProblem({
   id: "fill-sum-numbers",
-  stage: "fill",
+  stage: "write",
   scenario: "data",
   copy: {
     title: "合計を計算する①",

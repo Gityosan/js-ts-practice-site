@@ -2,7 +2,7 @@ import { defineProblem } from "../../core/schemas";
 
 export default defineProblem({
   id: "fill-some-positive",
-  stage: "fill",
+  stage: "write",
   scenario: "data",
   copy: {
     title: "条件を満たすデータがあるか調べる",

@@ -2,7 +2,7 @@ import { defineProblem } from "../../core/schemas";
 
 export default defineProblem({
   id: "fill-email-weekly",
-  stage: "fill",
+  stage: "write",
   scenario: "email",
   copy: {
     title: "メールを送る①",

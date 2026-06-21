@@ -2,7 +2,7 @@ import { defineProblem } from "../../core/schemas";
 
 export default defineProblem({
   id: "fill-replace-template",
-  stage: "fill",
+  stage: "write",
   scenario: "data",
   copy: {
     title: "文字列を置き換える",

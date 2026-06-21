@@ -10,7 +10,7 @@ export type Product = z.infer<typeof ProductSchema>;
 
 export default defineProblem({
   id: "fill-find-product",
-  stage: "fill",
+  stage: "write",
   scenario: "data",
   copy: {
     title: "データを抜き出す",

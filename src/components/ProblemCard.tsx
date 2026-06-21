@@ -9,7 +9,6 @@ const stageLabel: Record<string, string> = {
   decode: "解読",
   read: "読む",
   tweak: "いじる",
-  fill: "埋める",
   write: "書く",
 };
 
@@ -17,7 +16,6 @@ const stageColor: Record<string, string> = {
   decode: "pink",
   read: "cyan",
   tweak: "indigo",
-  fill: "teal",
   write: "purple",
 };
 
