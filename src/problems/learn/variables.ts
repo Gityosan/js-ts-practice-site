@@ -5,7 +5,7 @@ export default defineProblem({
   stage: "learn",
   scenario: "basic",
   copy: {
-    title: "変数の種類（const / let / var）",
+    title: "変数の種類を知る",
     prompt: `## 3つの宣言
 
 | キーワード | 再代入 | 使う？ |

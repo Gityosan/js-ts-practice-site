@@ -5,7 +5,7 @@ export default defineProblem({
   stage: "learn",
   scenario: "basic",
   copy: {
-    title: "then / catch / finally",
+    title: "then / catch / finally を知る",
     prompt: `## Promise のもう一つの書き方
 
 \`await\` を使わず、\`.then()\` をつなげて結果を受け取る書き方もある。

@@ -5,7 +5,7 @@ export default defineProblem({
   stage: "learn",
   scenario: "basic",
   copy: {
-    title: "async / await",
+    title: "async / await を知る",
     prompt: `## 「待つ」処理を読みやすく書く
 
 通信やファイル読み込みなど、**結果が後で返る処理**は \`Promise\` という形で返ってくる。

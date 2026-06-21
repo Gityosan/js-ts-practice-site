@@ -5,7 +5,7 @@ export default defineProblem({
   stage: "learn",
   scenario: "basic",
   copy: {
-    title: "比較演算子",
+    title: "比較演算子を知る",
     prompt: `## 大小・等しいを調べる
 
 比較の結果は必ず **\`true\` か \`false\`**（真偽値）になる。

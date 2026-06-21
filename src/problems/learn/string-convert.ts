@@ -5,7 +5,7 @@ export default defineProblem({
   stage: "learn",
   scenario: "basic",
   copy: {
-    title: "文字列を作る・変換する",
+    title: "文字列変換を知る",
     prompt: `## 変数を文字列に埋め込む（テンプレートリテラル）
 
 バッククォートで囲んだ文字列の中では、\`\${ }\` で変数を埋め込める。

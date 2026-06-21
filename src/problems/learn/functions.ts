@@ -5,7 +5,7 @@ export default defineProblem({
   stage: "learn",
   scenario: "basic",
   copy: {
-    title: "関数のいろいろな書き方",
+    title: "関数の種類を知る",
     prompt: `## 同じ関数を3通りで
 
 \`\`\`ts

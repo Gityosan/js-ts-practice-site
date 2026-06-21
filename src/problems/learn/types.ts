@@ -5,7 +5,7 @@ export default defineProblem({
   stage: "learn",
   scenario: "basic",
   copy: {
-    title: "type と interface",
+    title: "type と interface を知る",
     prompt: `## 「型」に名前をつける
 
 オブジェクトの形（どんなプロパティを持つか）に名前をつけられる。\`type\` でも \`interface\` でも書ける。

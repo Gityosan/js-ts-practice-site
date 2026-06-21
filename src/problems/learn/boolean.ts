@@ -5,7 +5,7 @@ export default defineProblem({
   stage: "learn",
   scenario: "basic",
   copy: {
-    title: "論理値と truthy / falsey",
+    title: "論理値を知る",
     prompt: `## true と false 以外も「真偽」として扱われる
 
 \`if\` などでは、\`true\`/\`false\` 以外の値も「真っぽい(truthy) / 偽っぽい(falsey)」で判定される。

@@ -5,7 +5,7 @@ export default defineProblem({
   stage: "learn",
   scenario: "basic",
   copy: {
-    title: "class",
+    title: "class を知る",
     prompt: `## データと操作をまとめる設計図
 
 \`class\` は「同じ形のデータと、それを扱う関数」をまとめた設計図。

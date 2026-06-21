@@ -5,7 +5,7 @@ export default defineProblem({
   stage: "learn",
   scenario: "basic",
   copy: {
-    title: "四則演算",
+    title: "四則演算を知る",
     prompt: `## 計算の記号
 
 数値どうしの計算はこの記号で書く。
