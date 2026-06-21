@@ -13,7 +13,7 @@ export default defineProblem({
   stage: "fill",
   scenario: "data",
   copy: {
-    title: "データを集計しよう",
+    title: "データを集計する",
     prompt: `## やること
 
 売上データの配列から**東京の売上合計**を返す関数 \`solve\` を書こう。

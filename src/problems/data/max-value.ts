@@ -5,7 +5,7 @@ export default defineProblem({
   stage: "write",
   scenario: "data",
   copy: {
-    title: "最大値を見つけよう",
+    title: "最大値を見つける",
     prompt: `## やること
 
 数値の配列から**最大値**を返す関数 \`solve\` を白紙から書こう。

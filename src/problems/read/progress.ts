@@ -5,7 +5,7 @@ export default defineProblem({
   stage: "read",
   scenario: "data",
   copy: {
-    title: "数字を変えてプログレスバーを動かそう",
+    title: "数字を変えてプログレスバーを動かす",
     prompt: `## まず実行してみよう
 
 **▶ 実行** を押すと、プログレスバーが表示される。

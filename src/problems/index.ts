@@ -57,25 +57,24 @@ export const allProblems: ProblemMeta[] = [
   tweakChromeChoice,
   tweakParsonsFilter,
   tweakGasParsons,
-  // fill / data（メソッド練習帳）
+  // fill: 合計を計算する①〜④
   sumNumbers,
-  filterEvens,
-  mapDouble,
-  findProduct,
-  somePositive,
-  sortNames,
   entriesTax,
-  splitCsv,
-  replaceTemplate,
-  // fill / 総合問題
-  sumSales,
-  // fill / gas
   gasSum,
   gasConditionalSum,
-  // fill / email
+  // fill: その他のデータ操作
+  mapDouble,
+  filterEvens,
+  somePositive,
+  sortNames,
+  findProduct,
+  splitCsv,
+  replaceTemplate,
+  sumSales,
+  // fill: メールを送る①②
   emailWeekly,
   emailPersonalized,
-  // fill / chrome
+  // fill: 要素操作
   chromeFillForm,
   chromeGetText,
   // write

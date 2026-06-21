@@ -5,7 +5,7 @@ export default defineProblem({
   stage: "read",
   scenario: "data",
   copy: {
-    title: "色の名前を返してボックスを塗ろう",
+    title: "色の名前を返してボックスを塗る",
     prompt: `## まず実行してみよう
 
 **▶ 実行** を押すと、青いボックスが表示される。

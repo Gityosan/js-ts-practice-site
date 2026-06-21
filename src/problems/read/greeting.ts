@@ -5,7 +5,7 @@ export default defineProblem({
   stage: "read",
   scenario: "data",
   copy: {
-    title: "名前を変えて挨拶を返そう",
+    title: "名前を変えて挨拶を返す",
     prompt: `## まず実行してみよう
 
 **▶ 実行** を押すと、挨拶メッセージが表示される。

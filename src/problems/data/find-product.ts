@@ -13,7 +13,7 @@ export default defineProblem({
   stage: "fill",
   scenario: "data",
   copy: {
-    title: "データを抜き出そう",
+    title: "データを抜き出す",
     prompt: `## やること
 
 商品リストから、指定した \`id\` の商品を探して返す関数 \`solve\` を完成させよう。

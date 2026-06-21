@@ -5,7 +5,7 @@ export default defineProblem({
   stage: "fill",
   scenario: "chrome",
   copy: {
-    title: "要素に値をセットしよう",
+    title: "要素に値をセットする",
     prompt: `## やること
 
 Chrome 拡張のコンテンツスクリプトで、**ログインフォームに値を自動入力**する関数を完成させよう。

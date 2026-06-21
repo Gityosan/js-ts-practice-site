@@ -5,7 +5,7 @@ export default defineProblem({
   stage: "tweak",
   scenario: "data",
   copy: {
-    title: "キーワードを選んで関数を組み立てよう①",
+    title: "キーワードを選んで関数を組み立てる①",
     prompt: `## やること
 
 空欄に入る**キーワード**を選んで、合計を計算する関数を完成させよう。

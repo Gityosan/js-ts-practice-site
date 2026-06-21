@@ -5,7 +5,7 @@ export default defineProblem({
   stage: "fill",
   scenario: "data",
   copy: {
-    title: "合計を計算しよう②",
+    title: "合計を計算する②",
     prompt: `## やること
 
 商品名 → 税抜価格のマップと税率を受け取って、**全商品の税込み合計**を返す関数 \`solve\` を完成させよう。

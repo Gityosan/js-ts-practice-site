@@ -5,7 +5,7 @@ export default defineProblem({
   stage: "tweak",
   scenario: "chrome",
   copy: {
-    title: "キーワードを選んで関数を組み立てよう④",
+    title: "キーワードを選んで関数を組み立てる④",
     prompt: `## やること
 
 Chrome 拡張のコンテンツスクリプトで、**ページ上のボタンをすべて無効化**するコードを完成させよう。

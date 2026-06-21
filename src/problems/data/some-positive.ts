@@ -5,7 +5,7 @@ export default defineProblem({
   stage: "fill",
   scenario: "data",
   copy: {
-    title: "条件を満たすデータがあるか調べよう",
+    title: "条件を満たすデータがあるか調べる",
     prompt: `## やること
 
 数値の配列を受け取って、**0 より大きい数が 1 つでもあれば \`true\`** を返す関数 \`solve\` を完成させよう。

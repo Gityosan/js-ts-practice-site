@@ -5,7 +5,7 @@ export default defineProblem({
   stage: "write",
   scenario: "gas",
   copy: {
-    title: "シートデータをオブジェクト配列に変換しよう",
+    title: "シートデータをオブジェクト配列に変換する",
     prompt: `## やること
 
 GAS で \`getValues()\` したデータ（先頭行がヘッダー、2行目以降がデータ）を、

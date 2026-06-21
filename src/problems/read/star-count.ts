@@ -5,7 +5,7 @@ export default defineProblem({
   stage: "read",
   scenario: "data",
   copy: {
-    title: "数字を変えて★を増やそう",
+    title: "数字を変えて★を増やす",
     prompt: `## まず実行してみよう
 
 右の **▶ 実行** を押してみよう。★ が表示される！

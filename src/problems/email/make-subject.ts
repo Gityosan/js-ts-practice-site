@@ -5,7 +5,7 @@ export default defineProblem({
   stage: "write",
   scenario: "email",
   copy: {
-    title: "宛先名と日付からメール件名を生成しよう",
+    title: "宛先名と日付からメール件名を生成する",
     prompt: `## やること
 
 宛先の名前と日付を受け取って、**メール件名文字列を生成する**関数 \`solve\` を書こう。

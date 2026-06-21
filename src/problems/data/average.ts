@@ -5,7 +5,7 @@ export default defineProblem({
   stage: "write",
   scenario: "data",
   copy: {
-    title: "平均値を計算しよう",
+    title: "平均値を計算する",
     prompt: `## やること
 
 数値の配列を受け取って、その**平均値**を返す関数 \`solve\` を**白紙から**書こう。
