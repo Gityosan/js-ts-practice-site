@@ -58,12 +58,39 @@ type T = { id: number } & { id: string };
 // id は number かつ string → そんな値は無い → id: never
 \`\`\`
 
-同じ型どうし（例：\`{ id: number } & { id: number }\`）なら、そのまま \`number\` のまま。`,
+同じ型どうし（例：\`{ id: number } & { id: number }\`）なら、そのまま \`number\` のまま。
+
+## \`|\` は「どれか一つ」（ユニオン型）
+
+\`&\`（両方を満たす）に対して、\`|\` は **いずれか一つ**を表す。値の候補を並べる（or 列挙）。
+
+\`\`\`ts
+type Answer = "yes" | "no" | "maybe"; // この3つのどれか
+type Id = number | string;            // 数値か文字列のどちらか
+\`\`\`
+
+## \`?\` と \`| undefined\` の違い
+
+どちらも値の型に undefined が入るが、**キーを省略できるか**が違う。
+
+\`\`\`ts
+type A = { age?: number };            // age は任意項目
+type B = { age: number | undefined }; // age は必須（値が undefined でも書く）
+
+const a: A = {};                  // OK（age を省略できる）
+const b: B = {};                  // ✗ エラー（age が無い）
+const b2: B = { age: undefined }; // OK
+\`\`\`
+
+- \`?\` … **キー自体を省略してよい**（任意）
+- \`| undefined\` … **キーは必須**。値は undefined でもよいが、書かないとエラー`,
     hints: [
       "type も interface も、型に名前をつけるための仕組み。",
       "interface の継承は extends、type の合成は &（交差型）。",
       "`?` は省略可能。その型は「指定型 | undefined」になる。",
       "& で同名項目を違う型にすると、両立できないので never になる。",
+      "`|` はユニオン（どれか一つ）。`&`（両方）と対。",
+      "`?` はキーを省略できる／`| undefined` はキー必須で値だけ undefined 可。",
     ],
   },
   learn: {
@@ -102,6 +129,24 @@ type T = { id: number } & { id: string };
         answer: "never",
         explain:
           "& は「両方を満たす」型。number かつ string の値は存在しないので、重なった id は never（あり得ない型）になる。",
+      },
+      {
+        prompt: "`|`（ユニオン型）の意味は？",
+        snippet: `type Id = number | string;`,
+        choices: ["並べた型のどれか一つ", "並べた型を全部同時に満たす", "省略可能"],
+        answer: "並べた型のどれか一つ",
+        explain: "`|` はユニオン。`number | string` は「数値か文字列のどちらか」。両方を満たす `&` と対になる。",
+      },
+      {
+        prompt: "`age?: number` と `age: number | undefined` の違いで正しいのは？",
+        choices: [
+          "? はキーを省略できる／| undefined はキー必須",
+          "意味は完全に同じ",
+          "| undefined の方がキーを省略できる",
+        ],
+        answer: "? はキーを省略できる／| undefined はキー必須",
+        explain:
+          "どちらも値の型に undefined を含むが、`?` はキー自体を省略可。`| undefined` はキーが必須で、書かないとエラー（値は undefined でよい）。",
       },
     ],
   },
