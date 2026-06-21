@@ -5,7 +5,7 @@ export default defineProblem({
   stage: "write",
   scenario: "data",
   copy: {
-    title: "地域別に売上を集計する",
+    title: "キー別に値を集計する",
     prompt: `## やること
 
 売上データの配列を受け取り、**地域ごとの合計金額**を返す関数 \`solve\` を書こう。
