@@ -25,13 +25,9 @@ Chrome 拡張のコンテンツスクリプトで、**クラス \`.item\` を持
 - \`el.textContent\` → 要素内のテキスト文字列
 - \`texts\` → モックで用意済みの空配列（ここに追加していく）
 
-## 完成イメージ
+## 進め方
 
-\`\`\`ts
-const items = document.querySelectorAll(".item");
-items.forEach((el) => texts.push(el.textContent));
-// texts → ["りんご", "バナナ", "みかん"]
-\`\`\`
+\`querySelectorAll\` で全要素を取り、ループで各要素の \`textContent\` を \`texts\` に追加していく。
 
 ## document はモックです
 

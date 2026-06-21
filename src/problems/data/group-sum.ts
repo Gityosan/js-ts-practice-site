@@ -21,16 +21,8 @@ solve([
 
 ## 考え方
 
-\`reduce\` で空オブジェクト \`{}\` から始めて、各行の \`region\` をキーとして \`amount\` を足し込む。
-
-\`\`\`ts
-sales.reduce<Record<string, number>>((acc, s) => {
-  acc[s.region] = (acc[s.region] ?? 0) + s.amount;
-  return acc;
-}, {})
-\`\`\`
-
-\`?? 0\` の部分は「まだ登録がなければ 0 を使う」という意味。
+\`reduce\` で空オブジェクト \`{}\` から始め、各行の \`region\` をキーに \`amount\` を足し込んでいく。
+「まだそのキーが無ければ 0 から数える」は \`?? 0\` で書ける。
 
 ## 型のヒント
 

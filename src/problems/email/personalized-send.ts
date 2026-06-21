@@ -14,13 +14,10 @@ export default defineProblem({
 - \`members: { name: string; email: string }[]\` — 送信先のリスト
 - \`sendEmail(to, subject, body)\` — メール送信関数（モック）
 
-## 完成イメージ
+## 進め方
 
-\`\`\`ts
-for (const member of members) {
-  sendEmail(member.email, "お知らせ", \`\${member.name}様、お知らせです。\`);
-}
-\`\`\`
+\`members\` をループで回し、各メンバーの \`email\` 宛に \`sendEmail\` を呼ぶ。
+本文は名前を差し込みたいので、テンプレートリテラルが便利。
 
 ## ポイント
 

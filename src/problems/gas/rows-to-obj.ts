@@ -23,17 +23,8 @@ solve([
 ## 考え方
 
 1. 先頭行（\`data[0]\`）をヘッダーとして取り出す
-2. 残りの行（\`data.slice(1)\` または分割代入）をデータとしてループ
-3. 各行を \`headers\` の順に対応付けてオブジェクトを作る
-
-\`\`\`ts
-const [headers, ...rows] = data;
-return rows.map((row) => {
-  const obj: Record<string, string> = {};
-  headers.forEach((h, i) => { obj[h] = row[i]; });
-  return obj;
-});
-\`\`\`
+2. 残りの行（\`data.slice(1)\` または分割代入）をループ
+3. 各行で「\`headers[i]\` をキー、\`row[i]\` を値」にしてオブジェクトを組み立てる
 
 ## 型のヒント
 

@@ -19,14 +19,11 @@ Google Apps Script（GAS）でスプレッドシートの **B2〜B5 の値を合
 | 5 | 2000 |
 | **6** | **← ここに合計を入れる** |
 
-\`\`\`ts
-// 書くコード（イメージ）
-const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-const values = sheet.getRange("B2:B5").getValues();
-// values は [[1200], [800], [500], [2000]] の形
-const total = values.reduce((acc, row) => acc + row[0], 0);
-sheet.getRange("B6").setValue(total);
-\`\`\`
+## 使う API
+
+- \`SpreadsheetApp.getActiveSpreadsheet().getActiveSheet()\` で操作対象のシートを取得
+- \`sheet.getRange("B2:B5").getValues()\` で値を読む
+- \`sheet.getRange("B6").setValue(合計)\` で書き込む
 
 ## getValues() の形
 
