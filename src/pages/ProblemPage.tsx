@@ -151,10 +151,12 @@ export function ProblemPage() {
             </HStack>
           </HStack>
 
-          {/* Main 2-column layout: 3:7 */}
+          {/* Main 2-column layout: 3:7
+              minmax(0, ...) にしないと 1fr=minmax(auto,1fr) の auto が
+              コードブロックの最小幅まで広がり、スマホで横にはみ出す */}
           <Box
             display="grid"
-            gridTemplateColumns={{ base: "1fr", lg: "3fr 7fr" }}
+            gridTemplateColumns={{ base: "minmax(0, 1fr)", lg: "minmax(0, 3fr) minmax(0, 7fr)" }}
             gap={5}
             alignItems="start"
           >
@@ -255,7 +257,7 @@ export function ProblemPage() {
             </Box>
 
             {/* Right: Editor + Results stacked (decode は実行せず解読UIのみ) */}
-            <VStack align="stretch" gap={3}>
+            <VStack align="stretch" gap={3} minWidth="0">
               {isDecode ? (
                 <Box
                   bg="white"
