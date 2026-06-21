@@ -5,7 +5,7 @@ export default defineProblem({
   stage: "fill",
   scenario: "data",
   copy: {
-    title: "売上の合計を計算しよう",
+    title: "合計を計算しよう",
     prompt: `## やること
 
 数値の配列を受け取って、その**合計**を返す関数 \`solve\` を完成させよう。
