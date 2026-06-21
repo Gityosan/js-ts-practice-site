@@ -66,7 +66,7 @@ export function Home() {
           {/* Stage funnel */}
           <Box>
             <Heading size="md" mb={4} color="gray.700">
-              ステージ構成（funnel）
+              ステージ構成
             </Heading>
             <SimpleGrid columns={{ base: 2, md: 5 }} gap={3}>
               {stageConfig.map((s, i) => {
