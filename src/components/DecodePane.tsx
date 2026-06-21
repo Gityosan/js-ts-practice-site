@@ -221,9 +221,20 @@ function TokenSpan({
 
 type Quiz = Decode["quiz"][number];
 
+function shuffleArray<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
 function QuizCard({ quiz, index }: { quiz: Quiz; index: number }) {
   const [picked, setPicked] = useState<string | null>(null);
   const correct = picked === quiz.answer;
+  // 正解が常に先頭だと答えが透けるので、表示順をシャッフル（採点は値で判定）
+  const choices = useMemo(() => shuffleArray(quiz.choices), [quiz]);
 
   return (
     <Box
@@ -254,7 +265,7 @@ function QuizCard({ quiz, index }: { quiz: Quiz; index: number }) {
         </Box>
       )}
       <HStack wrap="wrap" gap={2}>
-        {quiz.choices.map((choice) => {
+        {choices.map((choice) => {
           const isPicked = picked === choice;
           const isAnswer = choice === quiz.answer;
           const palette =

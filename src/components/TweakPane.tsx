@@ -119,6 +119,8 @@ function ChoicePane({
   }, [picks, template, onChange]);
 
   const parts = useMemo(() => template.split(/(\{\{\d+\}\})/g), [template]);
+  // 正解が常に先頭だと答えが透けるので、空欄ごとに選択肢の表示順をシャッフル
+  const shuffledChoices = useMemo(() => blanks.map((b) => shuffle(b.choices)), [blanks]);
 
   return (
     <VStack align="stretch" gap={4}>
@@ -165,13 +167,13 @@ function ChoicePane({
 
       {/* 選択肢 */}
       <VStack align="stretch" gap={3}>
-        {blanks.map((blank, i) => (
+        {blanks.map((_, i) => (
           <Box key={i}>
             <Text fontSize="xs" color="gray.500" mb={1}>
               空欄{i + 1} を選ぶ
             </Text>
             <HStack gap={2} wrap="wrap">
-              {blank.choices.map((choice) => {
+              {shuffledChoices[i].map((choice) => {
                 const selected = picks[i] === choice;
                 return (
                   <Button
