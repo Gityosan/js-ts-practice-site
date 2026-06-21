@@ -96,6 +96,10 @@ export function ProblemPage() {
     }
   }, [result, problem]);
 
+  const handleDecodeComplete = useCallback(() => {
+    if (problem) markSolved(problem.id);
+  }, [problem]);
+
   const handleReset = useCallback(() => {
     if (!problem) return;
     setCode(problem.initialCode);
@@ -264,7 +268,7 @@ export function ProblemPage() {
                   borderColor="gray.200"
                   p={5}
                 >
-                  <DecodePane decode={problem.decode!} />
+                  <DecodePane decode={problem.decode!} onComplete={handleDecodeComplete} />
                 </Box>
               ) : (
                 <>

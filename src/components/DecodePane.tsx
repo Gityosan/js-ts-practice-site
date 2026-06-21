@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Box, Text, VStack, HStack, Button } from "@chakra-ui/react";
 import { AnimatePresence, motion } from "motion/react";
 import {
@@ -36,11 +36,24 @@ const LEGEND: { label: string; color: string; note: string }[] = [
   { label: "文字列/数値", color: COLOR.string, note: "そのままのデータ" },
 ];
 
-export function DecodePane({ decode }: { decode: Decode }) {
+export function DecodePane({
+  decode,
+  onComplete,
+}: {
+  decode: Decode;
+  onComplete?: () => void;
+}) {
   const tokens = useMemo(() => tokenize(decode.code), [decode.code]);
   const pairs = useMemo(() => matchBrackets(tokens), [tokens]);
   const [selected, setSelected] = useState<number | null>(null);
   const [hovered, setHovered] = useState<number | null>(null);
+  // クイズ全問正解で「解読クリア」とみなす（一度正解したらラッチ）
+  const [solvedQuiz, setSolvedQuiz] = useState<boolean[]>(() => decode.quiz.map(() => false));
+  const allCleared = decode.quiz.length > 0 && solvedQuiz.every(Boolean);
+
+  useEffect(() => {
+    if (allCleared) onComplete?.();
+  }, [allCleared, onComplete]);
 
   const partnerOf = (idx: number | null) =>
     idx != null && pairs.has(idx) ? pairs.get(idx)! : null;
@@ -173,8 +186,30 @@ export function DecodePane({ decode }: { decode: Decode }) {
             読めたか確認しよう
           </Text>
           {decode.quiz.map((q, i) => (
-            <QuizCard key={i} index={i} quiz={q} />
+            <QuizCard
+              key={i}
+              index={i}
+              quiz={q}
+              onCorrect={() =>
+                setSolvedQuiz((prev) => (prev[i] ? prev : prev.map((v, j) => (j === i ? true : v))))
+              }
+            />
           ))}
+          {allCleared && (
+            <Box
+              bg="green.50"
+              borderWidth="1px"
+              borderStyle="solid"
+              borderColor="green.300"
+              borderRadius="md"
+              p={3}
+              textAlign="center"
+            >
+              <Text fontSize="sm" fontWeight="bold" color="green.700">
+                ✓ 解読クリア！全問正解
+              </Text>
+            </Box>
+          )}
         </VStack>
       )}
     </VStack>
@@ -230,11 +265,23 @@ function shuffleArray<T>(arr: T[]): T[] {
   return a;
 }
 
-function QuizCard({ quiz, index }: { quiz: Quiz; index: number }) {
+function QuizCard({
+  quiz,
+  index,
+  onCorrect,
+}: {
+  quiz: Quiz;
+  index: number;
+  onCorrect?: () => void;
+}) {
   const [picked, setPicked] = useState<string | null>(null);
   const correct = picked === quiz.answer;
   // 正解が常に先頭だと答えが透けるので、表示順をシャッフル（採点は値で判定）
   const choices = useMemo(() => shuffleArray(quiz.choices), [quiz]);
+
+  useEffect(() => {
+    if (correct) onCorrect?.();
+  }, [correct, onCorrect]);
 
   return (
     <Box
