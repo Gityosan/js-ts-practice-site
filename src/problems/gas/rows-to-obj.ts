@@ -37,8 +37,9 @@ function solve(data: string[][]): Record<string, string>[] { ... }
       "`rows.map(...)` で全データ行をオブジェクトに変換した配列を作れる",
     ],
   },
-  initialCode: `// 白紙から書いてみよう！
-// function solve(data: string[][]): Record<string, string>[] { ... }
+  initialCode: `function solve(data: string[][]): Record<string, string>[] {
+  // ここに書こう
+}
 `,
   solutionCode: `function solve(data: string[][]): Record<string, string>[] {
   const [headers, ...rows] = data;

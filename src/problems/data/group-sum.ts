@@ -36,9 +36,10 @@ function solve(sales: Sale[]): Record<string, number> { ... }
       "`return acc;` を忘れずに — reduce のコールバックは必ず accumulator を返す",
     ],
   },
-  initialCode: `// 白紙から書いてみよう！
-// type Sale = { region: string; amount: number };
-// function solve(sales: Sale[]): Record<string, number> { ... }
+  initialCode: `type Sale = { region: string; amount: number };
+function solve(sales: Sale[]): Record<string, number> {
+  // ここに書こう
+}
 `,
   solutionCode: `type Sale = { region: string; amount: number };
 function solve(sales: Sale[]): Record<string, number> {

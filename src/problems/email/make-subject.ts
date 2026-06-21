@@ -35,8 +35,9 @@ solve("佐藤", "2024/02/01")
       '`return \\`${to}様 週次レポート（${date}）\\`` だけで完成',
     ],
   },
-  initialCode: `// 白紙から書いてみよう！
-// function solve(to: string, date: string): string { ... }
+  initialCode: `function solve(to: string, date: string): string {
+  // ここに書こう
+}
 `,
   solutionCode: `function solve(to: string, date: string): string {
   return \`\${to}様 週次レポート（\${date}）\`;

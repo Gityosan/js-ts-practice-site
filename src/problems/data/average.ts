@@ -28,8 +28,9 @@ solve([42])          // → 42
       "空配列ガード: `if (nums.length === 0) return 0;`",
     ],
   },
-  initialCode: `// 白紙から書いてみよう！
-// function solve(nums: number[]): number { ... }
+  initialCode: `function solve(nums: number[]): number {
+  // ここに書こう
+}
 `,
   solutionCode: `function solve(nums: number[]): number {
   if (nums.length === 0) return 0;

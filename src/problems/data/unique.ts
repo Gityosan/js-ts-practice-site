@@ -30,8 +30,9 @@ solve([])                // → []
       "関数の骨格: `function solve(nums: number[]): number[] { return ...; }`",
     ],
   },
-  initialCode: `// 白紙から書いてみよう！
-// function solve(nums: number[]): number[] { ... }
+  initialCode: `function solve(nums: number[]): number[] {
+  // ここに書こう
+}
 `,
   solutionCode: `function solve(nums: number[]): number[] {
   return [...new Set(nums)];
