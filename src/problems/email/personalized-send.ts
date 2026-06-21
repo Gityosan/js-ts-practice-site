@@ -5,7 +5,7 @@ export default defineProblem({
   stage: "fill",
   scenario: "email",
   copy: {
-    title: "名前差し込みでメンバー全員に送ろう",
+    title: "一人ずつ内容を変えて送ろう",
     prompt: `## やること
 
 \`members\` 配列の各メンバーに、**名前を差し込んだ本文**でメールを送るコードを書こう。

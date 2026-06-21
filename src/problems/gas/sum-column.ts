@@ -5,7 +5,7 @@ export default defineProblem({
   stage: "fill",
   scenario: "gas",
   copy: {
-    title: "B列を合計して B6 にセットしよう",
+    title: "合計を計算しよう③",
     prompt: `## やること
 
 Google Apps Script（GAS）でスプレッドシートの **B2〜B5 の値を合計**し、**B6 にセット**するコードを書こう。

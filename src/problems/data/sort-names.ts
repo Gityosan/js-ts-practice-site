@@ -5,7 +5,7 @@ export default defineProblem({
   stage: "fill",
   scenario: "data",
   copy: {
-    title: "あいうえお順に並べよう",
+    title: "データを並べ替えよう",
     prompt: `## やること
 
 文字列の配列を受け取って、**辞書順（abc/あいうえお順）に並べた新しい配列**を返す関数 \`solve\` を完成させよう。

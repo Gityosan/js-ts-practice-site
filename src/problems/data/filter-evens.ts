@@ -5,7 +5,7 @@ export default defineProblem({
   stage: "fill",
   scenario: "data",
   copy: {
-    title: "偶数だけを取り出そう",
+    title: "条件でデータを絞り込もう",
     prompt: `## やること
 
 数値の配列から**偶数だけ**を取り出す関数 \`solve\` を完成させよう。

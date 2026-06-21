@@ -5,7 +5,7 @@ export default defineProblem({
   stage: "fill",
   scenario: "data",
   copy: {
-    title: "全部を2倍にしよう",
+    title: "数値を2倍にしよう",
     prompt: `## やること
 
 数値の配列を受け取り、**それぞれの値を2倍にした配列**を返す関数 \`solve\` を完成させよう。
