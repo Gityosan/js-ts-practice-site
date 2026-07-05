@@ -55,7 +55,10 @@ const grader: StateGraderDef = {
   ],
   visualize: (scope) => {
     const fields = scope._fields as Record<string, { value: string }>;
-    const labelOf: Record<string, string> = { "#username": "ユーザー名", "#password": "パスワード" };
+    const labelOf: Record<string, string> = {
+      "#username": "ユーザー名",
+      "#password": "パスワード",
+    };
     return {
       kind: "form",
       title: "ログインフォーム（サンドボックス）",

@@ -37,7 +37,13 @@ export type StateGraderDef = {
 
 export type GraderDef = IoGraderDef | StateGraderDef;
 
-export type CaseResult = { label: string; passed: boolean; detail?: string; output?: unknown; bonus?: boolean };
+export type CaseResult = {
+  label: string;
+  passed: boolean;
+  detail?: string;
+  output?: unknown;
+  bonus?: boolean;
+};
 
 export type GradeResult = {
   passed: number;

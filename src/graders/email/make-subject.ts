@@ -33,7 +33,13 @@ const grader: IoGraderDef = {
   ],
   visualize: (output, input) => ({
     kind: "emails",
-    sent: [{ to: `${String(input[0] ?? "")}様`, subject: String(output ?? ""), body: "（本文は別問題で）" }],
+    sent: [
+      {
+        to: `${String(input[0] ?? "")}様`,
+        subject: String(output ?? ""),
+        body: "（本文は別問題で）",
+      },
+    ],
   }),
 };
 

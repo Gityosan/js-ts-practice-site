@@ -6,7 +6,7 @@ const config = defineConfig({
       colors: {
         // Navy blue palette — replaces Chakra's bright royal blue
         blue: {
-          50:  { value: "#f0f4fc" },
+          50: { value: "#f0f4fc" },
           100: { value: "#dce6f5" },
           200: { value: "#b3cced" },
           300: { value: "#7aa7de" },
@@ -20,7 +20,7 @@ const config = defineConfig({
         },
         // Matte gray — navy-tinted instead of neutral gray
         gray: {
-          50:  { value: "#f4f6fb" },
+          50: { value: "#f4f6fb" },
           100: { value: "#e7edf6" },
           200: { value: "#cfd9ea" },
           300: { value: "#aabace" },

@@ -56,7 +56,13 @@ export function ProblemCard({ problem, solved = false }: Props) {
             </Badge>
           )}
         </HStack>
-        <Text fontWeight="bold" fontSize="md" color="gray.800" wordBreak="break-word" overflowWrap="break-word">
+        <Text
+          fontWeight="bold"
+          fontSize="md"
+          color="gray.800"
+          wordBreak="break-word"
+          overflowWrap="break-word"
+        >
           {problem.copy.title}
         </Text>
       </VStack>

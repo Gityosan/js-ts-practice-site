@@ -51,7 +51,9 @@ const grader: StateGraderDef = {
     const grid: { value: string | number; highlight?: boolean }[][] = MOCK_VALUES.map((row) => [
       { value: row[0], highlight: row[0] >= 1000 },
     ]);
-    grid.push([{ value: typeof total === "number" ? total : String(total ?? "—"), highlight: true }]);
+    grid.push([
+      { value: typeof total === "number" ? total : String(total ?? "—"), highlight: true },
+    ]);
     return { kind: "spreadsheet", headers: ["売上"], grid };
   },
 };

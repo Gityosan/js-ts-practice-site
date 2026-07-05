@@ -73,33 +73,35 @@ String(null)      // "null"（安全）
         snippet: "`${name}さん`",
         choices: ['"田中さん"', '"${name}さん"', '"nameさん"'],
         answer: '"田中さん"',
-        explain: "テンプレートリテラルの ${name} は変数の中身に置き換わるので \"田中さん\"。",
+        explain: 'テンプレートリテラルの ${name} は変数の中身に置き換わるので "田中さん"。',
       },
       {
         prompt: "数値 42 を文字列にする書き方は？",
         choices: ["String(42)", "Number(42)", "42.string"],
         answer: "String(42)",
-        explain: "`String(42)` で \"42\" になる。`(42).toString()` でも同じ。",
+        explain: '`String(42)` で "42" になる。`(42).toString()` でも同じ。',
       },
       {
         prompt: "値が null かもしれないとき、安全に文字列化できるのは？",
         choices: ["String(x)", "x.toString()"],
         answer: "String(x)",
-        explain: "`String(null)` は \"null\" を返すが、`null.toString()` はエラーになる。",
+        explain: '`String(null)` は "null" を返すが、`null.toString()` はエラーになる。',
       },
       {
         prompt: '`0 + "1"` の結果は？',
         snippet: `0 + "1"`,
         choices: ['"01"', "1", '"1"'],
         answer: '"01"',
-        explain: "片方が文字列だと連結。数値の 0 が \"0\" になって \"1\" とつながり \"01\"。計算の 1 ではない。",
+        explain:
+          '片方が文字列だと連結。数値の 0 が "0" になって "1" とつながり "01"。計算の 1 ではない。',
       },
       {
         prompt: '`"data: " + { a: 1 }` の結果は？',
         snippet: `"data: " + { a: 1 }`,
         choices: ['"data: [object Object]"', '"data: {a:1}"', '"data: 1"'],
         answer: '"data: [object Object]"',
-        explain: "オブジェクトを + で文字列につなぐと中身は出ず `[object Object]` になる。中身を見るなら JSON.stringify。",
+        explain:
+          "オブジェクトを + で文字列につなぐと中身は出ず `[object Object]` になる。中身を見るなら JSON.stringify。",
       },
       {
         prompt: '`"items: " + [1, 2, 3]` の結果は？',
@@ -114,14 +116,15 @@ String(null)      // "null"（安全）
         choices: ['"123"', '"33"', "6"],
         answer: '"123"',
         explain:
-          "( ) が先：`2 + \"3\"` は連結で \"23\"。次に `1 + \"23\"` も連結で \"123\"。文字列が混ざると以降ずっと連結になる。",
+          '( ) が先：`2 + "3"` は連結で "23"。次に `1 + "23"` も連結で "123"。文字列が混ざると以降ずっと連結になる。',
       },
       {
         prompt: '`"items: " + [1, 2, 1 + 2]` の結果は？',
         snippet: `"items: " + [1, 2, 1 + 2]`,
         choices: ['"items: 1,2,3"', '"items: 1,2,1+2"', '"items: 1,2,12"'],
         answer: '"items: 1,2,3"',
-        explain: "配列の中の `1 + 2` は先に計算されて 3。配列 [1, 2, 3] を文字列につないでカンマ区切りの \"1,2,3\"。",
+        explain:
+          '配列の中の `1 + 2` は先に計算されて 3。配列 [1, 2, 3] を文字列につないでカンマ区切りの "1,2,3"。',
       },
     ],
   },

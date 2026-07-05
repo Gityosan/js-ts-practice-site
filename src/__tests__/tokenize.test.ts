@@ -23,7 +23,11 @@ describe("tokenize: 分類", () => {
 
   it("join で原文に戻る（空白・記号を保持）", () => {
     const src = `if (x > 1) {\n  return "ok";\n}`;
-    expect(tokenize(src).map((t) => t.value).join("")).toBe(src);
+    expect(
+      tokenize(src)
+        .map((t) => t.value)
+        .join(""),
+    ).toBe(src);
   });
 });
 

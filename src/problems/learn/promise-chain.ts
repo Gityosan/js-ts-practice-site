@@ -98,7 +98,7 @@ console.log("B");`,
         choices: ["B → A", "A → B", "毎回バラバラ"],
         answer: "B → A",
         explain:
-          ".then の中は後回し（非同期）。fetch の直後の `console.log(\"B\")` が先に走り、その後 A。通信が速くても変わらない。",
+          '.then の中は後回し（非同期）。fetch の直後の `console.log("B")` が先に走り、その後 A。通信が速くても変わらない。',
       },
       {
         prompt: "`.then` で受け取った結果を、fetch の「下の行」で使える？",
@@ -109,7 +109,7 @@ console.log("B");`,
       },
       {
         prompt:
-          "`fetch(\"/x\").then(() => console.log(\"A\"))` の後に `await`（3秒待ち）→ `console.log(\"B\")`。fetch が1秒で終わるなら？",
+          '`fetch("/x").then(() => console.log("A"))` の後に `await`（3秒待ち）→ `console.log("B")`。fetch が1秒で終わるなら？',
         snippet: `fetch("/x").then(() => console.log("A"));
 await new Promise((r) => setTimeout(r, 3000));
 console.log("B");`,

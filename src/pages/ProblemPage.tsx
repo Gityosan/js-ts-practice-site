@@ -123,7 +123,9 @@ export function ProblemPage() {
                 variant="outline"
                 size="sm"
                 disabled={!prevProblem}
-                onClick={() => prevProblem && navigate({ to: "/problem/$id", params: { id: prevProblem.id } })}
+                onClick={() =>
+                  prevProblem && navigate({ to: "/problem/$id", params: { id: prevProblem.id } })
+                }
               >
                 ← 前へ
               </Button>
@@ -134,7 +136,9 @@ export function ProblemPage() {
                 variant="outline"
                 size="sm"
                 disabled={!nextProblem}
-                onClick={() => nextProblem && navigate({ to: "/problem/$id", params: { id: nextProblem.id } })}
+                onClick={() =>
+                  nextProblem && navigate({ to: "/problem/$id", params: { id: nextProblem.id } })
+                }
               >
                 次へ →
               </Button>
@@ -277,81 +281,96 @@ export function ProblemPage() {
                 </Box>
               ) : (
                 <>
-              <EditorPane ref={editorRef} value={code} onChange={setCode} height="420px" />
+                  <EditorPane ref={editorRef} value={code} onChange={setCode} height="420px" />
 
-              <HStack gap={3}>
-                <MotionButton
-                  colorPalette="blue"
-                  onClick={handleRun}
-                  disabled={running}
-                  flex={1}
-                  fontFamily="mono"
-                  whileTap={{ scale: 0.95 }}
-                  whileHover={{ scale: 1.02 }}
-                >
-                  ▶ 実行
-                </MotionButton>
-                <Button variant="outline" onClick={handleReset} disabled={running}>
-                  リセット
-                </Button>
-              </HStack>
+                  <HStack gap={3}>
+                    <MotionButton
+                      colorPalette="blue"
+                      onClick={handleRun}
+                      disabled={running}
+                      flex={1}
+                      fontFamily="mono"
+                      whileTap={{ scale: 0.95 }}
+                      whileHover={{ scale: 1.02 }}
+                    >
+                      ▶ 実行
+                    </MotionButton>
+                    <Button variant="outline" onClick={handleReset} disabled={running}>
+                      リセット
+                    </Button>
+                  </HStack>
 
-              {problem.stage === "read" && result?.results[0]?.output !== undefined && (
-                <Box
-                  bg="white"
-                  borderRadius="lg"
-                  borderWidth="1px"
-                  borderStyle="solid"
-                  borderColor="gray.200"
-                  overflow="hidden"
-                >
-                  <Box p={3} borderBottomWidth="1px" borderBottomStyle="solid" borderColor="gray.100">
-                    <Text fontSize="sm" fontWeight="bold" color="gray.600">
-                      出力プレビュー
-                    </Text>
-                  </Box>
-                  <Box p={3}>
-                    <VisualOutput problemId={problem.id} output={result.results[0].output} />
-                  </Box>
-                </Box>
-              )}
+                  {problem.stage === "read" && result?.results[0]?.output !== undefined && (
+                    <Box
+                      bg="white"
+                      borderRadius="lg"
+                      borderWidth="1px"
+                      borderStyle="solid"
+                      borderColor="gray.200"
+                      overflow="hidden"
+                    >
+                      <Box
+                        p={3}
+                        borderBottomWidth="1px"
+                        borderBottomStyle="solid"
+                        borderColor="gray.100"
+                      >
+                        <Text fontSize="sm" fontWeight="bold" color="gray.600">
+                          出力プレビュー
+                        </Text>
+                      </Box>
+                      <Box p={3}>
+                        <VisualOutput problemId={problem.id} output={result.results[0].output} />
+                      </Box>
+                    </Box>
+                  )}
 
-              {/* scenario の視覚出力（data/gas/email/chrome）。読み終わったら採点結果へ */}
-              {result?.visual && (
-                <Box
-                  bg="gray.50"
-                  borderRadius="lg"
-                  borderWidth="1px"
-                  borderStyle="solid"
-                  borderColor="gray.200"
-                  overflow="hidden"
-                >
-                  <Box p={3} borderBottomWidth="1px" borderBottomStyle="solid" borderColor="gray.100">
-                    <Text fontSize="sm" fontWeight="bold" color="gray.600">
-                      実行結果
-                    </Text>
-                  </Box>
-                  <Box p={4} display="flex" justifyContent="center">
-                    <ScenarioVisual state={result.visual} />
-                  </Box>
-                </Box>
-              )}
+                  {/* scenario の視覚出力（data/gas/email/chrome）。読み終わったら採点結果へ */}
+                  {result?.visual && (
+                    <Box
+                      bg="gray.50"
+                      borderRadius="lg"
+                      borderWidth="1px"
+                      borderStyle="solid"
+                      borderColor="gray.200"
+                      overflow="hidden"
+                    >
+                      <Box
+                        p={3}
+                        borderBottomWidth="1px"
+                        borderBottomStyle="solid"
+                        borderColor="gray.100"
+                      >
+                        <Text fontSize="sm" fontWeight="bold" color="gray.600">
+                          実行結果
+                        </Text>
+                      </Box>
+                      <Box p={4} display="flex" justifyContent="center">
+                        <ScenarioVisual state={result.visual} />
+                      </Box>
+                    </Box>
+                  )}
 
-              <Box
-                bg="white"
-                borderRadius="lg"
-                borderWidth="1px"
-                borderStyle="solid"
-                borderColor="gray.200"
-                minH="120px"
-              >
-                <Box p={3} borderBottomWidth="1px" borderBottomStyle="solid" borderColor="gray.100">
-                  <Text fontSize="sm" fontWeight="bold" color="gray.600">
-                    採点結果
-                  </Text>
-                </Box>
-                <ResultPanel result={result} running={running} error={runError} />
-              </Box>
+                  <Box
+                    bg="white"
+                    borderRadius="lg"
+                    borderWidth="1px"
+                    borderStyle="solid"
+                    borderColor="gray.200"
+                    minH="120px"
+                  >
+                    <Box
+                      p={3}
+                      borderBottomWidth="1px"
+                      borderBottomStyle="solid"
+                      borderColor="gray.100"
+                    >
+                      <Text fontSize="sm" fontWeight="bold" color="gray.600">
+                        採点結果
+                      </Text>
+                    </Box>
+                    <ResultPanel result={result} running={running} error={runError} />
+                  </Box>
                 </>
               )}
             </VStack>
@@ -390,12 +409,7 @@ function ShikiBlock({ code, lang }: { code: string; lang: string }) {
       </pre>
     );
   }
-  return (
-    <div
-      dangerouslySetInnerHTML={{ __html: html }}
-      style={{ margin: "4px 0" }}
-    />
-  );
+  return <div dangerouslySetInnerHTML={{ __html: html }} style={{ margin: "4px 0" }} />;
 }
 
 function parseTableRow(line: string): string[] {
@@ -502,7 +516,8 @@ function renderInline(text: string): React.ReactNode {
   const parts = text.split(/(`[^`]+`|\*\*[^*]+\*\*)/g);
   return parts.map((part, i) => {
     if (part.startsWith("`") && part.endsWith("`")) return <code key={i}>{part.slice(1, -1)}</code>;
-    if (part.startsWith("**") && part.endsWith("**")) return <strong key={i}>{part.slice(2, -2)}</strong>;
+    if (part.startsWith("**") && part.endsWith("**"))
+      return <strong key={i}>{part.slice(2, -2)}</strong>;
     return part;
   });
 }
@@ -510,7 +525,14 @@ function renderInline(text: string): React.ReactNode {
 function HintBox({ hint, index }: { hint: string; index: number }) {
   const [open, setOpen] = useState(false);
   return (
-    <Box borderWidth="1px" borderStyle="solid" borderColor="blue.100" borderRadius="md" overflow="hidden" fontSize="xs">
+    <Box
+      borderWidth="1px"
+      borderStyle="solid"
+      borderColor="blue.100"
+      borderRadius="md"
+      overflow="hidden"
+      fontSize="xs"
+    >
       <Box
         p={2}
         bg="blue.50"
@@ -539,7 +561,13 @@ function HintBox({ hint, index }: { hint: string; index: number }) {
             transition={{ duration: 0.2, ease: "easeInOut" }}
             style={{ overflow: "hidden" }}
           >
-            <Box p={2} color="gray.700" borderTopWidth="1px" borderTopStyle="solid" borderColor="blue.50">
+            <Box
+              p={2}
+              color="gray.700"
+              borderTopWidth="1px"
+              borderTopStyle="solid"
+              borderColor="blue.50"
+            >
               {renderInline(hint)}
             </Box>
           </MotionDiv>

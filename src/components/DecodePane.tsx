@@ -1,13 +1,7 @@
 import { useMemo, useState } from "react";
 import { Box, Text, VStack, HStack } from "@chakra-ui/react";
 import { AnimatePresence, motion } from "motion/react";
-import {
-  tokenize,
-  matchBrackets,
-  explainToken,
-  type Token,
-  type TokenType,
-} from "../lib/tokenize";
+import { tokenize, matchBrackets, explainToken, type Token, type TokenType } from "../lib/tokenize";
 import type { Decode } from "../core/schemas";
 import { QuizList } from "./QuizList";
 
@@ -37,13 +31,7 @@ const LEGEND: { label: string; color: string; note: string }[] = [
   { label: "文字列/数値", color: COLOR.string, note: "そのままのデータ" },
 ];
 
-export function DecodePane({
-  decode,
-  onComplete,
-}: {
-  decode: Decode;
-  onComplete?: () => void;
-}) {
+export function DecodePane({ decode, onComplete }: { decode: Decode; onComplete?: () => void }) {
   const tokens = useMemo(() => tokenize(decode.code), [decode.code]);
   const pairs = useMemo(() => matchBrackets(tokens), [tokens]);
   const [selected, setSelected] = useState<number | null>(null);
@@ -223,4 +211,3 @@ function TokenSpan({
     </Box>
   );
 }
-

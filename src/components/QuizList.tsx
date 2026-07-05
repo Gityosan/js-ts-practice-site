@@ -94,7 +94,14 @@ function QuizCard({
   }, [correct, onCorrect]);
 
   return (
-    <Box borderWidth="1px" borderStyle="solid" borderColor="gray.200" borderRadius="md" p={4} bg="white">
+    <Box
+      borderWidth="1px"
+      borderStyle="solid"
+      borderColor="gray.200"
+      borderRadius="md"
+      p={4}
+      bg="white"
+    >
       <Text fontSize="sm" color="gray.700" mb={quiz.snippet ? 2 : 3} fontWeight="medium">
         Q{index + 1}. {quiz.prompt}
       </Text>
@@ -150,7 +157,12 @@ function QuizCard({
               borderStyle="solid"
               borderColor={correct ? "green.200" : "orange.200"}
             >
-              <Text fontSize="sm" fontWeight="bold" color={correct ? "green.700" : "orange.700"} mb={1}>
+              <Text
+                fontSize="sm"
+                fontWeight="bold"
+                color={correct ? "green.700" : "orange.700"}
+                mb={1}
+              >
                 {correct ? "○ 正解！" : "もう一度考えてみよう"}
               </Text>
               <Text fontSize="sm" color="gray.700" lineHeight="1.7">

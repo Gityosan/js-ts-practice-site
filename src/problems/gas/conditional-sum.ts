@@ -27,7 +27,7 @@ Google Apps Script（GAS）で、スプレッドシートの **B2〜B5 の値の
     hints: [
       "`values.filter((row) => row[0] >= 1000)` で 1000 以上の行だけに絞れる",
       "`.reduce((acc, row) => acc + row[0], 0)` で合計できる",
-      "`sheet.getRange(\"B6\").setValue(total)` で結果をセットする",
+      '`sheet.getRange("B6").setValue(total)` で結果をセットする',
     ],
   },
   initialCode: `const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();

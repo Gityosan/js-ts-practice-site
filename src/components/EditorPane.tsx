@@ -66,7 +66,13 @@ export const EditorPane = forwardRef<EditorHandle, Props>(function EditorPane(
   }));
 
   return (
-    <Box borderWidth="1px" borderStyle="solid" borderColor="gray.200" borderRadius="md" overflow="hidden">
+    <Box
+      borderWidth="1px"
+      borderStyle="solid"
+      borderColor="gray.200"
+      borderRadius="md"
+      overflow="hidden"
+    >
       <MonacoEditor
         height={height}
         language="typescript"

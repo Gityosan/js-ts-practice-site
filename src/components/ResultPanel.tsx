@@ -35,7 +35,14 @@ export function ResultPanel({ result, running, error }: Props) {
         animate={{ opacity: 1, x: [0, -6, 6, -4, 4, 0] }}
         transition={{ duration: 0.4 }}
       >
-        <Text color="red.700" fontFamily="mono" fontSize="sm" whiteSpace="pre-wrap" wordBreak="break-all" overflowWrap="break-word">
+        <Text
+          color="red.700"
+          fontFamily="mono"
+          fontSize="sm"
+          whiteSpace="pre-wrap"
+          wordBreak="break-all"
+          overflowWrap="break-word"
+        >
           {error}
         </Text>
       </MotionBox>
@@ -75,8 +82,21 @@ export function ResultPanel({ result, running, error }: Props) {
       </HStack>
 
       {result.status === "error" && result.error && (
-        <Box bg="red.50" borderRadius="md" p={3} borderWidth="1px" borderStyle="solid" borderColor="red.200">
-          <Text fontSize="xs" color="red.700" fontFamily="mono" wordBreak="break-all" overflowWrap="break-word">
+        <Box
+          bg="red.50"
+          borderRadius="md"
+          p={3}
+          borderWidth="1px"
+          borderStyle="solid"
+          borderColor="red.200"
+        >
+          <Text
+            fontSize="xs"
+            color="red.700"
+            fontFamily="mono"
+            wordBreak="break-all"
+            overflowWrap="break-word"
+          >
             {result.error}
           </Text>
         </Box>
@@ -98,12 +118,25 @@ export function ResultPanel({ result, running, error }: Props) {
           >
             <HStack>
               <Text fontSize="lg">{r.passed ? "○" : "×"}</Text>
-              <Text fontSize="sm" color={r.passed ? "green.700" : "red.700"} wordBreak="break-word" overflowWrap="break-word">
+              <Text
+                fontSize="sm"
+                color={r.passed ? "green.700" : "red.700"}
+                wordBreak="break-word"
+                overflowWrap="break-word"
+              >
                 {r.label}
               </Text>
             </HStack>
             {!r.passed && r.detail && (
-              <Text fontSize="xs" fontFamily="mono" color="red.600" mt={1} ml={7} wordBreak="break-all" overflowWrap="break-word">
+              <Text
+                fontSize="xs"
+                fontFamily="mono"
+                color="red.600"
+                mt={1}
+                ml={7}
+                wordBreak="break-all"
+                overflowWrap="break-word"
+              >
                 {r.detail}
               </Text>
             )}
@@ -158,7 +191,12 @@ export function ResultPanel({ result, running, error }: Props) {
             textAlign="center"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: result.total * 0.08 + 0.1, type: "spring", stiffness: 260, damping: 18 }}
+            transition={{
+              delay: result.total * 0.08 + 0.1,
+              type: "spring",
+              stiffness: 260,
+              damping: 18,
+            }}
           >
             <Text fontSize="lg">全問正解！🎉</Text>
             <Text fontSize="sm" color="green.700" mt={1}>

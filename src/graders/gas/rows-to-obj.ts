@@ -9,7 +9,13 @@ const grader: IoGraderDef = {
   cases: [
     {
       label: "ヘッダー2列・データ2行",
-      input: [[["name", "price"], ["りんご", "120"], ["バナナ", "80"]]],
+      input: [
+        [
+          ["name", "price"],
+          ["りんご", "120"],
+          ["バナナ", "80"],
+        ],
+      ],
       expected: [
         { name: "りんご", price: "120" },
         { name: "バナナ", price: "80" },
@@ -17,7 +23,13 @@ const grader: IoGraderDef = {
     },
     {
       label: "ヘッダー3列・データ2行",
-      input: [[["id", "name", "score"], ["1", "田中", "85"], ["2", "佐藤", "92"]]],
+      input: [
+        [
+          ["id", "name", "score"],
+          ["1", "田中", "85"],
+          ["2", "佐藤", "92"],
+        ],
+      ],
       expected: [
         { id: "1", name: "田中", score: "85" },
         { id: "2", name: "佐藤", score: "92" },

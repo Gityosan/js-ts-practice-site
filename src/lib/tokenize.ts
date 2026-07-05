@@ -27,22 +27,81 @@ export function isClosedClass(t: TokenType): boolean {
 }
 
 const KEYWORDS = new Set([
-  "const", "let", "var", "function", "return", "if", "else", "for", "while", "do",
-  "switch", "case", "default", "break", "continue", "of", "in", "new", "class",
-  "extends", "import", "export", "from", "as", "await", "async", "yield", "this",
-  "typeof", "instanceof", "void", "delete", "throw", "try", "catch", "finally",
-  "true", "false", "null", "undefined", "interface", "type",
+  "const",
+  "let",
+  "var",
+  "function",
+  "return",
+  "if",
+  "else",
+  "for",
+  "while",
+  "do",
+  "switch",
+  "case",
+  "default",
+  "break",
+  "continue",
+  "of",
+  "in",
+  "new",
+  "class",
+  "extends",
+  "import",
+  "export",
+  "from",
+  "as",
+  "await",
+  "async",
+  "yield",
+  "this",
+  "typeof",
+  "instanceof",
+  "void",
+  "delete",
+  "throw",
+  "try",
+  "catch",
+  "finally",
+  "true",
+  "false",
+  "null",
+  "undefined",
+  "interface",
+  "type",
 ]);
 
 // 型注釈の文脈で現れやすい語。識別子として使われることは学習コードではほぼ無い。
 const TYPE_WORDS = new Set([
-  "number", "string", "boolean", "any", "unknown", "never", "object", "symbol", "bigint",
+  "number",
+  "string",
+  "boolean",
+  "any",
+  "unknown",
+  "never",
+  "object",
+  "symbol",
+  "bigint",
 ]);
 
 const OPS3 = new Set(["===", "!==", "**=", "&&=", "||=", "??=", ">>>"]);
 const OPS2 = new Set([
-  "==", "!=", "<=", ">=", "&&", "||", "??", "+=", "-=", "*=", "/=", "%=",
-  "++", "--", "**", "?.",
+  "==",
+  "!=",
+  "<=",
+  ">=",
+  "&&",
+  "||",
+  "??",
+  "+=",
+  "-=",
+  "*=",
+  "/=",
+  "%=",
+  "++",
+  "--",
+  "**",
+  "?.",
 ]);
 
 const isIdStart = (c: string) => /[A-Za-z_$]/.test(c);
@@ -433,18 +492,32 @@ function describeBracket(tokens: Token[], idx: number): TokenExplain {
   }
 
   if (t.value === "{") {
-    if (pv === "=>") return { ...base, detail: "この { } は『関数の本体』。アロー => の直後だから。" };
+    if (pv === "=>")
+      return { ...base, detail: "この { } は『関数の本体』。アロー => の直後だから。" };
     const eff = effectivePrevForBrace(tokens, idx);
     if (eff?.value === ")") {
       // ) の前を辿って if/while/for なら制御ブロック、それ以外は関数本体
       const head = ctrlKeywordBeforeParen(tokens, eff.index);
-      if (head) return { ...base, detail: `この { } は ${head} の『本体（ブロック）』。条件が成り立つと実行される。` };
-      return { ...base, detail: "この { } は『関数の本体』。引数 ( ) の直後だから（戻り値型注釈があっても本体）。" };
+      if (head)
+        return {
+          ...base,
+          detail: `この { } は ${head} の『本体（ブロック）』。条件が成り立つと実行される。`,
+        };
+      return {
+        ...base,
+        detail: "この { } は『関数の本体』。引数 ( ) の直後だから（戻り値型注釈があっても本体）。",
+      };
     }
     if (pv === "=" || pv === "(" || pv === "," || pv === "return" || pv === ":") {
-      return { ...base, detail: "この { } は『オブジェクトリテラル』。= や ( , の直後で値として置かれているから。" };
+      return {
+        ...base,
+        detail: "この { } は『オブジェクトリテラル』。= や ( , の直後で値として置かれているから。",
+      };
     }
-    if (prev?.type === "keyword" && (pv === "else" || pv === "do" || pv === "try" || pv === "finally")) {
+    if (
+      prev?.type === "keyword" &&
+      (pv === "else" || pv === "do" || pv === "try" || pv === "finally")
+    ) {
       return { ...base, detail: "この { } は処理をまとめる『ブロック』。" };
     }
     if (pv === "class" || pv === "interface") {
@@ -460,8 +533,17 @@ function describeBracket(tokens: Token[], idx: number): TokenExplain {
   }
 
   if (t.value === "[") {
-    if (prev && (prev.type === "identifier" || prev.value === ")" || prev.value === "]" || prev.type === "string")) {
-      return { ...base, detail: "この [ ] は『要素アクセス』（配列の n 番目・オブジェクトのキー）。" };
+    if (
+      prev &&
+      (prev.type === "identifier" ||
+        prev.value === ")" ||
+        prev.value === "]" ||
+        prev.type === "string")
+    ) {
+      return {
+        ...base,
+        detail: "この [ ] は『要素アクセス』（配列の n 番目・オブジェクトのキー）。",
+      };
     }
     return { ...base, detail: "この [ ] は『配列リテラル』。値を並べて配列を作る。" };
   }

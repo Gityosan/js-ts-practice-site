@@ -19,8 +19,7 @@ const rules: Rule[] = [
   {
     name: "TypeError",
     re: /Assignment to constant variable/,
-    format: () =>
-      `const で宣言した変数には値を代入できません。変えたいなら let を使いましょう。`,
+    format: () => `const で宣言した変数には値を代入できません。変えたいなら let を使いましょう。`,
   },
   {
     re: /Reduce of empty array with no initial value/,

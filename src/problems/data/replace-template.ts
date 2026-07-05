@@ -25,7 +25,7 @@ solve("こんにちは、{{name}}さん！", "Alice")
     hints: [
       '`template.replace("{{name}}", name)` — 最初の一致だけ置き換える',
       "正規表現 `/\\{\\{name\\}\\}/g` を使うと複数箇所を一度に置き換えられる",
-      'g フラグ（global）を付けると「全部置き換え」になる',
+      "g フラグ（global）を付けると「全部置き換え」になる",
     ],
   },
   initialCode: `function solve(template: string, name: string): string {
