@@ -35,7 +35,23 @@ export type StateGraderDef = {
   visualize?: (scope: Record<string, unknown>) => VisualState;
 };
 
-export type GraderDef = IoGraderDef | StateGraderDef;
+// cli（CLI 実行）ステージ用。学習者が書いたコマンド（jq フィルタ等）を本物の WASM で
+// 実行し、標準出力を expected と突き合わせる。io の stdin/stdout 版。
+export type CliCase = {
+  label?: string;
+  stdin: unknown; // jq に渡す入力（JS の値ならシリアライズ、文字列なら生 JSON として解釈）
+  args?: string[]; // 追加フラグ（例: ["-r"] で raw 出力）
+  expected: string; // 期待する標準出力（末尾改行は正規化して比較）
+};
+
+export type CliGraderDef = {
+  kind: "cli";
+  runtime: "jq"; // 将来 busybox(ash) 等を足す余地を残す
+  cases: CliCase[];
+  bonusCases?: { label: string; pattern: string }[];
+};
+
+export type GraderDef = IoGraderDef | StateGraderDef | CliGraderDef;
 
 export type CaseResult = {
   label: string;

@@ -13,6 +13,9 @@ type Props = {
   value: string;
   onChange: (v: string) => void;
   height?: string;
+  // Monaco の言語モード。"typescript" 以外（例: jq/シェルの "shell"）は
+  // TS 変換を掛けず、書いたコードをそのまま採点へ渡す。
+  language?: string;
 };
 
 /**
@@ -37,15 +40,19 @@ function fallbackStripTs(src: string): string {
 }
 
 export const EditorPane = forwardRef<EditorHandle, Props>(function EditorPane(
-  { value, onChange, height = "400px" },
+  { value, onChange, height = "400px", language = "typescript" },
   ref,
 ) {
   const editorRef = useRef<Monaco.editor.IStandaloneCodeEditor | null>(null);
+  const isTs = language === "typescript";
 
   useImperativeHandle(ref, () => ({
     async getTranspiledJs(): Promise<string> {
       const editor = editorRef.current;
       const currentCode = editor?.getModel()?.getValue() ?? value;
+
+      // TS 以外（jq/シェル）は変換せず、書いたコードをそのまま採点へ渡す。
+      if (!isTs) return currentCode;
 
       if (!editor) return fallbackStripTs(value);
 
@@ -75,15 +82,16 @@ export const EditorPane = forwardRef<EditorHandle, Props>(function EditorPane(
     >
       <MonacoEditor
         height={height}
-        language="typescript"
+        language={isTs ? "typescript" : language}
         value={value}
         theme="vs-dark"
-        // path="solve.ts" ensures Monaco registers the model with a .ts URI so the
-        // TypeScript language service recognizes it and getEmitOutput produces JS output.
-        path="solve.ts"
+        // TS のときは .ts URI にして言語サービスが getEmitOutput で JS を出せるようにする。
+        // それ以外（jq/シェル）は .sh URI にして TS の診断を掛けない。
+        path={isTs ? "solve.ts" : "solve.sh"}
         onChange={(v) => onChange(v ?? "")}
         onMount={(editor) => {
           editorRef.current = editor;
+          if (!isTs) return;
           monacoTs.typescriptDefaults.setDiagnosticsOptions({
             noSemanticValidation: false,
             noSyntaxValidation: false,

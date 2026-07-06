@@ -134,7 +134,7 @@ export function Home() {
                 {langMeta.label} の問題は準備中です
               </Text>
               <Text fontSize="sm" color="gray.400" mt={2}>
-                busybox（ash）を WASM で動かす実行環境を用意中。もうしばらくお待ちください。
+                実行環境を用意中です。もうしばらくお待ちください。
               </Text>
             </Box>
           ) : (

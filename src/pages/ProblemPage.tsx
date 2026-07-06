@@ -281,7 +281,13 @@ export function ProblemPage() {
                 </Box>
               ) : (
                 <>
-                  <EditorPane ref={editorRef} value={code} onChange={setCode} height="420px" />
+                  <EditorPane
+                    ref={editorRef}
+                    value={code}
+                    onChange={setCode}
+                    height="420px"
+                    language={problem.language === "bash" ? "shell" : "typescript"}
+                  />
 
                   <HStack gap={3}>
                     <MotionButton

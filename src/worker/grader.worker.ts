@@ -78,6 +78,26 @@ self.onmessage = async (e: MessageEvent<{ problemId: string; learnerJs: string }
         }
       }
       self.postMessage({ type: "done" });
+    } else if (g.kind === "cli") {
+      self.postMessage({ type: "meta", total: g.cases.length });
+      const { getJq, gradeJqCase } = await import("../grade/jq");
+      const jq = await getJq();
+      for (let i = 0; i < g.cases.length; i++) {
+        const c = g.cases[i];
+        const label = c.label ?? `ケース${i + 1}`;
+        self.postMessage({ type: "case", result: gradeJqCase(jq, c, learnerJs, label) });
+      }
+      if (g.bonusCases) {
+        for (const bc of g.bonusCases) {
+          if (new RegExp(bc.pattern).test(learnerJs)) {
+            self.postMessage({
+              type: "bonus",
+              result: { label: bc.label, passed: true, bonus: true },
+            });
+          }
+        }
+      }
+      self.postMessage({ type: "done" });
     } else {
       self.postMessage({ type: "meta", total: g.asserts.length });
       const scope = g.setupMocks();

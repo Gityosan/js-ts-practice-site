@@ -34,4 +34,6 @@ export const graders: Record<string, () => Promise<GraderDef>> = {
   "write-group-sum": () => import("./data/group-sum").then((m) => m.default),
   "write-gas-rows-to-obj": () => import("./gas/rows-to-obj").then((m) => m.default),
   "write-email-make-subject": () => import("./email/make-subject").then((m) => m.default),
+  // bash / jq
+  "bash-jq-pick-names": () => import("./jq/pick-names").then((m) => m.default),
 };
