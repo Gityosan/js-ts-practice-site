@@ -23,6 +23,19 @@ export async function runGrader(problemId: string, learnerTs: string): Promise<G
 
   // cli（jq 等）は学習者コードがそのままコマンド。TS 変換は掛けない。
   if (g.kind === "cli") {
+    // sh（@wasmer/sdk）はブラウザのメインスレッド専用。Node 採点（テスト）では対象外。
+    if (g.runtime === "sh") {
+      return {
+        passed: 0,
+        total: g.cases.length,
+        results: g.cases.map((c, i) => ({
+          label: c.label ?? `ケース${i + 1}`,
+          passed: false,
+          detail: "sh ランタイムはブラウザ専用のため Node では採点しません",
+        })),
+        status: "ok",
+      };
+    }
     const { getJq, gradeJqCase } = await import("../grade/jq");
     const jq = await getJq();
     for (let i = 0; i < g.cases.length; i++) {

@@ -1,4 +1,5 @@
 import GraderWorker from "../worker/grader.worker?worker";
+import { graders } from "../graders/registry";
 import type { CaseResult, GradeResult } from "../grade/types";
 import type { VisualState } from "../grade/visual";
 
@@ -9,7 +10,24 @@ const CASE_TIMEOUT_MS = 2000;
 // 2 秒では間に合わないことがある。最初の case が返れば以降は通常のタイムアウトに戻す。
 const BOOT_TIMEOUT_MS = 10000;
 
-export function runGrader(problemId: string, learnerJs: string): Promise<GradeResult> {
+export async function runGrader(problemId: string, learnerJs: string): Promise<GradeResult> {
+  // sh（本物のシェル）は @wasmer/sdk をメインスレッドで実行する。
+  // 重い取得結果をセッション内でキャッシュするため、使い捨てワーカーには載せない。
+  const g = await graders[problemId]();
+  if (g.kind === "cli" && g.runtime === "sh") {
+    const { runShCases } = await import("../grade/sh");
+    const results = await runShCases(g, learnerJs);
+    return {
+      passed: results.filter((r) => r.passed).length,
+      total: results.length,
+      results,
+      status: "ok",
+    };
+  }
+  return runInWorker(problemId, learnerJs);
+}
+
+function runInWorker(problemId: string, learnerJs: string): Promise<GradeResult> {
   return new Promise((resolve) => {
     const worker = new GraderWorker();
     const results: CaseResult[] = [];

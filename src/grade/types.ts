@@ -46,7 +46,9 @@ export type CliCase = {
 
 export type CliGraderDef = {
   kind: "cli";
-  runtime: "jq"; // 将来 busybox(ash) 等を足す余地を残す
+  // "jq": jq-wasm（npm 同梱・SAB 不要・Worker で実行）
+  // "sh": @wasmer/sdk で本物のシェルを実行（cross-origin isolation 必須・メインスレッドで実行）
+  runtime: "jq" | "sh";
   cases: CliCase[];
   bonusCases?: { label: string; pattern: string }[];
 };

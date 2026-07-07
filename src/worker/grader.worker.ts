@@ -79,6 +79,11 @@ self.onmessage = async (e: MessageEvent<{ problemId: string; learnerJs: string }
       }
       self.postMessage({ type: "done" });
     } else if (g.kind === "cli") {
+      // sh はメインスレッド（runGrader）で処理されワーカーには来ない。ここは jq 専用。
+      if (g.runtime !== "jq") {
+        self.postMessage({ type: "error", message: `未対応の CLI ランタイム: ${g.runtime}` });
+        return;
+      }
       self.postMessage({ type: "meta", total: g.cases.length });
       const { getJq, gradeJqCase } = await import("../grade/jq");
       const jq = await getJq();

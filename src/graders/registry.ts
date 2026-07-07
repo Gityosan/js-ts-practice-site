@@ -36,4 +36,6 @@ export const graders: Record<string, () => Promise<GraderDef>> = {
   "write-email-make-subject": () => import("./email/make-subject").then((m) => m.default),
   // bash / jq
   "bash-jq-pick-names": () => import("./jq/pick-names").then((m) => m.default),
+  // bash / シェル（本物の bash / WASM）
+  "bash-sh-greet-loop": () => import("./sh/greet-loop").then((m) => m.default),
 };
