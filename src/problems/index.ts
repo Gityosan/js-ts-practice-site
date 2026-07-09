@@ -52,9 +52,20 @@ import jqSumPrices from "./jq/sum-prices";
 import jqUniqueTags from "./jq/unique-tags";
 import jqMapShape from "./jq/map-shape";
 import jqGroupRegion from "./jq/group-region";
+import jqSortByAge from "./jq/sort-by-age";
+import jqKeys from "./jq/keys";
+import jqMaxByPrice from "./jq/max-by-price";
+import jqJoinNames from "./jq/join-names";
+import jqInterpolate from "./jq/interpolate";
+import jqAllAdults from "./jq/all-adults";
+import jqDefaultNick from "./jq/default-nick";
+import jqFlatten from "./jq/flatten";
 import shGreetLoop from "./sh/greet-loop";
 import shSumLoop from "./sh/sum-loop";
 import shEvenOdd from "./sh/even-odd";
+import shLineCount from "./sh/line-count";
+import shUppercase from "./sh/uppercase";
+import shStrLength from "./sh/str-length";
 
 export const allProblems: ProblemMeta[] = [
   // decode（解読）
@@ -110,7 +121,7 @@ export const allProblems: ProblemMeta[] = [
   groupSum,
   gasRowsToObj,
   emailMakeSubject,
-  // bash: jq（CLI）— select / length / add / unique / map / group_by
+  // bash: jq（CLI）
   jqPickNames,
   jqSelectAdults,
   jqCountUsers,
@@ -118,10 +129,21 @@ export const allProblems: ProblemMeta[] = [
   jqUniqueTags,
   jqMapShape,
   jqGroupRegion,
+  jqSortByAge,
+  jqKeys,
+  jqMaxByPrice,
+  jqJoinNames,
+  jqInterpolate,
+  jqAllAdults,
+  jqDefaultNick,
+  jqFlatten,
   // bash: シェルスクリプト（本物の bash / WASM）
   shGreetLoop,
   shSumLoop,
   shEvenOdd,
+  shLineCount,
+  shUppercase,
+  shStrLength,
 ];
 
 export function getProblemById(id: string): ProblemMeta | undefined {
