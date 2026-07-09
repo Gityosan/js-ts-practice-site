@@ -60,12 +60,18 @@ import jqInterpolate from "./jq/interpolate";
 import jqAllAdults from "./jq/all-adults";
 import jqDefaultNick from "./jq/default-nick";
 import jqFlatten from "./jq/flatten";
+import jqToEntries from "./jq/to-entries";
+import jqReduceSum from "./jq/reduce-sum";
+import jqLearnBasics from "./jq/learn-basics";
 import shGreetLoop from "./sh/greet-loop";
 import shSumLoop from "./sh/sum-loop";
 import shEvenOdd from "./sh/even-odd";
 import shLineCount from "./sh/line-count";
 import shUppercase from "./sh/uppercase";
 import shStrLength from "./sh/str-length";
+import shCase from "./sh/case";
+import shFunc from "./sh/func";
+import shLearnBasics from "./sh/learn-basics";
 
 export const allProblems: ProblemMeta[] = [
   // decode（解読）
@@ -121,7 +127,10 @@ export const allProblems: ProblemMeta[] = [
   groupSum,
   gasRowsToObj,
   emailMakeSubject,
-  // bash: jq（CLI）
+  // bash: learn（知る）— まず基本概念
+  jqLearnBasics,
+  shLearnBasics,
+  // bash: jq（CLI / 書く）
   jqPickNames,
   jqSelectAdults,
   jqCountUsers,
@@ -137,13 +146,17 @@ export const allProblems: ProblemMeta[] = [
   jqAllAdults,
   jqDefaultNick,
   jqFlatten,
-  // bash: シェルスクリプト（本物の bash / WASM）
+  jqToEntries,
+  jqReduceSum,
+  // bash: シェルスクリプト（本物の bash / WASM / 書く）
   shGreetLoop,
   shSumLoop,
   shEvenOdd,
   shLineCount,
   shUppercase,
   shStrLength,
+  shCase,
+  shFunc,
 ];
 
 export function getProblemById(id: string): ProblemMeta | undefined {

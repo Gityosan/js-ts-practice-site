@@ -50,6 +50,8 @@ export const graders: Record<string, () => Promise<GraderDef>> = {
   "bash-jq-all-adults": () => import("./jq/all-adults").then((m) => m.default),
   "bash-jq-default-nick": () => import("./jq/default-nick").then((m) => m.default),
   "bash-jq-flatten": () => import("./jq/flatten").then((m) => m.default),
+  "bash-jq-to-entries": () => import("./jq/to-entries").then((m) => m.default),
+  "bash-jq-reduce-sum": () => import("./jq/reduce-sum").then((m) => m.default),
   // bash / シェル（本物の bash / WASM）
   "bash-sh-greet-loop": () => import("./sh/greet-loop").then((m) => m.default),
   "bash-sh-sum-loop": () => import("./sh/sum-loop").then((m) => m.default),
@@ -57,4 +59,6 @@ export const graders: Record<string, () => Promise<GraderDef>> = {
   "bash-sh-line-count": () => import("./sh/line-count").then((m) => m.default),
   "bash-sh-uppercase": () => import("./sh/uppercase").then((m) => m.default),
   "bash-sh-str-length": () => import("./sh/str-length").then((m) => m.default),
+  "bash-sh-case": () => import("./sh/case-category").then((m) => m.default),
+  "bash-sh-func": () => import("./sh/function").then((m) => m.default),
 };
