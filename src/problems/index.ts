@@ -46,7 +46,15 @@ import gasRowsToObj from "./gas/rows-to-obj";
 import emailPersonalized from "./email/personalized-send";
 import emailMakeSubject from "./email/make-subject";
 import jqPickNames from "./jq/pick-names";
+import jqSelectAdults from "./jq/select-adults";
+import jqCountUsers from "./jq/count-users";
+import jqSumPrices from "./jq/sum-prices";
+import jqUniqueTags from "./jq/unique-tags";
+import jqMapShape from "./jq/map-shape";
+import jqGroupRegion from "./jq/group-region";
 import shGreetLoop from "./sh/greet-loop";
+import shSumLoop from "./sh/sum-loop";
+import shEvenOdd from "./sh/even-odd";
 
 export const allProblems: ProblemMeta[] = [
   // decode（解読）
@@ -102,10 +110,18 @@ export const allProblems: ProblemMeta[] = [
   groupSum,
   gasRowsToObj,
   emailMakeSubject,
-  // bash: jq（CLI）
+  // bash: jq（CLI）— select / length / add / unique / map / group_by
   jqPickNames,
+  jqSelectAdults,
+  jqCountUsers,
+  jqSumPrices,
+  jqUniqueTags,
+  jqMapShape,
+  jqGroupRegion,
   // bash: シェルスクリプト（本物の bash / WASM）
   shGreetLoop,
+  shSumLoop,
+  shEvenOdd,
 ];
 
 export function getProblemById(id: string): ProblemMeta | undefined {

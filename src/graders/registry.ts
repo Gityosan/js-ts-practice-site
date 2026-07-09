@@ -36,6 +36,14 @@ export const graders: Record<string, () => Promise<GraderDef>> = {
   "write-email-make-subject": () => import("./email/make-subject").then((m) => m.default),
   // bash / jq
   "bash-jq-pick-names": () => import("./jq/pick-names").then((m) => m.default),
+  "bash-jq-select-adults": () => import("./jq/select-adults").then((m) => m.default),
+  "bash-jq-count": () => import("./jq/count-users").then((m) => m.default),
+  "bash-jq-sum-prices": () => import("./jq/sum-prices").then((m) => m.default),
+  "bash-jq-unique-tags": () => import("./jq/unique-tags").then((m) => m.default),
+  "bash-jq-map-shape": () => import("./jq/map-shape").then((m) => m.default),
+  "bash-jq-group-region": () => import("./jq/group-region").then((m) => m.default),
   // bash / シェル（本物の bash / WASM）
   "bash-sh-greet-loop": () => import("./sh/greet-loop").then((m) => m.default),
+  "bash-sh-sum-loop": () => import("./sh/sum-loop").then((m) => m.default),
+  "bash-sh-even-odd": () => import("./sh/even-odd").then((m) => m.default),
 };
