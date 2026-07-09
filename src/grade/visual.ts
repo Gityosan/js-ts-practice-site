@@ -47,10 +47,7 @@ export function objectsToTable(
 }
 
 /** 配列（オブジェクト配列 / プリミティブ配列）を良きに計らってテーブル化 */
-export function autoTable(
-  arr: unknown,
-  result?: { label: string; value: unknown },
-): VisualState {
+export function autoTable(arr: unknown, result?: { label: string; value: unknown }): VisualState {
   const rows = Array.isArray(arr) ? arr : [arr];
   const first = rows[0];
   if (first && typeof first === "object" && !Array.isArray(first)) {

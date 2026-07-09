@@ -19,8 +19,46 @@ function transpileTs(code: string): string {
 
 export async function runGrader(problemId: string, learnerTs: string): Promise<GradeResult> {
   const g = await graders[problemId]();
-  const learnerJs = transpileTs(learnerTs);
   const results: CaseResult[] = [];
+
+  // cli（jq 等）は学習者コードがそのままコマンド。TS 変換は掛けない。
+  if (g.kind === "cli") {
+    // sh（@wasmer/sdk）はブラウザのメインスレッド専用。Node 採点（テスト）では対象外。
+    if (g.runtime === "sh") {
+      return {
+        passed: 0,
+        total: g.cases.length,
+        results: g.cases.map((c, i) => ({
+          label: c.label ?? `ケース${i + 1}`,
+          passed: false,
+          detail: "sh ランタイムはブラウザ専用のため Node では採点しません",
+        })),
+        status: "ok",
+      };
+    }
+    const { getJq, gradeJqCase } = await import("../grade/jq");
+    const jq = await getJq();
+    for (let i = 0; i < g.cases.length; i++) {
+      const c = g.cases[i];
+      results.push(gradeJqCase(jq, c, learnerTs, c.label ?? `ケース${i + 1}`));
+    }
+    const bonus: CaseResult[] = [];
+    if (g.bonusCases) {
+      for (const bc of g.bonusCases) {
+        if (new RegExp(bc.pattern).test(learnerTs)) {
+          bonus.push({ label: bc.label, passed: true, bonus: true });
+        }
+      }
+    }
+    return {
+      passed: results.filter((r) => r.passed).length,
+      total: results.length,
+      results: [...results, ...bonus],
+      status: "ok",
+    };
+  }
+
+  const learnerJs = transpileTs(learnerTs);
 
   if (g.kind === "io") {
     const fn = new Function(`${learnerJs}; return ${g.entry ?? "solve"};`)();

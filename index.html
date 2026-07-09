@@ -5,6 +5,11 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>JS/TS 練習サイト</title>
+    <!-- COOP/COEP をクライアント側で付与し SharedArrayBuffer を有効化する
+         （GitHub Pages はレスポンスヘッダを設定できないため）。
+         本物のシェル実行（@wasmer/sdk）が要求する cross-origin isolation の土台。
+         相対パスにして SW のスコープを base 配下（/js-ts-practice-site/）に合わせる。 -->
+    <script src="coi-serviceworker.min.js"></script>
   </head>
   <body>
     <div id="root"></div>

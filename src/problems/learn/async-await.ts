@@ -78,7 +78,8 @@ async function load() {
         prompt: "`await` が使えるのはどこ？",
         choices: ["async 関数の中", "どこでも", "if の中だけ"],
         answer: "async 関数の中",
-        explain: "`await` は `async` 関数の内側でのみ使える（トップレベルの例外はここでは置いておく）。",
+        explain:
+          "`await` は `async` 関数の内側でのみ使える（トップレベルの例外はここでは置いておく）。",
       },
       {
         prompt: "非同期処理の特徴として正しいのは？",
@@ -88,7 +89,8 @@ async function load() {
           "同期処理より必ず速い",
         ],
         answer: "時間のかかる処理を待たずに次へ進める",
-        explain: "非同期は完了を待たずに先へ進み、結果が出たら受け取る。だから画面が固まらない（速さの話ではない）。",
+        explain:
+          "非同期は完了を待たずに先へ進み、結果が出たら受け取る。だから画面が固まらない（速さの話ではない）。",
       },
       {
         prompt: "`await` を付けずに `const res = fetch(url)` とすると、`res` は何？",

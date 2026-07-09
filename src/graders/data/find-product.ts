@@ -62,9 +62,7 @@ const grader: IoGraderDef = {
     },
   ],
   assertMethod: "find",
-  bonusCases: [
-    { label: "オプショナルチェーン（?.）を使った", pattern: "\\?\\." },
-  ],
+  bonusCases: [{ label: "オプショナルチェーン（?.）を使った", pattern: "\\?\\." }],
 };
 
 export default grader;

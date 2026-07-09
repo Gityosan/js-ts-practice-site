@@ -113,14 +113,16 @@ const b2: B = { age: undefined }; // OK
         snippet: `type Admin = User ___ { role: string };`,
         choices: ["&", "extends", "|"],
         answer: "&",
-        explain: "`&` は交差型。両方のプロパティを併せ持つ型になる。`|` は「どちらか」の意味で別物。",
+        explain:
+          "`&` は交差型。両方のプロパティを併せ持つ型になる。`|` は「どちらか」の意味で別物。",
       },
       {
         prompt: "`age?: number` のとき、`age` の型はどうなる？",
         snippet: `type User = { name: string; age?: number };`,
         choices: ["number | undefined", "number", "undefined だけ"],
         answer: "number | undefined",
-        explain: "`?` は省略可能の印。値があれば number、無ければ undefined なので `number | undefined`。",
+        explain:
+          "`?` は省略可能の印。値があれば number、無ければ undefined なので `number | undefined`。",
       },
       {
         prompt: "`{ id: number } & { id: string }` の `id` の型は？",
@@ -135,7 +137,8 @@ const b2: B = { age: undefined }; // OK
         snippet: `type Id = number | string;`,
         choices: ["並べた型のどれか一つ", "並べた型を全部同時に満たす", "省略可能"],
         answer: "並べた型のどれか一つ",
-        explain: "`|` はユニオン。`number | string` は「数値か文字列のどちらか」。両方を満たす `&` と対になる。",
+        explain:
+          "`|` はユニオン。`number | string` は「数値か文字列のどちらか」。両方を満たす `&` と対になる。",
       },
       {
         prompt: "`age?: number` と `age: number | undefined` の違いで正しいのは？",

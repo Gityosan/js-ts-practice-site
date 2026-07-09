@@ -27,7 +27,7 @@ export default defineProblem({
     hints: [
       "`for (const member of members)` で配列の各要素を順に取り出せる",
       "テンプレートリテラル: バッククォートで囲んで `${member.name}` と書くと名前が埋め込まれる",
-      "`sendEmail(member.email, \"お知らせ\", ...)` の引数の順番（宛先・件名・本文）に注意",
+      '`sendEmail(member.email, "お知らせ", ...)` の引数の順番（宛先・件名・本文）に注意',
     ],
   },
   initialCode: `// members と sendEmail はモック済みで使えます

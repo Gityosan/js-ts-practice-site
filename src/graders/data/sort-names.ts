@@ -31,9 +31,7 @@ const grader: IoGraderDef = {
     },
   ],
   assertMethod: "sort",
-  bonusCases: [
-    { label: "localeCompare() で比較した", pattern: "\\.localeCompare\\s*\\(" },
-  ],
+  bonusCases: [{ label: "localeCompare() で比較した", pattern: "\\.localeCompare\\s*\\(" }],
 };
 
 export default grader;

@@ -63,7 +63,10 @@ self.onmessage = async (e: MessageEvent<{ problemId: string; learnerJs: string }
       if (g.bonusCases) {
         for (const bc of g.bonusCases) {
           if (new RegExp(bc.pattern).test(learnerJs)) {
-            self.postMessage({ type: "bonus", result: { label: bc.label, passed: true, bonus: true } });
+            self.postMessage({
+              type: "bonus",
+              result: { label: bc.label, passed: true, bonus: true },
+            });
           }
         }
       }
@@ -72,6 +75,31 @@ self.onmessage = async (e: MessageEvent<{ problemId: string; learnerJs: string }
           self.postMessage({ type: "visual", state: g.visualize(firstOutput, firstInput) });
         } catch {
           // 視覚化失敗は採点に影響させない
+        }
+      }
+      self.postMessage({ type: "done" });
+    } else if (g.kind === "cli") {
+      // sh はメインスレッド（runGrader）で処理されワーカーには来ない。ここは jq 専用。
+      if (g.runtime !== "jq") {
+        self.postMessage({ type: "error", message: `未対応の CLI ランタイム: ${g.runtime}` });
+        return;
+      }
+      self.postMessage({ type: "meta", total: g.cases.length });
+      const { getJq, gradeJqCase } = await import("../grade/jq");
+      const jq = await getJq();
+      for (let i = 0; i < g.cases.length; i++) {
+        const c = g.cases[i];
+        const label = c.label ?? `ケース${i + 1}`;
+        self.postMessage({ type: "case", result: gradeJqCase(jq, c, learnerJs, label) });
+      }
+      if (g.bonusCases) {
+        for (const bc of g.bonusCases) {
+          if (new RegExp(bc.pattern).test(learnerJs)) {
+            self.postMessage({
+              type: "bonus",
+              result: { label: bc.label, passed: true, bonus: true },
+            });
+          }
         }
       }
       self.postMessage({ type: "done" });
@@ -96,7 +124,10 @@ self.onmessage = async (e: MessageEvent<{ problemId: string; learnerJs: string }
       if (g.bonusCases) {
         for (const bc of g.bonusCases) {
           if (new RegExp(bc.pattern).test(learnerJs)) {
-            self.postMessage({ type: "bonus", result: { label: bc.label, passed: true, bonus: true } });
+            self.postMessage({
+              type: "bonus",
+              result: { label: bc.label, passed: true, bonus: true },
+            });
           }
         }
       }

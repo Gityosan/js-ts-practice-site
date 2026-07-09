@@ -3,7 +3,12 @@ import { z } from "zod";
 export const Stage = z.enum(["decode", "read", "learn", "write"]);
 export type Stage = z.infer<typeof Stage>;
 
-export const Scenario = z.enum(["basic", "data", "gas", "email", "chrome"]);
+// 学習対象の言語。トップページはこの値でコンテンツを出し分ける。
+// 既存問題はすべて js なので default を "js" にして無変更で移行する。
+export const Language = z.enum(["js", "bash"]);
+export type Language = z.infer<typeof Language>;
+
+export const Scenario = z.enum(["basic", "data", "gas", "email", "chrome", "jq", "sh"]);
 export type Scenario = z.infer<typeof Scenario>;
 
 const Copy = z.object({
@@ -39,6 +44,8 @@ export type Learn = z.infer<typeof Learn>;
 export const ProblemMeta = z.object({
   id: z.string().regex(/^[a-z0-9-]+$/),
   stage: Stage,
+  // 学習言語。未指定なら js（既存問題との後方互換）。
+  language: Language.default("js"),
   scenario: Scenario,
   copy: Copy,
   // decode / learn は実行しないので空でよい
@@ -49,5 +56,4 @@ export const ProblemMeta = z.object({
 });
 export type ProblemMeta = z.infer<typeof ProblemMeta>;
 
-export const defineProblem = (p: z.input<typeof ProblemMeta>): ProblemMeta =>
-  ProblemMeta.parse(p);
+export const defineProblem = (p: z.input<typeof ProblemMeta>): ProblemMeta => ProblemMeta.parse(p);

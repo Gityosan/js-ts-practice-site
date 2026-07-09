@@ -45,6 +45,8 @@ import gasConditionalSum from "./gas/conditional-sum";
 import gasRowsToObj from "./gas/rows-to-obj";
 import emailPersonalized from "./email/personalized-send";
 import emailMakeSubject from "./email/make-subject";
+import jqPickNames from "./jq/pick-names";
+import shGreetLoop from "./sh/greet-loop";
 
 export const allProblems: ProblemMeta[] = [
   // decode（解読）
@@ -100,6 +102,10 @@ export const allProblems: ProblemMeta[] = [
   groupSum,
   gasRowsToObj,
   emailMakeSubject,
+  // bash: jq（CLI）
+  jqPickNames,
+  // bash: シェルスクリプト（本物の bash / WASM）
+  shGreetLoop,
 ];
 
 export function getProblemById(id: string): ProblemMeta | undefined {

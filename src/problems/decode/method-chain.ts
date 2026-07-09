@@ -28,21 +28,28 @@ export default defineProblem({
         snippet: `nums.filter(n => n > 0)`,
         choices: ["メソッドの呼び出し", "引数の定義", "条件式"],
         answer: "メソッドの呼び出し",
-        explain: "名前（filter）の直後の ( ) は『呼び出し』。中の `n => n > 0` を渡して filter を動かす。",
+        explain:
+          "名前（filter）の直後の ( ) は『呼び出し』。中の `n => n > 0` を渡して filter を動かす。",
       },
       {
         prompt: "`n => n > 0` の `=>` は何を表す？",
         snippet: `n => n > 0`,
         choices: ["アロー関数（左が引数・右が処理）", "比較演算子", "代入"],
         answer: "アロー関数（左が引数・右が処理）",
-        explain: "`=>` はアロー関数。左の `n` が引数、右の `n > 0` が「返す値」。小さな関数を1行で書ける。",
+        explain:
+          "`=>` はアロー関数。左の `n` が引数、右の `n > 0` が「返す値」。小さな関数を1行で書ける。",
       },
       {
         prompt: "`.map(...)` はいつ実行される？",
         snippet: `.filter(n => n > 0).map(n => n * 2)`,
-        choices: ["filter の結果に対して、次に実行される", "filter より先に実行される", "同時に実行される"],
+        choices: [
+          "filter の結果に対して、次に実行される",
+          "filter より先に実行される",
+          "同時に実行される",
+        ],
         answer: "filter の結果に対して、次に実行される",
-        explain: "チェーンは左から右へ。まず filter で絞り込み、その結果の配列に対して map が動く。",
+        explain:
+          "チェーンは左から右へ。まず filter で絞り込み、その結果の配列に対して map が動く。",
       },
     ],
   },

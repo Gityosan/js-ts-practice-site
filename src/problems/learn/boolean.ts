@@ -28,31 +28,31 @@ false, 0, "", null, undefined, NaN
 !!"hello" // true   （!! で「truthy かどうか」を true/false にできる）
 \`\`\``,
     hints: [
-      "falsey は false / 0 / \"\" / null / undefined / NaN の6つだけ。",
+      'falsey は false / 0 / "" / null / undefined / NaN の6つだけ。',
       '"0" は「文字のゼロ」なので truthy（空文字 "" だけが falsey）。',
     ],
   },
   learn: {
     quiz: [
       {
-        prompt: "`!\"\"`（空文字を反転）の結果は？",
+        prompt: '`!""`（空文字を反転）の結果は？',
         snippet: `!""`,
         choices: ["true", "false"],
         answer: "true",
-        explain: "空文字 \"\" は falsey。`!` で反転して true。",
+        explain: '空文字 "" は falsey。`!` で反転して true。',
       },
       {
         prompt: "次のうち truthy（真として扱う）なのは？",
         choices: ['"0"', "0", '""', "null"],
         answer: '"0"',
-        explain: "`\"0\"` は中身のある文字列なので truthy。0 / \"\" / null は falsey。",
+        explain: '`"0"` は中身のある文字列なので truthy。0 / "" / null は falsey。',
       },
       {
-        prompt: "`!!\"hello\"` の結果は？",
+        prompt: '`!!"hello"` の結果は？',
         snippet: `!!"hello"`,
         choices: ["true", "false"],
         answer: "true",
-        explain: "\"hello\" は truthy。`!!` は truthy かどうかを true/false に変換するので true。",
+        explain: '"hello" は truthy。`!!` は truthy かどうかを true/false に変換するので true。',
       },
     ],
   },

@@ -11,7 +11,9 @@ import { Navbar } from "./components/Navbar";
 import { Home } from "./pages/Home";
 import { ProblemPage } from "./pages/ProblemPage";
 
-const MotionDiv = motion.create("div" as unknown as React.ComponentType<React.HTMLAttributes<HTMLDivElement>>);
+const MotionDiv = motion.create(
+  "div" as unknown as React.ComponentType<React.HTMLAttributes<HTMLDivElement>>,
+);
 
 function AnimatedOutlet() {
   const { pathname } = useLocation();
