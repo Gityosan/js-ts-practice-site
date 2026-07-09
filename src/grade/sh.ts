@@ -107,6 +107,8 @@ export async function runShCases(grader: CliGraderDef, script: string): Promise<
       results.push({
         label,
         passed: ok,
+        // 実際の標準出力を UI に見せるため添える
+        output: res.stdout,
         detail: ok
           ? undefined
           : `期待 ${JSON.stringify(c.expected)} / 実際 ${JSON.stringify(res.stdout)}`,

@@ -28,6 +28,8 @@ export function gradeJqCase(jq: Jq, c: CliCase, filter: string, label: string): 
     return {
       label,
       passed: ok,
+      // 実際の標準出力を UI に見せるため添える
+      output: res.stdout,
       detail: ok
         ? undefined
         : `期待 ${JSON.stringify(c.expected)} / 実際 ${JSON.stringify(res.stdout)}`,

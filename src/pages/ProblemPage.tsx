@@ -19,6 +19,7 @@ import { EditorPane, type EditorHandle } from "../components/EditorPane";
 import { DecodePane } from "../components/DecodePane";
 import { QuizList } from "../components/QuizList";
 import { ResultPanel } from "../components/ResultPanel";
+import { CliOutput } from "../components/CliOutput";
 import { VisualOutput, ScenarioVisual } from "../components/VisualOutput";
 import type { GradeResult } from "../grade/types";
 import { problemRoute } from "../router";
@@ -356,6 +357,9 @@ export function ProblemPage() {
                       </Box>
                     </Box>
                   )}
+
+                  {/* CLI（jq / シェル）の実際の標準出力をターミナル風に表示 */}
+                  {problem.language === "bash" && result && <CliOutput results={result.results} />}
 
                   <Box
                     bg="white"
