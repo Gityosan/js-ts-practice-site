@@ -99,8 +99,18 @@ export async function runShCases(grader: CliGraderDef, script: string): Promise<
         CASE_TIMEOUT_MS,
       );
       if (res.code !== 0) {
-        const firstLine = res.stderr.split("\n").find((l) => l.trim()) ?? `exit ${res.code}`;
-        results.push({ label, passed: false, detail: firstLine });
+        // stderr が空のまま失敗するケース（例: WASI 側のプロセス起動自体が
+        // 失敗している）はスクリプトの内容と無関係な環境要因の可能性が高い。
+        // 原因調査用に stdout/stderr を丸ごとコンソールへ残しておく。
+        console.error(`[bash grader] "${label}" failed`, {
+          args: c.args,
+          code: res.code,
+          stdout: res.stdout,
+          stderr: res.stderr,
+        });
+        const firstLine = res.stderr.split("\n").find((l) => l.trim());
+        const detail = firstLine ?? `終了コード ${res.code}（エラー出力なし・詳細はブラウザのコンソールを確認）`;
+        results.push({ label, passed: false, detail });
         continue;
       }
       if (c.skipValueCheck) {
