@@ -79,3 +79,69 @@ describe("explainToken: キーワードが括弧の意味を確定させる (SPE
     expect(explainToken(tokenize(code), bracketIndex(code, "{", 0)).detail).toContain("関数の本体");
   });
 });
+
+describe("tokenize: bash 言語", () => {
+  it("bash の予約語と識別子（コマンド名）を区別する", () => {
+    const toks = tokenize('if (( n % 2 == 0 )); then echo "even"; fi', "bash").filter(
+      (t) => t.type !== "whitespace",
+    );
+    expect(toks.find((t) => t.value === "if")?.type).toBe("keyword");
+    expect(toks.find((t) => t.value === "then")?.type).toBe("keyword");
+    expect(toks.find((t) => t.value === "fi")?.type).toBe("keyword");
+    expect(toks.find((t) => t.value === "n")?.type).toBe("identifier");
+    expect(toks.find((t) => t.value === "echo")?.type).toBe("identifier");
+  });
+
+  it("(( )) をひとまとまりの bracket として扱い、対応付ける", () => {
+    const code = "if (( n % 2 == 0 )); then echo ok; fi";
+    const toks = tokenize(code, "bash");
+    expect(toks.filter((t) => t.value === "((")).toHaveLength(1);
+    expect(toks.filter((t) => t.value === "))")).toHaveLength(1);
+    const pairs = matchBrackets(toks);
+    const open = toks.find((t) => t.value === "((")!;
+    const close = toks.find((t) => t.value === "))")!;
+    expect(pairs.get(open.index)).toBe(close.index);
+  });
+
+  it("(( )) は算術式として説明される", () => {
+    const code = "if (( n % 2 == 0 )); then echo ok; fi";
+    const toks = tokenize(code, "bash");
+    const openIdx = toks.findIndex((t) => t.value === "((");
+    expect(explainToken(toks, openIdx, "bash").detail).toContain("算術式");
+  });
+
+  it("$var は変数参照として説明される", () => {
+    const code = "case $n in\n  1) echo ok ;;\nesac";
+    const toks = tokenize(code, "bash");
+    const idx = toks.findIndex((t) => t.value === "$n");
+    expect(toks[idx].type).toBe("identifier");
+    expect(explainToken(toks, idx, "bash").detail).toContain("変数");
+  });
+
+  it("case の ) は ( とペアにならず、パターンの終わりとして説明される", () => {
+    const code = 'case $n in\n  1) echo "Mon" ;;\n  *) echo "invalid" ;;\nesac';
+    const toks = tokenize(code, "bash");
+    const closeParens = toks.filter((t) => t.type === "bracket" && t.value === ")");
+    expect(closeParens).toHaveLength(2);
+    const pairs = matchBrackets(toks);
+    for (const t of closeParens) {
+      expect(pairs.has(t.index)).toBe(false);
+      expect(explainToken(toks, t.index, "bash").detail).toContain("ペアではない");
+    }
+  });
+
+  it("name() { ... } の ( ) { } は関数定義として説明される", () => {
+    const code = `greet() {\n  echo "Hi, $1!"\n}`;
+    const toks = tokenize(code, "bash");
+    const openParenIdx = toks.findIndex((t) => t.value === "(");
+    const braceIdx = toks.findIndex((t) => t.value === "{");
+    expect(explainToken(toks, openParenIdx, "bash").detail).toContain("引数リスト");
+    expect(explainToken(toks, braceIdx, "bash").detail).toContain("関数の本体");
+  });
+
+  it("# から行末まではコメントとして扱う", () => {
+    const code = "n=1 # comment";
+    const toks = tokenize(code, "bash");
+    expect(toks.find((t) => t.value === "# comment")?.type).toBe("comment");
+  });
+});

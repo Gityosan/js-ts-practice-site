@@ -261,7 +261,11 @@ export function ProblemPage() {
                   borderColor="gray.200"
                   p={5}
                 >
-                  <DecodePane decode={problem.decode!} onComplete={handleQuizComplete} />
+                  <DecodePane
+                    decode={problem.decode!}
+                    language={problem.language}
+                    onComplete={handleQuizComplete}
+                  />
                 </Box>
               ) : isLearn ? (
                 <Box

@@ -8,6 +8,9 @@ import decodeArrayBrackets from "./decode/array-brackets";
 import decodeForLoop from "./decode/for-loop";
 import decodeMethodChain from "./decode/method-chain";
 import decodeOperators from "./decode/operators";
+import decodeBashIfArith from "./decode/bash-if-arith";
+import decodeBashFunctionDef from "./decode/bash-function-def";
+import decodeBashCase from "./decode/bash-case";
 import learnArithmetic from "./learn/arithmetic";
 import learnComparison from "./learn/comparison";
 import learnVariables from "./learn/variables";
@@ -18,6 +21,8 @@ import learnAsyncAwait from "./learn/async-await";
 import learnPromiseChain from "./learn/promise-chain";
 import learnClass from "./learn/class";
 import learnTypes from "./learn/types";
+import learnBashQuoting from "./learn/bash-quoting";
+import learnJqPipeBasics from "./learn/jq-pipe-basics";
 import sumNumbers from "./data/sum-numbers";
 import filterEvens from "./data/filter-evens";
 import mapDouble from "./data/map-double";
@@ -35,6 +40,9 @@ import readGreeting from "./read/greeting";
 import readProgress from "./read/progress";
 import readColorBox from "./read/color-box";
 import readBoolLight from "./read/bool-light";
+import readBashGreetName from "./read/bash-greet-name";
+import readBashRepeatCount from "./read/bash-repeat-count";
+import readBashCalc from "./read/bash-calc";
 import average from "./data/average";
 import maxValue from "./data/max-value";
 import unique from "./data/unique";
@@ -55,13 +63,11 @@ import jqMapDouble from "./jq/map-double";
 import jqKeys from "./jq/keys";
 import jqHasKey from "./jq/has-key";
 import jqSortByAge from "./jq/sort-by-age";
-import jqMaxByAge from "./jq/max-by-age";
 import jqUniqueValues from "./jq/unique-values";
 import jqGroupCount from "./jq/group-count";
 import jqToEntries from "./jq/to-entries";
 import jqStringInterp from "./jq/string-interp";
 import jqIfThenElse from "./jq/if-then-else";
-import jqSelectAnd from "./jq/select-and";
 import jqNestedPath from "./jq/nested-path";
 import jqArrayConstruct from "./jq/array-construct";
 import jqAltOperator from "./jq/alt-operator";
@@ -79,7 +85,6 @@ import shFunctionGreet from "./sh/function-greet";
 import shWhileReadLines from "./sh/while-read-lines";
 import shCaseDay from "./sh/case-day";
 import shDefaultValue from "./sh/default-value";
-import shSubstring from "./sh/substring";
 import shStringReplace from "./sh/string-replace";
 import shPositionalParams from "./sh/positional-params";
 import shNestedLoop from "./sh/nested-loop";
@@ -96,12 +101,20 @@ export const allProblems: ProblemMeta[] = [
   decodeForLoop,
   decodeMethodChain,
   decodeOperators,
+  // decode: bash
+  decodeBashIfArith,
+  decodeBashFunctionDef,
+  decodeBashCase,
   // read
   starCount,
   readGreeting,
   readProgress,
   readColorBox,
   readBoolLight,
+  // read: bash
+  readBashGreetName,
+  readBashRepeatCount,
+  readBashCalc,
   // learn（知る）— 文法のキホン
   learnArithmetic,
   learnComparison,
@@ -113,6 +126,9 @@ export const allProblems: ProblemMeta[] = [
   learnPromiseChain,
   learnClass,
   learnTypes,
+  // learn: bash
+  learnBashQuoting,
+  learnJqPipeBasics,
   // fill: 合計を計算する①〜④
   sumNumbers,
   entriesTax,
@@ -150,13 +166,11 @@ export const allProblems: ProblemMeta[] = [
   jqKeys,
   jqHasKey,
   jqSortByAge,
-  jqMaxByAge,
   jqUniqueValues,
   jqGroupCount,
   jqToEntries,
   jqStringInterp,
   jqIfThenElse,
-  jqSelectAnd,
   jqNestedPath,
   jqArrayConstruct,
   jqAltOperator,
@@ -176,7 +190,6 @@ export const allProblems: ProblemMeta[] = [
   shWhileReadLines,
   shCaseDay,
   shDefaultValue,
-  shSubstring,
   shStringReplace,
   shPositionalParams,
   shNestedLoop,
