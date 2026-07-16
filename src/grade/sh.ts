@@ -98,19 +98,21 @@ export async function runShCases(grader: CliGraderDef, script: string): Promise<
         shell.run(["-c", script, ...(c.args ?? [])], stdin),
         CASE_TIMEOUT_MS,
       );
-      if (res.code !== 0) {
-        // stderr が空のまま失敗するケース（例: WASI 側のプロセス起動自体が
-        // 失敗している）はスクリプトの内容と無関係な環境要因の可能性が高い。
-        // 原因調査用に stdout/stderr を丸ごとコンソールへ残しておく。
+      // 注意: res.code は使わない。この環境の @wasmer/sdk + sharrattj/bash の組み合わせでは
+      // スクリプトが正しく実行され期待通りの stdout を出していても、プロセス終了時に
+      // 無関係な非ゼロコード（観測例: WASIX の ENOEXEC = 45）を返すことがあるため、
+      // 終了コードは合否判定の根拠として信用できない。実際に失敗したスクリプト
+      // （構文エラーや未定義変数の参照など）は通常 stderr にメッセージを残すので、
+      // stdout の内容と stderr の有無で判定する。
+      if (res.stderr.trim()) {
         console.error(`[bash grader] "${label}" failed`, {
           args: c.args,
           code: res.code,
           stdout: res.stdout,
           stderr: res.stderr,
         });
-        const firstLine = res.stderr.split("\n").find((l) => l.trim());
-        const detail = firstLine ?? `終了コード ${res.code}（エラー出力なし・詳細はブラウザのコンソールを確認）`;
-        results.push({ label, passed: false, detail });
+        const firstLine = res.stderr.split("\n").find((l) => l.trim()) ?? res.stderr;
+        results.push({ label, passed: false, detail: firstLine });
         continue;
       }
       if (c.skipValueCheck) {
