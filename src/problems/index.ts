@@ -47,6 +47,44 @@ import emailPersonalized from "./email/personalized-send";
 import emailMakeSubject from "./email/make-subject";
 import jqPickNames from "./jq/pick-names";
 import shGreetLoop from "./sh/greet-loop";
+import jqLength from "./jq/length";
+import jqFirstUserName from "./jq/first-user-name";
+import jqSumAges from "./jq/sum-ages";
+import jqFilterAdult from "./jq/filter-adult";
+import jqMapDouble from "./jq/map-double";
+import jqKeys from "./jq/keys";
+import jqHasKey from "./jq/has-key";
+import jqSortByAge from "./jq/sort-by-age";
+import jqMaxByAge from "./jq/max-by-age";
+import jqUniqueValues from "./jq/unique-values";
+import jqGroupCount from "./jq/group-count";
+import jqToEntries from "./jq/to-entries";
+import jqStringInterp from "./jq/string-interp";
+import jqIfThenElse from "./jq/if-then-else";
+import jqSelectAnd from "./jq/select-and";
+import jqNestedPath from "./jq/nested-path";
+import jqArrayConstruct from "./jq/array-construct";
+import jqAltOperator from "./jq/alt-operator";
+import jqJoin from "./jq/join";
+import shIfEvenOdd from "./sh/if-even-odd";
+import shSumTwo from "./sh/sum-two";
+import shCountDown from "./sh/count-down";
+import shStringUpper from "./sh/string-upper";
+import shStringLength from "./sh/string-length";
+import shArraySum from "./sh/array-sum";
+import shMaxOfThree from "./sh/max-of-three";
+import shFizzbuzz from "./sh/fizzbuzz";
+import shReverseString from "./sh/reverse-string";
+import shFunctionGreet from "./sh/function-greet";
+import shWhileReadLines from "./sh/while-read-lines";
+import shCaseDay from "./sh/case-day";
+import shDefaultValue from "./sh/default-value";
+import shSubstring from "./sh/substring";
+import shStringReplace from "./sh/string-replace";
+import shPositionalParams from "./sh/positional-params";
+import shNestedLoop from "./sh/nested-loop";
+import shArrayFilter from "./sh/array-filter";
+import shHereString from "./sh/here-string";
 
 export const allProblems: ProblemMeta[] = [
   // decode（解読）
@@ -104,8 +142,46 @@ export const allProblems: ProblemMeta[] = [
   emailMakeSubject,
   // bash: jq（CLI）
   jqPickNames,
+  jqLength,
+  jqFirstUserName,
+  jqSumAges,
+  jqFilterAdult,
+  jqMapDouble,
+  jqKeys,
+  jqHasKey,
+  jqSortByAge,
+  jqMaxByAge,
+  jqUniqueValues,
+  jqGroupCount,
+  jqToEntries,
+  jqStringInterp,
+  jqIfThenElse,
+  jqSelectAnd,
+  jqNestedPath,
+  jqArrayConstruct,
+  jqAltOperator,
+  jqJoin,
   // bash: シェルスクリプト（本物の bash / WASM）
   shGreetLoop,
+  shIfEvenOdd,
+  shSumTwo,
+  shCountDown,
+  shStringUpper,
+  shStringLength,
+  shArraySum,
+  shMaxOfThree,
+  shFizzbuzz,
+  shReverseString,
+  shFunctionGreet,
+  shWhileReadLines,
+  shCaseDay,
+  shDefaultValue,
+  shSubstring,
+  shStringReplace,
+  shPositionalParams,
+  shNestedLoop,
+  shArrayFilter,
+  shHereString,
 ];
 
 export function getProblemById(id: string): ProblemMeta | undefined {
