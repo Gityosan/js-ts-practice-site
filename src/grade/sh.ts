@@ -103,6 +103,10 @@ export async function runShCases(grader: CliGraderDef, script: string): Promise<
         results.push({ label, passed: false, detail: firstLine });
         continue;
       }
+      if (c.skipValueCheck) {
+        results.push({ label, passed: true });
+        continue;
+      }
       const ok = normalize(res.stdout) === normalize(c.expected);
       results.push({
         label,

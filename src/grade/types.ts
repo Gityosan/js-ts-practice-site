@@ -42,6 +42,7 @@ export type CliCase = {
   stdin: unknown; // jq に渡す入力（JS の値ならシリアライズ、文字列なら生 JSON として解釈）
   args?: string[]; // 追加フラグ（例: ["-r"] で raw 出力）
   expected: string; // 期待する標準出力（末尾改行は正規化して比較）
+  skipValueCheck?: boolean; // read ステージ用: 正常終了（exit 0）すれば OK、出力の中身は問わない
 };
 
 export type CliGraderDef = {

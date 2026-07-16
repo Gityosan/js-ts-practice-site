@@ -31,8 +31,16 @@ const LEGEND: { label: string; color: string; note: string }[] = [
   { label: "文字列/数値", color: COLOR.string, note: "そのままのデータ" },
 ];
 
-export function DecodePane({ decode, onComplete }: { decode: Decode; onComplete?: () => void }) {
-  const tokens = useMemo(() => tokenize(decode.code), [decode.code]);
+export function DecodePane({
+  decode,
+  language = "js",
+  onComplete,
+}: {
+  decode: Decode;
+  language?: "js" | "bash";
+  onComplete?: () => void;
+}) {
+  const tokens = useMemo(() => tokenize(decode.code, language), [decode.code, language]);
   const pairs = useMemo(() => matchBrackets(tokens), [tokens]);
   const [selected, setSelected] = useState<number | null>(null);
   const [hovered, setHovered] = useState<number | null>(null);
@@ -45,7 +53,7 @@ export function DecodePane({ decode, onComplete }: { decode: Decode; onComplete?
     ),
   );
 
-  const explain = selected != null ? explainToken(tokens, selected) : null;
+  const explain = selected != null ? explainToken(tokens, selected, language) : null;
   const selectedTok = selected != null ? tokens[selected] : null;
 
   return (
