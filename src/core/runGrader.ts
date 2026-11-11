@@ -24,6 +24,20 @@ export async function runGrader(problemId: string, learnerJs: string): Promise<G
       status: "ok",
     };
   }
+  // rust はネットワーク越しに Rust Playground でコンパイル・実行する（ワーカー不要）。
+  if (g.kind === "rust") {
+    const [{ gradeRust }, { playgroundExecutor }] = await Promise.all([
+      import("../grade/rust"),
+      import("../grade/rust-playground"),
+    ]);
+    const results = await gradeRust(g, learnerJs, playgroundExecutor);
+    return {
+      passed: results.filter((r) => r.passed).length,
+      total: results.length,
+      results,
+      status: "ok",
+    };
+  }
   return runInWorker(problemId, learnerJs);
 }
 

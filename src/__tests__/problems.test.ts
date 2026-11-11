@@ -7,7 +7,9 @@ describe("全問題: 模範解答が満点を取ること", () => {
   // scenario "sh" は @wasmer/sdk がブラウザの cross-origin isolation を要求し、
   // シェル本体を実行時にレジストリ取得するため Node/CI では採点できない（対象外）。
   for (const problem of allProblems.filter(
-    (p) => p.stage !== "decode" && p.stage !== "learn" && p.scenario !== "sh",
+    // scenario "rust" は rustc を使うので rust.test.ts で別に検証する。
+    (p) =>
+      p.stage !== "decode" && p.stage !== "learn" && p.scenario !== "sh" && p.scenario !== "rust",
   )) {
     it(`${problem.id}: 模範解答が満点`, async () => {
       const result = await runGrader(problem.id, problem.solutionCode);

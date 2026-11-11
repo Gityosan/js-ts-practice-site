@@ -136,6 +136,8 @@ export function ResultPanel({ result, running, error }: Props) {
                 ml={7}
                 wordBreak="break-all"
                 overflowWrap="break-word"
+                // rustc のエラーは複数行で桁揃えに意味があるので改行・空白を保つ
+                whiteSpace="pre-wrap"
               >
                 {r.detail}
               </Text>

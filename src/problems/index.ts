@@ -90,6 +90,7 @@ import shPositionalParams from "./sh/positional-params";
 import shNestedLoop from "./sh/nested-loop";
 import shArrayFilter from "./sh/array-filter";
 import shHereString from "./sh/here-string";
+import { rustProblems } from "./rust";
 
 export const allProblems: ProblemMeta[] = [
   // decode（解読）
@@ -195,6 +196,8 @@ export const allProblems: ProblemMeta[] = [
   shNestedLoop,
   shArrayFilter,
   shHereString,
+  // rust: 知る（教材）→ 書く（rustc で採点）。problems/rust/ にファイルを置くと自動登録
+  ...rustProblems,
 ];
 
 export function getProblemById(id: string): ProblemMeta | undefined {

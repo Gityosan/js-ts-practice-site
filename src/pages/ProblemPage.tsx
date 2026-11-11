@@ -182,6 +182,13 @@ export function ProblemPage() {
                       marginTop: "12px",
                       marginBottom: "4px",
                     },
+                    "& h3": {
+                      fontWeight: "bold",
+                      fontSize: "0.85rem",
+                      marginTop: "10px",
+                      marginBottom: "2px",
+                      color: "var(--chakra-colors-gray-600)",
+                    },
                     "& strong": { fontWeight: "bold" },
                     "& code": {
                       background: "#eaf0f8",
@@ -263,7 +270,8 @@ export function ProblemPage() {
                 >
                   <DecodePane
                     decode={problem.decode!}
-                    language={problem.language}
+                    // 解読（トークン分解）は JS / bash のみ対応。rust の decode 問題は作らない
+                    language={problem.language === "bash" ? "bash" : "js"}
                     onComplete={handleQuizComplete}
                   />
                 </Box>
@@ -290,7 +298,13 @@ export function ProblemPage() {
                     value={code}
                     onChange={setCode}
                     height="420px"
-                    language={problem.language === "bash" ? "shell" : "typescript"}
+                    language={
+                      problem.language === "bash"
+                        ? "shell"
+                        : problem.language === "rust"
+                          ? "rust"
+                          : "typescript"
+                    }
                   />
 
                   <HStack gap={3}>
@@ -503,7 +517,9 @@ function MarkdownLite({ source }: { source: string }) {
       continue;
     }
 
-    if (line.startsWith("## ")) {
+    if (line.startsWith("### ")) {
+      elements.push(<h3 key={key++}>{line.slice(4)}</h3>);
+    } else if (line.startsWith("## ")) {
       elements.push(<h2 key={key++}>{line.slice(3)}</h2>);
     } else if (line.startsWith("- ")) {
       elements.push(

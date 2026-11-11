@@ -55,6 +55,7 @@ const stageConfig = [
 const languageConfig = [
   { key: "js", label: "JS / TS", color: "blue", heading: "「構造から読む」JS/TS 入門" },
   { key: "bash", label: "Bash（CLI）", color: "green", heading: "シェルで動かす CLI 入門" },
+  { key: "rust", label: "Rust", color: "orange", heading: "所有権から学ぶ Rust 入門" },
 ] as const satisfies ReadonlyArray<{
   key: Language;
   label: string;

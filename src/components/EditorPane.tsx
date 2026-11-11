@@ -87,7 +87,7 @@ export const EditorPane = forwardRef<EditorHandle, Props>(function EditorPane(
         theme="vs-dark"
         // TS のときは .ts URI にして言語サービスが getEmitOutput で JS を出せるようにする。
         // それ以外（jq/シェル）は .sh URI にして TS の診断を掛けない。
-        path={isTs ? "solve.ts" : "solve.sh"}
+        path={isTs ? "solve.ts" : language === "rust" ? "solve.rs" : "solve.sh"}
         onChange={(v) => onChange(v ?? "")}
         onMount={(editor) => {
           editorRef.current = editor;
@@ -111,7 +111,7 @@ export const EditorPane = forwardRef<EditorHandle, Props>(function EditorPane(
           lineNumbersMinChars: 3,
           scrollBeyondLastLine: false,
           wordWrap: "on",
-          tabSize: 2,
+          tabSize: language === "rust" ? 4 : 2,
           insertSpaces: true,
           automaticLayout: true,
           padding: { top: 12, bottom: 12 },

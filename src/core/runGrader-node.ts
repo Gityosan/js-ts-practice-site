@@ -21,6 +21,21 @@ export async function runGrader(problemId: string, learnerTs: string): Promise<G
   const g = await graders[problemId]();
   const results: CaseResult[] = [];
 
+  // rust はローカルの rustc でコンパイル・実行する（テスト側で rustc の有無を確認する）。
+  if (g.kind === "rust") {
+    const [{ gradeRust }, { localRustExecutor }] = await Promise.all([
+      import("../grade/rust"),
+      import("../grade/rust-local"),
+    ]);
+    const rustResults = await gradeRust(g, learnerTs, localRustExecutor);
+    return {
+      passed: rustResults.filter((r) => r.passed).length,
+      total: rustResults.length,
+      results: rustResults,
+      status: "ok",
+    };
+  }
+
   // cli（jq 等）は学習者コードがそのままコマンド。TS 変換は掛けない。
   if (g.kind === "cli") {
     // sh（@wasmer/sdk）はブラウザのメインスレッド専用。Node 採点（テスト）では対象外。

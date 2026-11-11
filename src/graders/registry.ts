@@ -1,4 +1,5 @@
 import type { GraderDef } from "../grade/types";
+import { rustGraders } from "./rust";
 
 export const graders: Record<string, () => Promise<GraderDef>> = {
   // fill / data
@@ -76,4 +77,6 @@ export const graders: Record<string, () => Promise<GraderDef>> = {
   "bash-sh-nested-loop": () => import("./sh/nested-loop").then((m) => m.default),
   "bash-sh-array-filter": () => import("./sh/array-filter").then((m) => m.default),
   "bash-sh-here-string": () => import("./sh/here-string").then((m) => m.default),
+  // rust（graders/rust/ にファイルを置くと自動登録）
+  ...rustGraders,
 };
