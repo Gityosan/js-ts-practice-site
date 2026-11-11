@@ -436,11 +436,30 @@ function ShikiBlock({ code, lang }: { code: string; lang: string }) {
   return <div dangerouslySetInnerHTML={{ __html: html }} style={{ margin: "4px 0" }} />;
 }
 
+// 表の 1 行をセルに分ける。インラインコード（`|a, b| a + b` のようなクロージャ）の中の
+// `|` と、`\|` でエスケープした `|` では区切らない。
 function parseTableRow(line: string): string[] {
-  return line
-    .split("|")
-    .slice(1, -1)
-    .map((c) => c.trim());
+  const cells: string[] = [];
+  let cur = "";
+  let inCode = false;
+  const src = line.trim();
+  for (let i = 0; i < src.length; i++) {
+    const ch = src[i];
+    if (ch === "\\" && src[i + 1] === "|") {
+      cur += "|";
+      i++;
+    } else if (ch === "`") {
+      inCode = !inCode;
+      cur += ch;
+    } else if (ch === "|" && !inCode) {
+      cells.push(cur);
+      cur = "";
+    } else {
+      cur += ch;
+    }
+  }
+  cells.push(cur);
+  return cells.slice(1, -1).map((c) => c.trim());
 }
 
 function isTableSeparator(line: string): boolean {
@@ -521,6 +540,13 @@ function MarkdownLite({ source }: { source: string }) {
       elements.push(<h3 key={key++}>{line.slice(4)}</h3>);
     } else if (line.startsWith("## ")) {
       elements.push(<h2 key={key++}>{line.slice(3)}</h2>);
+    } else if (/^\s+- /.test(line)) {
+      // 1 段ネストした箇条書き（行頭にスペース）
+      elements.push(
+        <ul key={key++} style={{ marginLeft: "1.25em" }}>
+          <li>{renderInline(line.trimStart().slice(2))}</li>
+        </ul>,
+      );
     } else if (line.startsWith("- ")) {
       elements.push(
         <ul key={key++}>
@@ -539,7 +565,8 @@ function MarkdownLite({ source }: { source: string }) {
 }
 
 function renderInline(text: string): React.ReactNode {
-  const parts = text.split(/(`[^`]+`|\*\*[^*]+\*\*)/g);
+  // 太字の中には単独の `*`（例: **`*x`**）を書けるようにする
+  const parts = text.split(/(`[^`]+`|\*\*(?:[^*]|\*(?!\*))+?\*\*)/g);
   return parts.map((part, i) => {
     if (part.startsWith("`") && part.endsWith("`")) return <code key={i}>{part.slice(1, -1)}</code>;
     // 太字の中にインラインコードがある場合（**`fn main()`**）も中身を再帰的に描画する
