@@ -63,9 +63,27 @@ const languageConfig = [
   heading: string;
 }>;
 
+const LANG_KEY = "home-language";
+
 export function Home() {
   const solved = useMemo(() => getAllSolved(), []);
-  const [lang, setLang] = useState<Language>("js");
+  // 選んだ言語タブは問題ページから戻っても保つ（取得できない環境では js）
+  const [lang, setLangState] = useState<Language>(() => {
+    try {
+      const saved = sessionStorage.getItem(LANG_KEY);
+      return languageConfig.some((l) => l.key === saved) ? (saved as Language) : "js";
+    } catch {
+      return "js";
+    }
+  });
+  const setLang = (next: Language) => {
+    setLangState(next);
+    try {
+      sessionStorage.setItem(LANG_KEY, next);
+    } catch {
+      // 保存できなくても表示は切り替える
+    }
+  };
 
   const problemsForLang = useMemo(() => allProblems.filter((p) => p.language === lang), [lang]);
 

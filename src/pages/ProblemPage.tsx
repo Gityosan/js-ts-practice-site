@@ -542,8 +542,9 @@ function renderInline(text: string): React.ReactNode {
   const parts = text.split(/(`[^`]+`|\*\*[^*]+\*\*)/g);
   return parts.map((part, i) => {
     if (part.startsWith("`") && part.endsWith("`")) return <code key={i}>{part.slice(1, -1)}</code>;
+    // 太字の中にインラインコードがある場合（**`fn main()`**）も中身を再帰的に描画する
     if (part.startsWith("**") && part.endsWith("**"))
-      return <strong key={i}>{part.slice(2, -2)}</strong>;
+      return <strong key={i}>{renderInline(part.slice(2, -2))}</strong>;
     return part;
   });
 }
