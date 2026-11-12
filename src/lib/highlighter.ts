@@ -6,7 +6,7 @@ export function getHighlighter(): Promise<Highlighter> {
   if (!_promise) {
     _promise = createHighlighter({
       themes: ["github-dark"],
-      langs: ["typescript", "javascript", "html", "css"],
+      langs: ["typescript", "javascript", "html", "css", "rust", "bash", "toml"],
     });
   }
   return _promise;

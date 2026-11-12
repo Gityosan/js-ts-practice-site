@@ -103,6 +103,9 @@ self.onmessage = async (e: MessageEvent<{ problemId: string; learnerJs: string }
         }
       }
       self.postMessage({ type: "done" });
+    } else if (g.kind === "rust") {
+      // rust はメインスレッド（runGrader）で Playground に送るためワーカーには来ない。
+      self.postMessage({ type: "error", message: "rust はワーカーでは採点しません" });
     } else {
       self.postMessage({ type: "meta", total: g.asserts.length });
       const scope = g.setupMocks();

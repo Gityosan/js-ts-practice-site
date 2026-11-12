@@ -5,10 +5,10 @@ export type Stage = z.infer<typeof Stage>;
 
 // 学習対象の言語。トップページはこの値でコンテンツを出し分ける。
 // 既存問題はすべて js なので default を "js" にして無変更で移行する。
-export const Language = z.enum(["js", "bash"]);
+export const Language = z.enum(["js", "bash", "rust"]);
 export type Language = z.infer<typeof Language>;
 
-export const Scenario = z.enum(["basic", "data", "gas", "email", "chrome", "jq", "sh"]);
+export const Scenario = z.enum(["basic", "data", "gas", "email", "chrome", "jq", "sh", "rust"]);
 export type Scenario = z.infer<typeof Scenario>;
 
 const Copy = z.object({

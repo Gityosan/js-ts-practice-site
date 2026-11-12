@@ -54,7 +54,29 @@ export type CliGraderDef = {
   bonusCases?: { label: string; pattern: string }[];
 };
 
-export type GraderDef = IoGraderDef | StateGraderDef | CliGraderDef;
+// rust ステージ用。学習者の Rust コードを本物の rustc でコンパイル・実行して採点する。
+// ブラウザでは公式の Rust Playground（play.rust-lang.org）、Node/CI ではローカルの rustc を使う。
+//
+// - "harness": 学習者は関数・構造体などを書く（fn main は書かない）。採点側が main を
+//   付け足し、各ケースの式 `expr` を評価して `{:?}`（Debug 表示）を expected と比べる。
+//   1 回のコンパイルで全ケースを実行し、ケースごとに panic を捕まえて部分点を残す。
+// - "stdout": 学習者が fn main を含むプログラム全体を書き、標準出力を expected と比べる。
+export type RustHarnessCase = {
+  label?: string;
+  expr: string; // Rust の式。例: `add(2, 3)` / `{ let mut v = vec![3, 1]; sort_desc(&mut v); v }`
+  expected: string; // 式の結果を `{:?}` で表示した文字列。例: `5` / `"hello"` / `[3, 1]`
+};
+
+export type RustStdoutCase = {
+  label?: string;
+  expected: string; // 期待する標準出力（行末の空白と末尾改行は正規化して比較）
+};
+
+export type RustGraderDef =
+  | { kind: "rust"; mode: "harness"; cases: RustHarnessCase[] }
+  | { kind: "rust"; mode: "stdout"; cases: RustStdoutCase[] };
+
+export type GraderDef = IoGraderDef | StateGraderDef | CliGraderDef | RustGraderDef;
 
 export type CaseResult = {
   label: string;

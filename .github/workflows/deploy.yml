@@ -31,6 +31,10 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # Rust 教材の模範解答を rustc で検証する（src/__tests__/rust.test.ts）。
+      # rustc が無いとテストはスキップされるので、CI では必ず入れておく。
+      - uses: dtolnay/rust-toolchain@stable
+
       - name: Run tests
         run: pnpm test
 
