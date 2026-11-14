@@ -234,6 +234,14 @@ export function parseRustRun(grader: RustGraderDef, run: RustRun): CaseResult[] 
         const hint = explainPanic(msg);
         return { label, passed: false, detail: `実行中に panic: ${msg}${hint ? `\n${hint}` : ""}` };
       }
+      if (c.skipValueCheck) {
+        return {
+          label,
+          passed: run.success,
+          detail: run.success ? undefined : "最後まで実行できませんでした",
+          output: run.stdout,
+        };
+      }
       const ok = normalizeStdout(run.stdout) === normalizeStdout(c.expected);
       return {
         label,

@@ -1,5 +1,12 @@
 import { describe, it, expect } from "vitest";
-import { rustLearnProblems, rustProblems, rustWriteProblems } from "../problems/rust";
+import {
+  rustDecodeProblems,
+  rustLearnProblems,
+  rustProblems,
+  rustReadProblems,
+  rustWriteProblems,
+} from "../problems/rust";
+import { tokenize, explainToken, matchBrackets } from "../lib/tokenize";
 import { rustGraders } from "../graders/rust";
 import { runGrader } from "../core/grader-node";
 import { buildRustProgram, firstRustError, parseRustRun } from "../grade/rust";
@@ -35,12 +42,39 @@ describe("Rust 教材の構成", () => {
     }
   });
 
-  it("write 問題と採点定義が 1 対 1 で対応している", () => {
-    const writeIds = rustWriteProblems.map((p) => p.id).sort();
+  it("decode は decode ステージで、コードとクイズがある", () => {
+    expect(rustDecodeProblems.length).toBeGreaterThan(0);
+    for (const p of rustDecodeProblems) {
+      expect(p.stage, p.id).toBe("decode");
+      expect(p.decode?.code.trim(), p.id).toBeTruthy();
+      expect(p.decode?.quiz.length ?? 0, p.id).toBeGreaterThan(0);
+      for (const q of p.decode!.quiz) {
+        expect(q.choices, `${p.id}: ${q.prompt}`).toContain(q.answer);
+        expect(new Set(q.choices).size, `${p.id}: 選択肢が重複 ${q.prompt}`).toBe(q.choices.length);
+      }
+      // 分解しても原文に戻り、括弧がすべて対応している
+      const toks = tokenize(p.decode!.code, "rust");
+      expect(toks.map((t) => t.value).join(""), p.id).toBe(p.decode!.code);
+      const brackets = toks.filter((t) => t.type === "bracket").length;
+      expect(matchBrackets(toks).size, `${p.id}: 括弧の対応`).toBe(brackets);
+      // どのトークンにも説明が付く
+      for (const t of toks) {
+        if (t.type === "whitespace") continue;
+        expect(explainToken(toks, t.index, "rust").detail, `${p.id}: ${t.value}`).not.toBe("");
+      }
+    }
+  });
+
+  it("read は read ステージ", () => {
+    expect(rustReadProblems.length).toBeGreaterThan(0);
+    for (const p of rustReadProblems) expect(p.stage, p.id).toBe("read");
+  });
+
+  it("write / read 問題と採点定義が 1 対 1 で対応している", () => {
+    const writeIds = [...rustWriteProblems, ...rustReadProblems].map((p) => p.id).sort();
     const graderIds = Object.keys(rustGraders).sort();
     expect(graderIds).toEqual(writeIds);
-    for (const p of rustWriteProblems) {
-      expect(p.stage, p.id).toBe("write");
+    for (const p of [...rustWriteProblems, ...rustReadProblems]) {
       expect(p.solutionCode.trim(), p.id).not.toBe("");
       expect(p.initialCode.trim(), p.id).not.toBe("");
     }
@@ -89,6 +123,71 @@ describe("Rust 採点器の部品", () => {
     expect(results.every((r) => !r.passed)).toBe(true);
     expect(results[0].detail).toContain("所有権");
   });
+});
+
+describe("Rust の解読トークナイザ", () => {
+  const kinds = (code: string) =>
+    Object.fromEntries(
+      tokenize(code, "rust")
+        .filter((t) => t.type !== "whitespace")
+        .map((t) => [t.value, t.type]),
+    );
+
+  it("予約語・型・名前・マクロ・ライフタイム・文字を分ける", () => {
+    const k = kinds(`fn longest<'a>(x: &'a str) -> &'a str { println!("{}", 'c'); x }`);
+    expect(k["fn"]).toBe("keyword");
+    expect(k["longest"]).toBe("identifier");
+    expect(k["'a"]).toBe("type");
+    expect(k["str"]).toBe("type");
+    expect(k["println!"]).toBe("identifier");
+    expect(k["'c'"]).toBe("string");
+    expect(k["->"]).toBe("keyword");
+  });
+
+  it("範囲 0..5 の .. を数値に含めない", () => {
+    const vals = tokenize("for i in 0..5 {}", "rust").map((t) => t.value);
+    expect(vals).toContain("0");
+    expect(vals).toContain("..");
+    expect(vals).toContain("5");
+  });
+
+  it("括弧の意味を直前の予約語で説明する", () => {
+    const code = `fn add(a: i32) -> i32 { if a > 0 { a } else { 0 } }`;
+    const toks = tokenize(code, "rust");
+    const braces = toks.filter((t) => t.value === "{");
+    expect(explainToken(toks, braces[0].index, "rust").detail).toContain("関数の本体");
+    expect(explainToken(toks, braces[1].index, "rust").detail).toContain("if");
+    expect(explainToken(toks, braces[2].index, "rust").detail).toContain("else");
+    const paren = toks.find((t) => t.value === "(")!;
+    expect(explainToken(toks, paren.index, "rust").detail).toContain("引数");
+  });
+
+  it("& と &mut と * を説明し分ける", () => {
+    const toks = tokenize("let r = &mut x; *r += 1; let s = &y;", "rust");
+    const amps = toks.filter((t) => t.value === "&");
+    expect(explainToken(toks, amps[0].index, "rust").detail).toContain("可変の借用");
+    expect(explainToken(toks, amps[1].index, "rust").detail).toContain("借用");
+    const star = toks.find((t) => t.value === "*")!;
+    expect(explainToken(toks, star.index, "rust").detail).toContain("参照外し");
+  });
+});
+
+describe.skipIf(!hasRustc)("Rust の read 問題: そのままでも、模範解答でも実行できる", () => {
+  for (const problem of rustReadProblems) {
+    it(
+      `${problem.id}: 初期コード・模範解答が実行できる`,
+      async () => {
+        for (const code of [problem.initialCode, problem.solutionCode]) {
+          const result = await runGrader(problem.id, code);
+          const failed = result.results
+            .filter((r) => !r.passed)
+            .map((r) => `${r.label}: ${r.detail}`);
+          expect(failed, failed.join("\n")).toEqual([]);
+        }
+      },
+      RUST_TIMEOUT,
+    );
+  }
 });
 
 describe.skipIf(!hasRustc)("Rust 問題: rustc で採点", () => {

@@ -1,7 +1,14 @@
 import { useMemo, useState } from "react";
 import { Box, Text, VStack, HStack } from "@chakra-ui/react";
 import { AnimatePresence, motion } from "motion/react";
-import { tokenize, matchBrackets, explainToken, type Token, type TokenType } from "../lib/tokenize";
+import {
+  tokenize,
+  matchBrackets,
+  explainToken,
+  type DecodeLanguage,
+  type Token,
+  type TokenType,
+} from "../lib/tokenize";
 import type { Decode } from "../core/schemas";
 import { QuizList } from "./QuizList";
 
@@ -37,7 +44,7 @@ export function DecodePane({
   onComplete,
 }: {
   decode: Decode;
-  language?: "js" | "bash";
+  language?: DecodeLanguage;
   onComplete?: () => void;
 }) {
   const tokens = useMemo(() => tokenize(decode.code, language), [decode.code, language]);
