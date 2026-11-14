@@ -2,6 +2,11 @@
 // コードを「予約語(closed-class) / 名前(open-class) / 括弧 / 記号 / 型 / リテラル」に分解し、
 // さらに「直前のキーワードが ( ) { } の意味を確定させる」(SPEC §1.3) を機械的に説明する。
 
+import { explainRustToken, tokenizeRust } from "./tokenize-rust";
+
+/** 解読（トークン分解）に対応している言語 */
+export type DecodeLanguage = "js" | "bash" | "rust";
+
 export type TokenType =
   | "keyword" // 予約語（const, if, function, return …）= closed-class・構造
   | "type" // 型注釈に現れる語（number, string …）
@@ -136,7 +141,8 @@ const isIdStart = (c: string) => /[A-Za-z_$]/.test(c);
 const isIdPart = (c: string) => /[A-Za-z0-9_$]/.test(c);
 
 /** ソースをトークン列へ。空白・コメントも保持するので join すれば原文に戻る。 */
-export function tokenize(src: string, language: "js" | "bash" = "js"): Token[] {
+export function tokenize(src: string, language: DecodeLanguage = "js"): Token[] {
+  if (language === "rust") return tokenizeRust(src);
   const tokens: Token[] = [];
   let i = 0;
   const n = src.length;
@@ -462,9 +468,10 @@ export type TokenExplain = {
 export function explainToken(
   tokens: Token[],
   idx: number,
-  language: "js" | "bash" = "js",
+  language: DecodeLanguage = "js",
 ): TokenExplain {
   if (language === "bash") return explainBashToken(tokens, idx);
+  if (language === "rust") return explainRustToken(tokens, idx);
   const t = tokens[idx];
   switch (t.type) {
     case "keyword": {
@@ -827,7 +834,8 @@ function describeBracketBash(tokens: Token[], idx: number): TokenExplain {
     if (openIdx < 0) {
       return {
         ...base,
-        detail: "この ) は ( とペアではない。case の 1 つのパターンを閉じる記号（bash 独特の書き方）。",
+        detail:
+          "この ) は ( とペアではない。case の 1 つのパターンを閉じる記号（bash 独特の書き方）。",
       };
     }
     return { ...base, detail: "対応する開き ( とペア。クリックで相方が光る。" };

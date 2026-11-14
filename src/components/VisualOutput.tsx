@@ -11,6 +11,8 @@ type Props = { problemId: string; output: unknown };
 
 export function VisualOutput({ problemId, output }: Props) {
   const renderer = visualRenderers[problemId];
+  // 専用の絵が無く、出力が文字列（rust の標準出力など）ならターミナル風にそのまま見せる
+  if (!renderer && typeof output === "string") return <TerminalOutput text={output} />;
   if (!renderer) return null;
   return (
     <Box
@@ -28,6 +30,26 @@ export function VisualOutput({ problemId, output }: Props) {
 }
 
 type Renderer = (output: unknown) => React.ReactNode;
+
+function TerminalOutput({ text }: { text: string }) {
+  return (
+    <Box
+      as="pre"
+      bg="gray.900"
+      color="green.200"
+      borderRadius="md"
+      p={4}
+      minH="80px"
+      m={0}
+      fontFamily="mono"
+      fontSize="sm"
+      whiteSpace="pre-wrap"
+      overflowX="auto"
+    >
+      {text === "" ? "（何も出力されませんでした）" : text}
+    </Box>
+  );
+}
 
 function StarRenderer(output: unknown): React.ReactNode {
   const n = Math.max(0, Math.min(20, Math.round(Number(output) || 0)));

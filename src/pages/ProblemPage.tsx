@@ -270,8 +270,7 @@ export function ProblemPage() {
                 >
                   <DecodePane
                     decode={problem.decode!}
-                    // 解読（トークン分解）は JS / bash のみ対応。rust の decode 問題は作らない
-                    language={problem.language === "bash" ? "bash" : "js"}
+                    language={problem.language}
                     onComplete={handleQuizComplete}
                   />
                 </Box>

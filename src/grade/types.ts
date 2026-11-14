@@ -70,6 +70,9 @@ export type RustHarnessCase = {
 export type RustStdoutCase = {
   label?: string;
   expected: string; // 期待する標準出力（行末の空白と末尾改行は正規化して比較）
+  // read ステージ用: コンパイルして最後まで実行できれば OK（出力の中身は問わない）。
+  // 学習者が数字などを自由に変えて出力の変化を見る問題で使う。
+  skipValueCheck?: boolean;
 };
 
 export type RustGraderDef =
