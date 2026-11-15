@@ -60,8 +60,9 @@ export function DecodePane({
     ),
   );
 
-  const explain = selected != null ? explainToken(tokens, selected, language) : null;
-  const selectedTok = selected != null ? tokens[selected] : null;
+  // 念のため、範囲外の番号（コードが変わった直後など）は「未選択」として扱う
+  const selectedTok = selected != null ? (tokens[selected] ?? null) : null;
+  const explain = selectedTok ? explainToken(tokens, selectedTok.index, language) : null;
 
   return (
     <VStack align="stretch" gap={4}>

@@ -45,6 +45,13 @@ const stageColor: Record<string, string> = {
 
 export function ProblemPage() {
   const { id } = problemRoute.useParams();
+  // 「次へ / 前へ」で問題が変わってもこのコンポーネントは使い回される（同じルート）。
+  // 問題 id を key にして中身を作り直し、前の問題の状態（選択中のトークン番号・
+  // 入力中のコード・採点結果など）を新しい問題に持ち込まないようにする。
+  return <ProblemView key={id} id={id} />;
+}
+
+function ProblemView({ id }: { id: string }) {
   const navigate = useNavigate();
   const problem = getProblemById(id);
 
